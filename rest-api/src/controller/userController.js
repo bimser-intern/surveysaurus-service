@@ -1,32 +1,26 @@
 const CustomError = require('../helper/error/CustomError')
 const asyncHandler = require('express-async-handler')
-const {createUser , login} = require("../model/User")
-
+const { createUser, getUser } = require('../model/User')
+const { sendJWTUser } = require('../helper/token/token')
 
 /*
     @params
     @description
 */
 const login = asyncHandler(async (req, res, next) => {
-    const { email, password, } = req.body
+    const { email, password } = req.body
     try {
-        const { status, data, message } = await login({
+        const { status, data, message } = await getUser({
             email,
             password,
         })
 
+        if (!status) return next(new CustomError(message))
 
-        if (status === false) {
-            return next(new CustomError(message))
-          }
-
-
-      }
-
-     catch (error) {
+        sendJWTUser(data, res)
+    } catch (error) {
         return next(new CustomError(message))
     }
-
 })
 
 /*
@@ -46,12 +40,18 @@ const register = asyncHandler(async (req, res, next) => {
             country,
         })
 
-        if (status === false) {
+        if (!status) {
             return next(new CustomError(message))
         }
 
+        return res.status(200).json({
+            data: {},
+            message: 'User oluşturuldu',
+        })
+
         // JWT
     } catch (error) {
+        console.log(error)
         return next(new CustomError('Create user içinde hata alındı'))
     }
 })

@@ -20,6 +20,7 @@
         "express-async-handler": "^1.2.0",
         "jsonwebtoken": "^8.5.1",
         "neo4j": "^2.0.0-RC2",
+        "neo4j-driver": "^4.4.7",
         "yup": "^0.32.11"
     },
     "devDependencies": {
