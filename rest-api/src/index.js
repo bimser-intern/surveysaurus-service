@@ -2,9 +2,10 @@ const express = require('express')
 const dotenv = require('dotenv')
 const router = require('./router')
 const customErrorHandler = require('./middleware/error/customErrorHandler')
+const { connectDB } = require('./helper/db/dbHelper')
 dotenv.config()
 
-console.log(process.env.NEO4J_USER_PASS)
+connectDB()
 
 // connect database
 
