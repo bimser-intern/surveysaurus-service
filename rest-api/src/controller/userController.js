@@ -1,17 +1,32 @@
 const CustomError = require('../helper/error/CustomError')
 const asyncHandler = require('express-async-handler')
+const {createUser , login} = require("../model/User")
+
 
 /*
     @params
     @description
 */
 const login = asyncHandler(async (req, res, next) => {
-    const { email, password } = req.body
+    const { email, password, } = req.body
+    try {
+        const { status, data, message } = await login({
+            email,
+            password,
+        })
 
-    res.status(200).json({
-        status: true,
-        message: 'Giriş Yapıldı',
-    })
+
+        if (status === false) {
+            return next(new CustomError(message))
+          }
+
+
+      }
+
+     catch (error) {
+        return next(new CustomError(message))
+    }
+
 })
 
 /*
@@ -19,12 +34,26 @@ const login = asyncHandler(async (req, res, next) => {
     @description
 */
 const register = asyncHandler(async (req, res, next) => {
-    const { email, password, location } = req.body
+    const { email, password, city, userName, gender, country } = req.body
 
-    res.status(200).json({
-        status: true,
-        message: 'Kayıt Olundu',
-    })
+    try {
+        const { status, data, message } = await createUser({
+            userName,
+            email,
+            password,
+            gender,
+            city,
+            country,
+        })
+
+        if (status === false) {
+            return next(new CustomError(message))
+        }
+
+        // JWT
+    } catch (error) {
+        return next(new CustomError('Create user içinde hata alındı'))
+    }
 })
 
 module.exports = { login, register }

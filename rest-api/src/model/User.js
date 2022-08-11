@@ -8,17 +8,17 @@ module.exports = {
     createUser : async ({userName, email, gender, country, city, password}) => { 
       try {
            let a = false;
-           const Query = 'MATCH(n:User) WHERE n.email = $email OR n.name = $userName RETURN count(n) AS result'
-           const Result = executeCypherQuery(Query, {email, userName})
+           const Query = `MATCH(n:User ) WHERE n.email = ${email} OR n.name = ${userName} RETURN count(n) AS result`
+           const Result = await executeCypherQuery(Query)
            Result.records.forEach(record => { 
            if(record.get('result') > 0){
               a = true;
            }
            }) 
           if(a == 0){
-            const writeQuery = `CREATE (p1:User {name: $userName, email: $email, gender: $gender, country: $country, city: $city, password: $password})
+            const writeQuery = `CREATE (p1:User {name: ${userName}, email: ${email}, gender: ${gender}, country: ${country}, city: ${city}, password: ${password}})
                               RETURN p1`
-          const writeResult = executeCypherQuery(writeQuery, {userName, email, gender, country, city, password})
+          const writeResult = await executeCypherQuery(writeQuery)
           writeResult.records.forEach(record => {
             const person1Node = record.get('p1')
             return {
@@ -58,16 +58,16 @@ module.exports = {
   login : async ({email, password}) => {
     try{
       let a = false;
-      const Query = 'MATCH(n:User) WHERE n.email =$email AND n.password = $password RETURN count(n) AS result'
-      const Result = executeCypherQuery(Query, {email, password})
+      const Query = `MATCH(n:User) WHERE n.email =${email} AND n.password = ${password} RETURN count(n) AS result`
+      const Result = await executeCypherQuery(Query)
       Result.records.forEach(record => { 
         if(record.get('result') > 0){
           a = true;
         }
       }) 
       if(a){
-        const readQuery = 'MATCH(n:User) WHERE n.email $email AND n.password $password RETURN n.name + "|"+ n.email+ "|"+n.gender+ "|"+n.country+ "|"+n.city AS result'
-      const readResult = executeCypherQuery(readQuery, {email,password})
+        const readQuery = `MATCH(n:User) WHERE n.email ${email} AND n.password ${password} RETURN n.name + "|"+ n.email+ "|"+n.gender+ "|"+n.country+ "|"+n.city AS result`
+      const readResult = await executeCypherQuery(readQuery, {email,password})
       readResult.records.forEach(record => {
       const array = record.get('result').split("|")
       return {
