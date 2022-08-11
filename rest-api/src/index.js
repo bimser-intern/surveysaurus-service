@@ -1,9 +1,9 @@
 const express = require('express')
-const dotenv = require('dotenv')
+// const dotenv = require('dotenv')
 const router = require('./router')
 const customErrorHandler = require('./middleware/error/customErrorHandler')
 const { connectDB } = require('./helper/db/dbHelper')
-dotenv.config()
+// dotenv.config()
 
 connectDB()
 
