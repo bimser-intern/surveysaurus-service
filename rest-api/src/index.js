@@ -19,7 +19,15 @@ configSchema
         // * middleware
         //      -cors
         //      -json
-        app.use(cors())
+        app.use(
+            cors({
+                origin: '*',
+                credentials: true, //access-control-allow-credentials:true
+                optionSuccessStatus: 200,
+                methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+                preflightContinue: false,
+            })
+        )
         app.use(express.json())
 
         // routing
