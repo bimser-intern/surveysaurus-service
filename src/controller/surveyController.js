@@ -2,17 +2,20 @@ const CustomError = require('../helper/error/CustomError')
 const asyncHandler = require('express-async-handler')
 const { createUser, getUser } = require('../model/User')
 const { sendJWTUser } = require('../helper/token/token')
+const {createSurveyModel,fillSurveyModel} = require("../model/Survey")
+const { request } = require('express')
 
 //create survey
 const createSurvey = asyncHandler(async (req, res, next) => {
-    const { surveyQuestionTitle, surveyQuestion, questionTrueChoice, choiceNumber, choice = [], } = req.body
+    const {title, question, choice } = req.body
     try {
-        const { status, data, message } = await getUser({
-            surveyQuestionTitle,
-            surveyQuestion,
-            questionTrueChoice,
-            choiceNumber,
-            choice = [],
+
+        
+        const { status, data, message } = await createSurveyModel({
+            email: req.user.email,
+            title,
+            question,
+            choice,
         })
 
         if (!status){
@@ -21,7 +24,7 @@ const createSurvey = asyncHandler(async (req, res, next) => {
 
         return res.status(200).json({
             data: {},
-            message: 'Anket oluşturuldu',
+            message: 'Survey created',
         })
 
     } catch (error) {
@@ -32,17 +35,20 @@ const createSurvey = asyncHandler(async (req, res, next) => {
 // Fill Survey
 
 const fillSurvey = asyncHandler(async (req, res, next) => {
-    const { email, surveyQuestionTitle, answer, } = req.body
+    const {title, answer } = req.body
     try {
-        const { status, data, message } = await getUser({
-            email,
-            surveyQuestionTitle,
+        const { status, data, message } = await fillSurveyModel({
+            email:req.user.email,
+            title,
             answer,
+            
         })
+    
 
         if (!status) return next(new CustomError(message))
 
-        sendJWTUser(data, res)
+        res.status(200).json({body:{},message:"Survey filled"})
+
     } catch (error) {
         return next(new CustomError(message))
     }

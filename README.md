@@ -1,6 +1,3 @@
-# surveysaurus-service
-surveysaurus-service
-
 # Surveysaurus - REST API
 
 ## How To Run?
@@ -25,9 +22,10 @@ To restart for each change on project files (For developers only)
 npm run dev
 ```
 
-## Endpoints
+## How to Send Request ?
 
-### Giriş Yap
+
+### Login
 
 ```
 POST /api/user/login
@@ -62,7 +60,7 @@ Bu endpoint kullanıcı girişi için kullanılmalı
 
 ---
 
-### Kayıt ol
+### Register
 
 ```
 POST /api/user/register
@@ -91,3 +89,59 @@ Bu endpoint kullanıcı kaydı için kullanılmalı
     },
 ]
 ```
+
+---
+
+### Create Survey
+
+```
+POST /api/survey/createSurvey
+```
+
+Bu endpoint anket oluşturmak için kullanılmalı
+
+**Parameters:**
+
+| Veri adı | Veri tipi | Zorunluluk | Açıklama                                                 |
+| -------- | --------- | ---------- | -------------------------------------------------------- |
+| title    | STRING    | EVET       | Sistemde kayıtlı olmayan ve eşsiz bir title olmalı |
+| question | STRING    | EVET       | Soru içeriği |
+| choice   | ARRAY       | EVET       | Example : ['Pizza' , 'Lahmacun']                                              |
+
+**Response:**
+
+```javascript
+[
+    {
+        data: {},
+        message: 'Survey created',
+    },
+]
+```
+
+### Fill Survey
+
+```
+POST /api/survey/fillSurvey
+```
+
+Bu endpoint anket oylamak için kullanılmalı
+
+**Parameters:**
+
+| Veri adı | Veri tipi | Zorunluluk | Açıklama                                                 |
+| -------- | --------- | ---------- | -------------------------------------------------------- |
+| title    | STRING    | EVET       |Veritabanında anketi bulmak için bu title kullanılıyor     |
+| answer | NUMBER    | EVET       | Cevap index olarak gönderilmeli çünkü backend kodları buna göre ayarlanmıştır aksi takdirde sonuç hata olacaktır. |
+
+**Response:**
+
+```javascript
+[
+    {
+        data: {},
+        message: 'Survey filled',
+    },
+]
+```
+

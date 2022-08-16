@@ -3,8 +3,8 @@ const { executeCypherQuery } = require('../helper/db/dbHelper')
 
 // Create Survey   
 // OK
-createSurvey: async ({
-    username,
+createSurveyModel: async ({
+    email,
     title,
     question,
     choice,   //Array
@@ -25,7 +25,7 @@ createSurvey: async ({
             for(let i = 0; i<choice.length;i++){
                 counts.push(0);
             }
-            const writeQuery = `MATCH (m:User) WHERE m.name= "${username}"
+            const writeQuery = `MATCH (m:User) WHERE m.email= "${email}"
             CREATE (p1:Survey {title: "${title}", question: "${question}",  choices : ${JSON.stringify(choice)}, counts : ${JSON.stringify(counts)}})
             CREATE (m)-[r:CREATED]->(p1)
             RETURN p1`
@@ -59,15 +59,15 @@ createSurvey: async ({
 
 // Fill Survey 
 
-fillSurvey: async ({
-    username,
+fillSurveyModel: async ({
+    email,
     title,
     answer,  //as index
     
 
 }) => {
     try {     
-            const writeQuery = `MATCH (n:User) WHERE n.name="${username}"
+            const writeQuery = `MATCH (n:User) WHERE n.email="${email}"
             MATCH (m:Survey) WHERE m.title = "${title}"
             CREATE (n)-[r:VOTED {choice : "${answer}"}]->(m)
             SET m.counts = apoc.coll.set(m.counts,${answer},m.counts[${answer}]+1)
@@ -93,3 +93,5 @@ fillSurvey: async ({
 }
 
 //
+
+module.exports={fillSurveyModel, createSurveyModel}
