@@ -7,6 +7,8 @@ const { sendJWTUser } = require('../helper/token/token')
     @params
     @description
 */
+
+//login 
 const login = asyncHandler(async (req, res, next) => {
     const { email, password } = req.body
     try {
@@ -23,10 +25,13 @@ const login = asyncHandler(async (req, res, next) => {
     }
 })
 
+
 /*
     @params
     @description
 */
+
+//register
 const register = asyncHandler(async (req, res, next) => {
     const { email, password, city, userName, gender, country } = req.body
 
@@ -55,5 +60,6 @@ const register = asyncHandler(async (req, res, next) => {
         return next(new CustomError('Create user içinde hata alındı'))
     }
 })
+
 
 module.exports = { login, register }
