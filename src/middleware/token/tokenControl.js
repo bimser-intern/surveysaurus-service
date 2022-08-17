@@ -11,7 +11,7 @@ module.exports = {
     tokenControl: asyncHandler((req, res, next) => {
         const { JWT_SECRET_KEY } = process.env
 
-        if (!isTokenIncluded(req))
+        if (isTokenIncluded(req))
             return next(
                 new CustomError(
                     'You are not authorized, Please login an account',
@@ -27,7 +27,6 @@ module.exports = {
             req.user = {
                 email: decoded.email,
             }
-
             return next()
         })
     }),

@@ -2,15 +2,17 @@ const CustomError = require('../helper/error/CustomError')
 const asyncHandler = require('express-async-handler')
 const { createUser, getUser } = require('../model/User')
 const { sendJWTUser } = require('../helper/token/token')
-const {createSurveyModel,fillSurveyModel} = require("../model/Survey")
+const {
+    createSurveyModel,
+    fillSurveyModel,
+    sampleSurveyModel,
+} = require('../model/Survey')
 const { request } = require('express')
 
 //create survey
 const createSurvey = asyncHandler(async (req, res, next) => {
-    const {title, question, choice } = req.body
+    const { title, question, choice } = req.body
     try {
-
-        
         const { status, data, message } = await createSurveyModel({
             email: req.user.email,
             title,
@@ -18,7 +20,7 @@ const createSurvey = asyncHandler(async (req, res, next) => {
             choice,
         })
 
-        if (!status){
+        if (!status) {
             return next(new CustomError(message))
         }
 
@@ -26,35 +28,51 @@ const createSurvey = asyncHandler(async (req, res, next) => {
             data: {},
             message: 'Survey created',
         })
-
     } catch (error) {
-        return next(new CustomError(message))
+        return next(new CustomError(error.message))
     }
 })
 
 // Fill Survey
 
 const fillSurvey = asyncHandler(async (req, res, next) => {
-    const {title, answer } = req.body
+    const { title, answer } = req.body
     try {
         const { status, data, message } = await fillSurveyModel({
-            email:req.user.email,
+            email: req.user.email,
             title,
             answer,
-            
         })
-    
 
         if (!status) return next(new CustomError(message))
 
-        res.status(200).json({body:{},message:"Survey filled"})
-
+        res.status(200).json({ data: {}, message: 'Survey filled' })
     } catch (error) {
-        return next(new CustomError(message))
+        return next(new CustomError(error.message))
     }
 })
 
+// Sample Survey
 
-module.exports = { createSurvey, fillSurvey }
+const sampleSurvey = asyncHandler(async (req, res, next) => {
+    const { count } = req.query
+
+    try {
+        const { status, data, message } = await sampleSurveyModel({
+            count: count || 3,
+        })
+
+        if (!status) return next(new CustomError(message))
+
+        res.status(200).json({
+            data: { surveys: data.surveys },
+            message: 'Survey filled',
+        })
+    } catch (error) {
+        return next(new CustomError(error.message))
+    }
+})
+
+module.exports = { createSurvey, fillSurvey, sampleSurvey }
 
 //

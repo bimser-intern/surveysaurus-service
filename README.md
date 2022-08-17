@@ -26,9 +26,9 @@ npm run dev
 
 istek atabilmek için zorunlu bazı headerların kullanılması gerekir aşağıdaki rotaya uyarak hareket edebilirsiniz.
 
-| Header Adı | Veri tipi| Açıklama  |
-| -------- | --------- | ---------- |
-| authorization    | STRING    | ey... ile başalayan bir jwt tokeni olmalıdır. örnek : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c* **Not : Login ve Register için gerekli değildir !** |  
+| Header Adı    | Veri tipi | Açıklama                                                                                                                                                                                                                                                                |
+| ------------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| authorization | STRING    | ey... ile başalayan bir jwt tokeni olmalıdır. örnek : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c\* **Not : Login ve Register için gerekli değildir !** |
 
 ### **Login**
 
@@ -48,7 +48,7 @@ Bu endpoint kullanıcı girişi için kullanılmalı
 **Response:**
 
 ```javascript
-[
+;[
     {
         accessToken: 'ey.....',
         data: {
@@ -87,7 +87,7 @@ Bu endpoint kullanıcı kaydı için kullanılmalı
 **Response:**
 
 ```javascript
-[
+;[
     {
         data: {},
         message: 'User oluşturuldu',
@@ -107,16 +107,16 @@ Bu endpoint anket oluşturmak için kullanılmalı
 
 **Parameters:**
 
-| Veri adı | Veri tipi | Zorunluluk | Açıklama                                                 |
-| -------- | --------- | ---------- | -------------------------------------------------------- |
+| Veri adı | Veri tipi | Zorunluluk | Açıklama                                           |
+| -------- | --------- | ---------- | -------------------------------------------------- |
 | title    | STRING    | EVET       | Sistemde kayıtlı olmayan ve eşsiz bir title olmalı |
-| question | STRING    | EVET       | Soru içeriği |
-| choice   | ARRAY       | EVET       | Example : ['Pizza' , 'Lahmacun']                                              |
+| question | STRING    | EVET       | Soru içeriği                                       |
+| choice   | ARRAY     | EVET       | Example : ['Pizza' , 'Lahmacun']                   |
 
 **Response:**
 
 ```javascript
-[
+;[
     {
         data: {},
         message: 'Survey created',
@@ -134,15 +134,15 @@ Bu endpoint anket oylamak için kullanılmalı
 
 **Parameters:**
 
-| Veri adı | Veri tipi | Zorunluluk | Açıklama                                                 |
-| -------- | --------- | ---------- | -------------------------------------------------------- |
-| title    | STRING    | EVET       |Veritabanında anketi bulmak için bu title kullanılıyor     |
-| answer | NUMBER    | EVET       | Cevap index olarak gönderilmeli çünkü backend kodları buna göre ayarlanmıştır aksi takdirde sonuç hata olacaktır. |
+| Veri adı | Veri tipi | Zorunluluk | Açıklama                                                                                                          |
+| -------- | --------- | ---------- | ----------------------------------------------------------------------------------------------------------------- |
+| title    | STRING    | EVET       | Veritabanında anketi bulmak için bu title kullanılıyor                                                            |
+| answer   | NUMBER    | EVET       | Cevap index olarak gönderilmeli çünkü backend kodları buna göre ayarlanmıştır aksi takdirde sonuç hata olacaktır. |
 
 **Response:**
 
 ```javascript
-[
+;[
     {
         data: {},
         message: 'Survey filled',
@@ -153,16 +153,16 @@ Bu endpoint anket oylamak için kullanılmalı
 ### **List User Surveys**
 
 ```
-POST /api/survey/mysurveys
+GET /api/user/mysurveys
 ```
 
 Bu endpoint kişinin kendi anketlerini göstermek için kullanılmalı
 
 **Parameters:**
 
-| Veri adı | Veri tipi | Zorunluluk | Açıklama                                                 |
-| -------- | --------- | ---------- | -------------------------------------------------------- |
-||||Not : Bu bölümde parametreye ihtiyaç yoktur.
+| Veri adı | Veri tipi | Zorunluluk | Açıklama                                     |
+| -------- | --------- | ---------- | -------------------------------------------- |
+|          |           |            | Not : Bu bölümde parametreye ihtiyaç yoktur. |
 
 **Response:**
 
@@ -206,3 +206,41 @@ Bu endpoint kişinin kendi anketlerini göstermek için kullanılmalı
 
 ```
 
+### **List Sample Surveys**
+
+```
+GET /api/survey/sample
+```
+
+Bu endpoint Homepage sayfasında örnek gösterilecek anketleri almak için kullanılmalı
+
+**Parameters:**
+
+| Veri adı | Veri tipi | Zorunluluk | Açıklama                                                        |
+| -------- | --------- | ---------- | --------------------------------------------------------------- |
+| count    | NUMBER    | HAYIR      | URL in devamında örnekteki gibi eklenmeli ?count=5, default : 3 |
+
+**Response:**
+
+```javascript
+{
+    data: {
+        surveys: [
+            {
+                question: "En sevilen şehir hangisidir? ",
+                counts: [0, 0, 0],
+                title: "En Çok Sevilen Şehirler",
+                choices: ["Ankara", "İstanbul", "İzmir"]
+            },
+            {
+                question: "hangi yemeği daha çok seviyorunuz",
+                counts: [0, 1],
+                choices: ["pizza", "lahmacun"],
+                title: "yemek anketi"
+            }
+        ]
+    },
+    message: "Survey filled"
+}
+
+```

@@ -24,6 +24,7 @@
         "yup": "^0.32.11"
     },
     "devDependencies": {
+        "axios": "^0.27.2",
         "eslint": "^8.21.0",
         "eslint-config-prettier": "^8.5.0",
         "nodemon": "^2.0.19",

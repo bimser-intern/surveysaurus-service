@@ -1,6 +1,6 @@
 const CustomError = require('../helper/error/CustomError')
 const asyncHandler = require('express-async-handler')
-const { createUser, getUser } = require('../model/User')
+const { createUser, getUser, mysurveys } = require('../model/User')
 const { sendJWTUser } = require('../helper/token/token')
 
 /*
@@ -8,7 +8,7 @@ const { sendJWTUser } = require('../helper/token/token')
     @description
 */
 
-//login 
+//login
 const login = asyncHandler(async (req, res, next) => {
     const { email, password } = req.body
     try {
@@ -24,7 +24,6 @@ const login = asyncHandler(async (req, res, next) => {
         return next(new CustomError(message))
     }
 })
-
 
 /*
     @params
@@ -64,19 +63,24 @@ const register = asyncHandler(async (req, res, next) => {
 // My Survey Listed Controller
 
 const usersurveys = asyncHandler(async (req, res, next) => {
-    const {} = req.body
     try {
-        const { status, data, message } = await getUser({
+        const { status, data, message } = await mysurveys({
             email: req.user.email,
         })
 
         if (!status) return next(new CustomError(message))
 
-        sendJWTUser(data, res)
+        return res.status(200).json({
+            data: {
+                surveys: data.surveys,
+            },
+            message: 'Anketler alındı',
+        })
+
+        // sendJWTUser(data, res)
     } catch (error) {
-        return next(new CustomError(message))
+        return next(new CustomError(error.message))
     }
 })
-
 
 module.exports = { login, register, usersurveys }

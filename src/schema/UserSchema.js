@@ -24,9 +24,7 @@ module.exports = {
     }),
 
     mySurveysSchema: Yup.object({
-        body: Yup.object({
-            email: Yup.string().email().required(),
-        }),
+        body: Yup.object({}),
         query: Yup.object({}),
         params: Yup.object({}),
     }),

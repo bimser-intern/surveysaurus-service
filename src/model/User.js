@@ -105,21 +105,20 @@ module.exports = {
 
     // my surveys model
 
-    mysurveys: async ({
-        email,
-    }) => {
-        try {     
-                const writeQuery = `MATCH (n:User)-[:CREATED]->(m:Survey) WHERE n.email = "${email}"  RETURN m`
-                const writeResult = await executeCypherQuery(writeQuery)
-                for (const record of writeResult.records) {
-                    const survey1Node = record.get('m')
-                    return {
-                        status: true,
-                        data: {survey1Node},
-                        message: 'Survey listed successfully',
-                    }
-                }
-            
+    mysurveys: async ({ email }) => {
+        try {
+            const writeQuery = `MATCH (n:User)-[:CREATED]->(m:Survey) WHERE n.email = "${email}"  RETURN m`
+            const writeResult = await executeCypherQuery(writeQuery)
+
+            const surveys = writeResult.records.map(
+                (_record) => _record.get('m').properties
+            )
+
+            return {
+                status: true,
+                data: { surveys },
+                message: 'Survey listed successfully',
+            }
         } catch (error) {
             ////////////////////////////////////////////
             return {
@@ -130,8 +129,5 @@ module.exports = {
         }
     },
 
-    // 
-
+    //
 }
-
-
