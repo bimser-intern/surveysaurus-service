@@ -1,11 +1,13 @@
 const express = require('express')
-const dotenv = require('dotenv')
 const router = require('./router')
 const customErrorHandler = require('./middleware/error/customErrorHandler')
 const { connectDB } = require('./helper/db/dbHelper')
 const { configSchema } = require('./schema/configSchema')
 const cors = require('cors')
-dotenv.config()
+
+// uncomment when development stage
+// const dotenv = require('dotenv')
+// dotenv.config()
 
 configSchema
     .validate(process.env)
