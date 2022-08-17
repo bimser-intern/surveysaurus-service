@@ -22,4 +22,12 @@ module.exports = {
         query: Yup.object({}),
         params: Yup.object({}),
     }),
+
+    mySurveysSchema: Yup.object({
+        body: Yup.object({
+            email: Yup.string().email().required(),
+        }),
+        query: Yup.object({}),
+        params: Yup.object({}),
+    }),
 }

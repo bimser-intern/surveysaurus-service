@@ -61,5 +61,22 @@ const register = asyncHandler(async (req, res, next) => {
     }
 })
 
+// My Survey Listed Controller
 
-module.exports = { login, register }
+const usersurveys = asyncHandler(async (req, res, next) => {
+    const {} = req.body
+    try {
+        const { status, data, message } = await getUser({
+            email: req.user.email,
+        })
+
+        if (!status) return next(new CustomError(message))
+
+        sendJWTUser(data, res)
+    } catch (error) {
+        return next(new CustomError(message))
+    }
+})
+
+
+module.exports = { login, register, usersurveys }
