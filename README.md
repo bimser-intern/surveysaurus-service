@@ -28,9 +28,9 @@ istek atabilmek için zorunlu bazı headerların kullanılması gerekir aşağı
 
 | Header Adı | Veri tipi| Açıklama  |
 | -------- | --------- | ---------- |
-| authorization    | STRING    | ey... ile başalayan bir jwt tokeni olmalıdır. örnek : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c |  
+| authorization    | STRING    | ey... ile başalayan bir jwt tokeni olmalıdır. örnek : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c* **Not : Login ve Register için gerekli değildir !** |  
 
-### Login
+### **Login**
 
 ```
 POST /api/user/login
@@ -65,7 +65,7 @@ Bu endpoint kullanıcı girişi için kullanılmalı
 
 ---
 
-### Register
+### **Register**
 
 ```
 POST /api/user/register
@@ -97,7 +97,7 @@ Bu endpoint kullanıcı kaydı için kullanılmalı
 
 ---
 
-### Create Survey
+### **Create Survey**
 
 ```
 POST /api/survey/createSurvey
@@ -124,7 +124,7 @@ Bu endpoint anket oluşturmak için kullanılmalı
 ]
 ```
 
-### Fill Survey
+### **Fill Survey**
 
 ```
 POST /api/survey/fillSurvey
@@ -148,5 +148,61 @@ Bu endpoint anket oylamak için kullanılmalı
         message: 'Survey filled',
     },
 ]
+```
+
+### **List User Surveys**
+
+```
+POST /api/survey/mysurveys
+```
+
+Bu endpoint kişinin kendi anketlerini göstermek için kullanılmalı
+
+**Parameters:**
+
+| Veri adı | Veri tipi | Zorunluluk | Açıklama                                                 |
+| -------- | --------- | ---------- | -------------------------------------------------------- |
+||||Not : Bu bölümde parametreye ihtiyaç yoktur.
+
+**Response:**
+
+```javascript
+{
+    data: {
+    mysurveys: [
+            {
+                title: "En Güzel Şehir Yarışması",
+                question: "En güzel şehir hangisidir?",
+                choices: [
+                    "Ankara",
+                    "İstanbul",
+                    "İzmir"
+                ],
+                count: [
+                    120,
+                    45,
+                    223
+                ]
+            },
+            {
+                title: "En Güzel Yemek Yarışması",
+                question: "En güzel yemek hangisidir?",
+                choices: [
+                    "Döner",
+                    "Lahmacun",
+                    "Kebap"
+                ],
+                count: [
+                    1241,
+                    5123,
+                    12414
+                ]
+            }
+        ]
+    },
+    message: "User Survey is listed"
+
+}
+
 ```
 
