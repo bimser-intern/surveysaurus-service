@@ -1,11 +1,11 @@
 const express = require('express')
-// const dotenv = require('dotenv')
+const dotenv = require('dotenv')
 const router = require('./router')
 const customErrorHandler = require('./middleware/error/customErrorHandler')
 const { connectDB } = require('./helper/db/dbHelper')
 const { configSchema } = require('./schema/configSchema')
 const cors = require('cors')
-// dotenv.config()
+dotenv.config()
 
 configSchema
     .validate(process.env)
@@ -23,7 +23,7 @@ configSchema
             cors({
                 origin: '*',
                 credentials: true, //access-control-allow-credentials:true
-                optionSuccessStatus: 200,
+                optionSuccessStatus: 200, 
                 methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
                 preflightContinue: false,
             })

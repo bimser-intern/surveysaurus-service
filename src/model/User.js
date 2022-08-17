@@ -2,7 +2,7 @@ const { executeCypherQuery } = require('../helper/db/dbHelper')
 
 module.exports = {
     /*
-  
+   Create user model
   */
     createUser: async ({
         userName,
@@ -53,7 +53,7 @@ module.exports = {
     },
 
     /*
-
+    login model
   */
     getUser: async ({ email, password }) => {
         try {
@@ -102,4 +102,32 @@ module.exports = {
             }
         }
     },
+
+    // my surveys model
+
+    mysurveys: async ({ email }) => {
+        try {
+            const writeQuery = `MATCH (n:User)-[:CREATED]->(m:Survey) WHERE n.email = "${email}"  RETURN m`
+            const writeResult = await executeCypherQuery(writeQuery)
+
+            const surveys = writeResult.records.map(
+                (_record) => _record.get('m').properties
+            )
+
+            return {
+                status: true,
+                data: { surveys },
+                message: 'Survey listed successfully',
+            }
+        } catch (error) {
+            ////////////////////////////////////////////
+            return {
+                status: false,
+                data: {},
+                message: `Something went wrong: ${error.message}`,
+            }
+        }
+    },
+
+    //
 }
