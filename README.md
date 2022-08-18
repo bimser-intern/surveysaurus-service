@@ -219,6 +219,34 @@ Bu endpoint Homepage sayfasında örnek gösterilecek anketleri almak için kull
 
 ```
 
+### **Get Survey**
+
+```
+GET /api/survey/getSurvey
+```
+
+Bu endpoint spesifik bir anketi almak için kullanılır
+
+**Parameters:**
+
+| Veri adı | Veri tipi | Zorunluluk | Açıklama                                    |
+| -------- | --------- | ---------- | ------------------------------------------- |
+| title    | STRING    | EVET       | Sistemde kayıtlı bir anketin title'ı olmalı |
+
+**Response:**
+
+```javascript
+{
+    data: {
+        question: 'Which animals do you like most',
+        choice: [['Gold Fish', 'Dog', 'Cat']],
+        counts: [[1, 1, 0]],
+    },
+    message: 'Anket alındı',
+}
+
+```
+
 ### **Fill Survey**
 
 ```

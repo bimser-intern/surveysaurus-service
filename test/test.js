@@ -140,6 +140,16 @@ const getCities = async ({ country }) => {
     console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
 }
 
+const getSurvey = async ({ title }) => {
+    const res = await axios.post('http://localhost:5500/api/survey/getSurvey', {
+        title,
+    })
+    console.log(
+        '=============================================================='
+    )
+    console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
+}
+
 const main = async () => {
     await signIn({ email: 'felat@gmail.com', password: 'Felat123.' })
 
@@ -152,7 +162,9 @@ const main = async () => {
     //await getSamples({})
     // await signUp();
     // await isFilledTest({ title: 'yemek anketi' })
-    await fillSurvey({ title: 'animaldoyoulike', answer: 1 })
+    // await fillSurvey({ title: 'animaldoyoulike', answer: 1 })
+
+    await getSurvey({ title: 'animaldoyoulike' })
 
     // await getCountries()
     // await getCities({ country: 'Turkey' })

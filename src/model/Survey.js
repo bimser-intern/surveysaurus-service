@@ -58,22 +58,22 @@ const createSurveyModel = async ({
 }
 
 // Get Survey
-const getSurveyModel = async ({
-    title,
-}) => {
+const getSurveyModel = async ({ title }) => {
     try {
-        const writeQuery = `MATCH (n:Survey) WHERE n.title = "${title}" RETURN n.question AS q, n.choices AS ch, n.counts AS count`
+        const writeQuery = `MATCH (n:Survey) WHERE n.title = "${title}" RETURN n.question AS q, n.choices AS ch, n.counts AS count, COUNT(n) as c`
         const writeResult = await executeCypherQuery(writeQuery)
-        const question = writeResult.get('q')
-        const choice = writeResult.records.map(
-            (_record) => _record.get('ch').properties
-        )
-        const counts = writeResult.records.map(
-            (_record) => _record.get('count').properties
+
+        if (!writeResult.records[0]?.get("c")) throw Error('Survey is not found!')
+
+        const question = writeResult.records[0]?.get('q')
+
+        const choice = writeResult.records.map((_record) => _record.get('ch'))
+        const counts = writeResult.records.map((_record) =>
+            _record.get('count')
         )
         return {
             status: true,
-            data: {question, choice, counts},
+            data: { question, choice, counts },
             message: 'Survey sended successfully',
         }
     } catch (error) {
@@ -85,7 +85,6 @@ const getSurveyModel = async ({
         }
     }
 }
-
 
 // Fill Survey
 

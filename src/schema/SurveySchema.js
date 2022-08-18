@@ -35,5 +35,13 @@ module.exports = {
         query: Yup.object({}),
         params: Yup.object({}),
     }),
+
+    getSurveySchema: Yup.object({
+        body: Yup.object({
+            title: Yup.string().required(),
+        }),
+        query: Yup.object({}),
+        params: Yup.object({}),
+    }),
 }
 //
