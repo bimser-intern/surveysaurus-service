@@ -11,6 +11,8 @@ const {
     fillSurvey,
     sampleSurvey,
 } = require('../controller/surveyController')
+const { isfilled } = require('../controller/surveyController')
+const { isFilledSchema } = require('../schema/SurveySchema')
 
 router.post(
     '/createSurvey',
@@ -25,6 +27,12 @@ router.post(
 )
 
 router.get('/sample', [yupValidate(sampleSurveySchema)], sampleSurvey)
+
+router.post(
+    '/isfilled',
+    [tokenControl, yupValidate(isFilledSchema)],
+    isfilled
+)
 
 module.exports = router
 //

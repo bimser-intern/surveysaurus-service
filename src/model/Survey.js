@@ -105,7 +105,7 @@ const sampleSurveyModel = async ({ count }) => {
 
         return {
             status: true,
-            data: { surveys },
+            data: {surveys },
             message: 'Survey filled successfully',
         }
     } catch (error) {
@@ -118,6 +118,38 @@ const sampleSurveyModel = async ({ count }) => {
     }
 }
 
-//
+//is filled ? 
+
+const isFilledModel = async ({
+    email,
+    title,
+}) => {
+    try {
+        const writeQuery = `OPTIONAL MATCH (n:User)-[r:VOTED]->(m:Survey) WHERE n.email = "${email}" AND m.title = "${title}" RETURN r.choice as r1`
+        const writeResult = await executeCypherQuery(writeQuery)
+        for (const record of writeResult.records) {
+            const choice = record.get('r1')
+            if(result == null)
+                throw Error("kullanıcı oy vermemiştir")
+            
+            return {
+                status: true,
+                data: {choice},
+                message: `Anket daha önce işaretlenmiş cevabı: '${result}'`,
+            }
+        }
+    } catch (error) {
+        ////////////////////////////////////////////
+        return {
+            status: false,
+            data: {},
+            message: `Something went wrong: ${error.message}`,
+        }
+    }
+}
+
+
+
+
 
 module.exports = { fillSurveyModel, createSurveyModel, sampleSurveyModel }

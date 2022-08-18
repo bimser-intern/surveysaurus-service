@@ -73,6 +73,25 @@ const sampleSurvey = asyncHandler(async (req, res, next) => {
     }
 })
 
-module.exports = { createSurvey, fillSurvey, sampleSurvey }
+// survey is filled controller ?
+
+const isfilled = asyncHandler(async (req, res, next) => {
+    const { title } = req.body
+    try {
+        const { status, data, message } = await fillSurveyModel({
+            email: req.user.email,
+            title,
+        })
+
+        if (!status) return next(new CustomError(message))
+
+        res.status(200).json({ data: {choice}, message: 'Anket daha önce işaretlenmiş' })
+    } catch (error) {
+        return next(new CustomError(error.message))
+    }
+})
+
+
+module.exports = { createSurvey, fillSurvey, sampleSurvey, isfilled}
 
 //
