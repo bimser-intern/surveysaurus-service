@@ -1,8 +1,6 @@
 FROM node:lts-alpine
 ENV NODE_ENV=production
 WORKDIR /usr/src/app
-COPY package.json .
-COPY package-lock.json .
 COPY . .
 RUN  npm install && mkdir -p /usr/src/app
 COPY . /usr/src/app
