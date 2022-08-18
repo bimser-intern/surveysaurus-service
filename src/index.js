@@ -25,7 +25,7 @@ configSchema
             cors({
                 origin: '*',
                 credentials: true, //access-control-allow-credentials:true
-                optionSuccessStatus: 200, 
+                optionSuccessStatus: 200,
                 methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
                 preflightContinue: false,
             })

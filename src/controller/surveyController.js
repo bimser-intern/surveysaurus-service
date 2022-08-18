@@ -6,6 +6,7 @@ const {
     createSurveyModel,
     fillSurveyModel,
     sampleSurveyModel,
+    isFilledModel,
 } = require('../model/Survey')
 const { request } = require('express')
 
@@ -78,20 +79,22 @@ const sampleSurvey = asyncHandler(async (req, res, next) => {
 const isfilled = asyncHandler(async (req, res, next) => {
     const { title } = req.body
     try {
-        const { status, data, message } = await fillSurveyModel({
+        const { status, data, message } = await isFilledModel({
             email: req.user.email,
             title,
         })
 
         if (!status) return next(new CustomError(message))
 
-        res.status(200).json({ data: {choice}, message: 'Anket daha önce işaretlenmiş' })
+        res.status(200).json({
+            data: { ...data },
+            message: 'Anket daha önce işaretlenmiş',
+        })
     } catch (error) {
         return next(new CustomError(error.message))
     }
 })
 
-
-module.exports = { createSurvey, fillSurvey, sampleSurvey, isfilled}
+module.exports = { createSurvey, fillSurvey, sampleSurvey, isfilled }
 
 //

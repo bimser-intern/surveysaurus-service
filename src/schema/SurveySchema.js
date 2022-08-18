@@ -23,16 +23,16 @@ module.exports = {
     sampleSurveySchema: Yup.object({
         body: Yup.object({}),
         query: Yup.object({
-            count: Yup.number("number olmalıdır"),
+            count: Yup.number('number olmalıdır'),
         }),
         params: Yup.object({}),
     }),
 
     isFilledSchema: Yup.object({
-        body: Yup.object({}),
-        query: Yup.object({
+        body: Yup.object({
             title: Yup.string().required(),
         }),
+        query: Yup.object({}),
         params: Yup.object({}),
     }),
 }
