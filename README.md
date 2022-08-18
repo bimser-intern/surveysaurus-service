@@ -124,32 +124,6 @@ Bu endpoint anket oluşturmak için kullanılmalı
 ]
 ```
 
-### **Fill Survey**
-
-```
-POST /api/survey/fillSurvey
-```
-
-Bu endpoint anket oylamak için kullanılmalı
-
-**Parameters:**
-
-| Veri adı | Veri tipi | Zorunluluk | Açıklama                                                                                                          |
-| -------- | --------- | ---------- | ----------------------------------------------------------------------------------------------------------------- |
-| title    | STRING    | EVET       | Veritabanında anketi bulmak için bu title kullanılıyor                                                            |
-| answer   | NUMBER    | EVET       | Cevap index olarak gönderilmeli çünkü backend kodları buna göre ayarlanmıştır aksi takdirde sonuç hata olacaktır. |
-
-**Response:**
-
-```javascript
-;[
-    {
-        data: {},
-        message: 'Survey filled',
-    },
-]
-```
-
 ### **List User Surveys**
 
 ```
@@ -242,5 +216,96 @@ Bu endpoint Homepage sayfasında örnek gösterilecek anketleri almak için kull
     },
     message: "Survey filled"
 }
+
+```
+
+### **Fill Survey**
+
+```
+GET /api/survey/fillSurvey
+```
+
+Bu endpoint belirli bir ankete oylama yapmak için kullanılmalı
+
+**Parameters:**
+
+| Veri adı | Veri tipi | Zorunluluk | Açıklama                                                                                    |
+| -------- | --------- | ---------- | ------------------------------------------------------------------------------------------- |
+| title    | STRING    | EVET       | Oylanacak anketin title'ını vermeniz gerekir. Title eşleştirme işlemi için kullanılacaktır. |
+| answer   | NUMBER    | EVET       | Seçilen cevabın index numarası                                                              |
+
+**Response:**
+
+```javascript
+{ data: {}, message: 'Survey filled' }
+
+```
+
+### **List Countries**
+
+```
+GET /api/user/countries
+```
+
+Bu endpoint Country listesi almak için kullanılır
+
+**Parameters:**
+
+| Veri adı | Veri tipi | Zorunluluk | Açıklama                                                 |
+| -------- | --------- | ---------- | -------------------------------------------------------- |
+|          |           |            | Bu endpointte parametre ve header vermenize gerek yoktur |
+
+**Response:**
+
+```javascript
+{
+    data: {
+        surveys: [
+            'Albania',
+            'Algeria',
+            'Andorra',
+            'Angola',
+            'Antigua And Barbuda',
+            ...
+        ],
+    },
+    message: 'Anketler alındı',
+}
+
+```
+
+### **List Cities**
+
+```
+GET /api/user/countries
+```
+
+Bu endpoint City listesi almak için kullanılır
+
+**Parameters:**
+
+| Veri adı | Veri tipi | Zorunluluk | Açıklama          |
+| -------- | --------- | ---------- | ----------------- |
+| country  | STRING    | EVET       | example : Turkiye |
+
+**Response:**
+
+```javascript
+ {
+    data: {
+        surveys: [
+            'Adana',
+            'Zonguldak',
+            'Yozgat',
+            'Yalova',
+            'Ağrı',
+            'Afyonkarahisar',
+            'Adıyaman',
+            ...
+        ],
+    },
+    message: 'Şehirler alındı',
+}
+
 
 ```

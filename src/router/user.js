@@ -1,7 +1,17 @@
 const router = require('express').Router()
 const yupValidate = require('../middleware/yup/yup')
-const { loginSchema, registerSchema } = require('../schema/UserSchema')
-const { login, register } = require('../controller/userController')
+const {
+    loginSchema,
+    registerSchema,
+    getCountriesSchema,
+    getCitiesSchema,
+} = require('../schema/UserSchema')
+const {
+    login,
+    register,
+    getCities,
+    getCountries,
+} = require('../controller/userController')
 const { mySurveysSchema } = require('../schema/UserSchema')
 const { usersurveys } = require('../controller/userController')
 const { tokenControl } = require('../middleware/token/tokenControl')
@@ -14,5 +24,9 @@ router.get(
     [tokenControl, yupValidate(mySurveysSchema)],
     usersurveys
 )
+
+router.get('/countries', [yupValidate(getCountriesSchema)], getCountries)
+
+router.post('/cities', [yupValidate(getCitiesSchema)], getCities)
 
 module.exports = router

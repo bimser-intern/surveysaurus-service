@@ -28,4 +28,17 @@ module.exports = {
         query: Yup.object({}),
         params: Yup.object({}),
     }),
+
+    getCountriesSchema: Yup.object({
+        body: Yup.object({}),
+        query: Yup.object({}),
+        params: Yup.object({}),
+    }),
+    getCitiesSchema: Yup.object({
+        body: Yup.object({
+            country: Yup.string().required(),
+        }),
+        query: Yup.object({}),
+        params: Yup.object({}),
+    }),
 }
