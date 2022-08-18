@@ -27,5 +27,13 @@ module.exports = {
         }),
         params: Yup.object({}),
     }),
+
+    isFilledSchema: Yup.object({
+        body: Yup.object({}),
+        query: Yup.object({
+            title: Yup.string().required(),
+        }),
+        params: Yup.object({}),
+    }),
 }
 //

@@ -21,6 +21,20 @@ const signIn = async ({ email, password }) => {
     }
 }
 
+const isFilledTest = async ({ title }) => {
+    const res = await axios.post('http://localhost:5500/api/survey/isfilled', {
+       title,
+    })
+
+    const data = res.data
+
+    console.log(
+        '=============================================================='
+    )
+    console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
+}
+
+
 const signUp = async ({ userName, email, password, gender, city, country }) => {
     const res = await axios.post('http://localhost:5500/api/user/register', {
         userName,
@@ -73,18 +87,21 @@ const getSamples = async ({}) => {
     console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
 }
 const main = async () => {
-    await signIn({ email: 'eray@gmail.com', password: 'Eray123.' })
+    await signIn({ email: 'felat@gmail.com', password: 'Felat123.' })
     // await createSurvey({
     //     question: 'En sevilen şehir hangisidir? ',
     //     title: 'En Çok Sevilen Şehirler',
     //     choice: ['Ankara', 'İstanbul', 'İzmir'],
     // })
     // await getSurveys({})
-    await getSamples({})
+    //await getSamples({})
     // await signUp();
+    await isFilledTest("yemek anketi");
 }
 main()
     .then(() => {
         console.log('Finished')
     })
     .catch((err) => console.error(err))
+
+    
