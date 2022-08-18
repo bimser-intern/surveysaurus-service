@@ -129,5 +129,52 @@ module.exports = {
         }
     },
 
+    countryListModel: async ({}) => {
+        try {
+            const writeQuery = `MATCH (n:Country) RETURN n.name AS m`
+            const writeResult = await executeCypherQuery(writeQuery)
+            const countries = writeResult.records.map(
+                (_record) => _record.get('m')
+            )
+            return {
+                status: true,
+                data: { countries },
+                message: 'Countries listed successfully'
+            }
+        } catch (error) {
+            ////////////////////////////////////////////
+            return {
+                status: false,
+                data: {},
+                message: `Something went wrong: ${error.message}`,
+            }
+        }
+    },
+
+    cityListModel: async ({country}) => {
+        try {
+            const writeQuery = `MATCH (a)-[r:LOCATED]->(n) WHERE n.name ="${country}" RETURN a`
+            ///***** DEVAM EDİLECEK 
+
+
+            const writeResult = await executeCypherQuery(writeQuery)
+            const countries = writeResult.records.map(
+                (_record) => _record.get('m')
+            )
+            return {
+                status: true,
+                data: { countries },
+                message: 'Countries listed successfully'
+            }
+        } catch (error) {
+            ////////////////////////////////////////////
+            return {
+                status: false,
+                data: {},
+                message: `Something went wrong: ${error.message}`,
+            }
+        }
+    },
+
     //
 }

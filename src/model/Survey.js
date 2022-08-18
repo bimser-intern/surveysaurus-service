@@ -65,14 +65,28 @@ const fillSurveyModel = async ({
     answer, //as index
 }) => {
     try {
-        const writeQuery = `MATCH (n:User) WHERE n.email="${email}"
+        const query = `MATCH (a:User)-[b:VOTED]->(c:Survey) WHERE a.email="${email}" AND c.title = "${title}" RETURN COUNT(b) AS c`
+        const runquery = await executeCypherQuery(query)
+        for(const record of runquery.records){
+            const result = record.get('c')
+        }
+        let writeQuery =""
+        if(result == 0){
+            writeQuery = `MATCH (n:User) WHERE n.email="${email}"
             MATCH (m:Survey) WHERE m.title = "${title}"
-            CREATE (n)-[r:VOTED {choice : "${answer}"}]->(m)
+            CREATE (n)-[r:VOTED {choice : ${answer}}]->(m)
             SET m.counts = apoc.coll.set(m.counts,${answer},m.counts[${answer}]+1)
-            RETURN r`
+            RETURN 1 as d`
+        }
+        else{
+            writeQuery = `MATCH (a:User)-[b:VOTED]->(c:Survey) WHERE a.email="${email}" AND c.title = "${title}"
+            SET c.counts = apoc.coll.set(c.counts,toInteger(b.choice),toInteger(c.counts[toInteger(b.choice)])-1)
+            SET c.counts = apoc.coll.set(c.counts,${answer},toInteger(c.counts[${answer}])+1)
+            SET b.choice = ${answer} RETURN 1 as d`
+        }
         const writeResult = await executeCypherQuery(writeQuery)
         for (const record of writeResult.records) {
-            const survey1Node = record.get('p1')
+            const survey1Node = record.get('d')
             return {
                 status: true,
                 data: {},
@@ -96,7 +110,7 @@ const sampleSurveyModel = async ({ count }) => {
         // downgrade
         if (count > 20) count = 20
 
-        const writeQuery = `MATCH (n:Survey) RETURN n LIMIT ${count}`
+        const writeQuery = `MATCH (n:Survey) RETURN n.counts ORDER BY toInteger(apoc.coll.sum(n.counts)) DESC LIMIT ${count}`
         const writeResult = await executeCypherQuery(writeQuery)
 
         const surveys = writeResult.records.map(
@@ -122,7 +136,7 @@ const sampleSurveyModel = async ({ count }) => {
 
 const isFilledModel = async ({ email, title }) => {
     try {
-        const writeQuery = `OPTIONAL MATCH (n:User)-[r:VOTED]->(m:Survey) WHERE n.email = "${email}" AND m.title = "${title}" RETURN r.choice as r1`
+        const writeQuery = `MATCH (n:User)-[r:VOTED]->(m:Survey) WHERE n.email = "${email}" AND m.title = "${title}" RETURN r.choice as r1`
         const writeResult = await executeCypherQuery(writeQuery)
         for (const record of writeResult.records) {
             const choice = record.get('r1')
