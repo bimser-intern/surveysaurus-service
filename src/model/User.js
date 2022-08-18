@@ -154,17 +154,14 @@ module.exports = {
     cityListModel: async ({country}) => {
         try {
             const writeQuery = `MATCH (a)-[r:LOCATED]->(n) WHERE n.name ="${country}" RETURN a`
-            ///***** DEVAM EDİLECEK 
-
-
             const writeResult = await executeCypherQuery(writeQuery)
-            const countries = writeResult.records.map(
+            const cities = writeResult.records.map(
                 (_record) => _record.get('m')
             )
             return {
                 status: true,
-                data: { countries },
-                message: 'Countries listed successfully'
+                data: { cities },
+                message: 'Cities listed successfully'
             }
         } catch (error) {
             ////////////////////////////////////////////
@@ -175,6 +172,5 @@ module.exports = {
             }
         }
     },
-
     //
 }

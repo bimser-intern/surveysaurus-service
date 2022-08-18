@@ -76,13 +76,13 @@ const fillSurveyModel = async ({
             MATCH (m:Survey) WHERE m.title = "${title}"
             CREATE (n)-[r:VOTED {choice : ${answer}}]->(m)
             SET m.counts = apoc.coll.set(m.counts,${answer},m.counts[${answer}]+1)
-            RETURN 1 as d`
+            RETURN m.title as d`
         }
         else{
             writeQuery = `MATCH (a:User)-[b:VOTED]->(c:Survey) WHERE a.email="${email}" AND c.title = "${title}"
             SET c.counts = apoc.coll.set(c.counts,toInteger(b.choice),toInteger(c.counts[toInteger(b.choice)])-1)
             SET c.counts = apoc.coll.set(c.counts,${answer},toInteger(c.counts[${answer}])+1)
-            SET b.choice = ${answer} RETURN 1 as d`
+            SET b.choice = ${answer} RETURN b.choice as d`
         }
         const writeResult = await executeCypherQuery(writeQuery)
         for (const record of writeResult.records) {
