@@ -57,6 +57,36 @@ const createSurveyModel = async ({
     }
 }
 
+// Get Survey
+const getSurveyModel = async ({
+    title,
+}) => {
+    try {
+        const writeQuery = `MATCH (n:Survey) WHERE n.title = "${title}" RETURN n.question AS q, n.choices AS ch, n.counts AS count`
+        const writeResult = await executeCypherQuery(writeQuery)
+        const question = writeResult.get('q')
+        const choice = writeResult.records.map(
+            (_record) => _record.get('ch').properties
+        )
+        const counts = writeResult.records.map(
+            (_record) => _record.get('count').properties
+        )
+        return {
+            status: true,
+            data: {question, choice, counts},
+            message: 'Survey sended successfully',
+        }
+    } catch (error) {
+        ////////////////////////////////////////////
+        return {
+            status: false,
+            data: {},
+            message: `Something went wrong: ${error.message}`,
+        }
+    }
+}
+
+
 // Fill Survey
 
 const fillSurveyModel = async ({
@@ -162,4 +192,5 @@ module.exports = {
     createSurveyModel,
     sampleSurveyModel,
     isFilledModel,
+    getSurveyModel,
 }
