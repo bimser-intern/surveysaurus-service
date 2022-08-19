@@ -138,11 +138,12 @@ const sampleSurveyModel = async ({ count }) => {
         // downgrade
         if (count > 20) count = 20
 
-        const writeQuery = `MATCH (n:Survey) RETURN n.counts AS b ORDER BY toInteger(apoc.coll.sum(n.counts)) DESC LIMIT ${count}`
+        const writeQuery = `MATCH (n:Survey) RETURN n ORDER BY toInteger(apoc.coll.sum(n.counts)) DESC LIMIT ${count}`
         const writeResult = await executeCypherQuery(writeQuery)
 
+        console.log(writeResult)
         const surveys = writeResult.records.map(
-            (_record) => _record.get('b').properties
+            (_record) => _record.get('n').properties
         )
 
         return {
