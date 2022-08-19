@@ -1,6 +1,12 @@
 const CustomError = require('../helper/error/CustomError')
 const asyncHandler = require('express-async-handler')
-const { createUser, getUser, mysurveys } = require('../model/User')
+const {
+    createUser,
+    getUser,
+    mysurveys,
+    countryListModel,
+    cityListModel,
+} = require('../model/User')
 const { sendJWTUser } = require('../helper/token/token')
 
 /*
@@ -83,4 +89,44 @@ const usersurveys = asyncHandler(async (req, res, next) => {
     }
 })
 
-module.exports = { login, register, usersurveys }
+const getCountries = asyncHandler(async (req, res, next) => {
+    try {
+        const { status, data, message } = await countryListModel({})
+
+        if (!status) return next(new CustomError(message))
+
+        return res.status(200).json({
+            data: {
+                surveys: data.countries,
+            },
+            message: 'Ülkeler alındı',
+        })
+
+        // sendJWTUser(data, res)
+    } catch (error) {
+        return next(new CustomError(error.message))
+    }
+})
+
+const getCities = asyncHandler(async (req, res, next) => {
+    try {
+        const { country } = req.body
+
+        const { status, data, message } = await cityListModel({ country })
+
+        if (!status) return next(new CustomError(message))
+
+        return res.status(200).json({
+            data: {
+                surveys: data.cities,
+            },
+            message: 'Şehirler alındı',
+        })
+
+        // sendJWTUser(data, res)
+    } catch (error) {
+        return next(new CustomError(error.message))
+    }
+})
+
+module.exports = { login, register, usersurveys, getCities, getCountries }

@@ -57,6 +57,35 @@ const createSurveyModel = async ({
     }
 }
 
+// Get Survey
+const getSurveyModel = async ({ title }) => {
+    try {
+        const writeQuery = `MATCH (n:Survey) WHERE n.title = "${title}" RETURN n.question AS q, n.choices AS ch, n.counts AS count, COUNT(n) as c`
+        const writeResult = await executeCypherQuery(writeQuery)
+
+        if (!writeResult.records[0]?.get("c")) throw Error('Survey is not found!')
+
+        const question = writeResult.records[0]?.get('q')
+
+        const choice = writeResult.records.map((_record) => _record.get('ch'))
+        const counts = writeResult.records.map((_record) =>
+            _record.get('count')
+        )
+        return {
+            status: true,
+            data: { question, choice, counts },
+            message: 'Survey sended successfully',
+        }
+    } catch (error) {
+        ////////////////////////////////////////////
+        return {
+            status: false,
+            data: {},
+            message: `Something went wrong: ${error.message}`,
+        }
+    }
+}
+
 // Fill Survey
 
 const fillSurveyModel = async ({
@@ -65,14 +94,27 @@ const fillSurveyModel = async ({
     answer, //as index
 }) => {
     try {
-        const writeQuery = `MATCH (n:User) WHERE n.email="${email}"
+        const query = `MATCH (a:User)-[b:VOTED]->(c:Survey) WHERE a.email="${email}" AND c.title = "${title}" RETURN COUNT(b) AS c`
+        const runquery = await executeCypherQuery(query)
+
+        const result = runquery.records[0]?.get('c')
+
+        let writeQuery = ''
+        if (result == 0) {
+            writeQuery = `MATCH (n:User) WHERE n.email="${email}"
             MATCH (m:Survey) WHERE m.title = "${title}"
-            CREATE (n)-[r:VOTED {choice : "${answer}"}]->(m)
+            CREATE (n)-[r:VOTED {choice : ${answer}}]->(m)
             SET m.counts = apoc.coll.set(m.counts,${answer},m.counts[${answer}]+1)
-            RETURN r`
+            RETURN m.title as d`
+        } else {
+            writeQuery = `MATCH (a:User)-[b:VOTED]->(c:Survey) WHERE a.email="${email}" AND c.title = "${title}"
+            SET c.counts = apoc.coll.set(c.counts,toInteger(b.choice),toInteger(c.counts[toInteger(b.choice)])-1)
+            SET c.counts = apoc.coll.set(c.counts,${answer},toInteger(c.counts[${answer}])+1)
+            SET b.choice = ${answer} RETURN b.choice as d`
+        }
         const writeResult = await executeCypherQuery(writeQuery)
         for (const record of writeResult.records) {
-            const survey1Node = record.get('p1')
+            const survey1Node = record.get('d')
             return {
                 status: true,
                 data: {},
@@ -96,7 +138,7 @@ const sampleSurveyModel = async ({ count }) => {
         // downgrade
         if (count > 20) count = 20
 
-        const writeQuery = `MATCH (n:Survey) RETURN n LIMIT ${count}`
+        const writeQuery = `MATCH (n:Survey) RETURN n.counts ORDER BY toInteger(apoc.coll.sum(n.counts)) DESC LIMIT ${count}`
         const writeResult = await executeCypherQuery(writeQuery)
 
         const surveys = writeResult.records.map(
@@ -118,6 +160,36 @@ const sampleSurveyModel = async ({ count }) => {
     }
 }
 
-//
+//is filled ?
 
-module.exports = { fillSurveyModel, createSurveyModel, sampleSurveyModel }
+const isFilledModel = async ({ email, title }) => {
+    try {
+        const writeQuery = `MATCH (n:User)-[r:VOTED]->(m:Survey) WHERE n.email = "${email}" AND m.title = "${title}" RETURN r.choice as r1`
+        const writeResult = await executeCypherQuery(writeQuery)
+        for (const record of writeResult.records) {
+            const choice = record.get('r1')
+            if (choice == null) throw Error('kullanıcı oy vermemiştir')
+
+            return {
+                status: true,
+                data: { choice },
+                message: `Anket daha önce işaretlenmiş cevabı: '${choice}'`,
+            }
+        }
+    } catch (error) {
+        ////////////////////////////////////////////
+        return {
+            status: false,
+            data: {},
+            message: `Something went wrong: ${error.message}`,
+        }
+    }
+}
+
+module.exports = {
+    fillSurveyModel,
+    createSurveyModel,
+    sampleSurveyModel,
+    isFilledModel,
+    getSurveyModel,
+}

@@ -21,6 +21,27 @@ const signIn = async ({ email, password }) => {
     }
 }
 
+const isFilledTest = async ({ title }) => {
+    const res = await axios.post(
+        'http://localhost:5500/api/survey/isfilled',
+        {
+            title,
+        },
+        {
+            headers: {
+                authorization: user.token,
+            },
+        }
+    )
+
+    const data = res.data
+
+    console.log(
+        '=============================================================='
+    )
+    console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
+}
+
 const signUp = async ({ userName, email, password, gender, city, country }) => {
     const res = await axios.post('http://localhost:5500/api/user/register', {
         userName,
@@ -57,6 +78,25 @@ const createSurvey = async ({ title, question, choice }) => {
     console.log(`Status : ${res.status} \n data : ${res.data}`)
 }
 
+const fillSurvey = async ({ title, answer }) => {
+    const res = await axios.post(
+        'http://localhost:5500/api/survey/fillSurvey',
+        {
+            title,
+            answer,
+        },
+        {
+            headers: {
+                authorization: user.token,
+            },
+        }
+    )
+    console.log(
+        '=============================================================='
+    )
+    console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
+}
+
 const getSurveys = async ({}) => {
     const res = await axios.get('http://localhost:5500/api/user/mysurveys', {
         headers: {
@@ -72,16 +112,62 @@ const getSamples = async ({}) => {
 
     console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
 }
+
+const getCountries = async () => {
+    const res = await axios.get(
+        'http://localhost:5500/api/user/countries',
+
+        {}
+    )
+    console.log(
+        '=============================================================='
+    )
+    console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
+}
+
+const getCities = async ({ country }) => {
+    const res = await axios.post(
+        'http://localhost:5500/api/user/cities',
+        {
+            country,
+        },
+
+        {}
+    )
+    console.log(
+        '=============================================================='
+    )
+    console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
+}
+
+const getSurvey = async ({ title }) => {
+    const res = await axios.post('http://localhost:5500/api/survey/getSurvey', {
+        title,
+    })
+    console.log(
+        '=============================================================='
+    )
+    console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
+}
+
 const main = async () => {
-    await signIn({ email: 'eray@gmail.com', password: 'Eray123.' })
+    await signIn({ email: 'felat@gmail.com', password: 'Felat123.' })
+
     // await createSurvey({
     //     question: 'En sevilen şehir hangisidir? ',
     //     title: 'En Çok Sevilen Şehirler',
     //     choice: ['Ankara', 'İstanbul', 'İzmir'],
     // })
     // await getSurveys({})
-    await getSamples({})
+    //await getSamples({})
     // await signUp();
+    // await isFilledTest({ title: 'yemek anketi' })
+    // await fillSurvey({ title: 'animaldoyoulike', answer: 1 })
+
+    await getSurvey({ title: 'animaldoyoulike' })
+
+    // await getCountries()
+    // await getCities({ country: 'Turkey' })
 }
 main()
     .then(() => {
