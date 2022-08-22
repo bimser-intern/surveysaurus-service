@@ -307,7 +307,7 @@ Bu endpoint Country listesi almak için kullanılır
 ### **List Cities**
 
 ```
-GET /api/user/countries
+POST /api/user/cities
 ```
 
 Bu endpoint City listesi almak için kullanılır
@@ -352,7 +352,7 @@ Bu endpoint kullanıcının bilgilerini almak için kullanılır
 
 | Veri adı | Veri tipi | Zorunluluk | Açıklama                                                 |
 | -------- | --------- | ---------- | -------------------------------------------------------- |
-|  |     |        |Bu endpointte parametre ve header vermenize gerek yoktur      |
+|          |           |            | Bu endpointte parametre ve header vermenize gerek yoktur |
 
 **Response:**
 
@@ -385,12 +385,12 @@ Bu endpoint kullanıcı bilgilerinin güncellenmesi için kullanılır
 
 | Veri adı | Veri tipi | Zorunluluk | Açıklama                                                 |
 | -------- | --------- | ---------- | -------------------------------------------------------- |
-| userName | STRING   | EVET      | bu veri eşşiz (unique) olmalıdır                        |
-| email    | STRING   | EVET      | email formatında olmalı örn. example@example.com         |
-| password | STRING   | EVET      | Bir büyük harf, bir küçük harf, bir nokta tavsiye edilir |
-| gender   | ENUM     | EVET      | seçenekler : male, famale                                |
-| city     | STRING   | EVET      |                                                          |
-| country  | STRING   | EVET      |                                                          |
+| userName | STRING    | EVET       | bu veri eşşiz (unique) olmalıdır                         |
+| email    | STRING    | EVET       | email formatında olmalı örn. example@example.com         |
+| password | STRING    | EVET       | Bir büyük harf, bir küçük harf, bir nokta tavsiye edilir |
+| gender   | ENUM      | EVET       | seçenekler : male, famale                                |
+| city     | STRING    | EVET       |                                                          |
+| country  | STRING    | EVET       |                                                          |
 
 **Response:**
 
@@ -416,10 +416,9 @@ Bu endpoint spesifik bir anketin yorumlarını çekmek için kullanılır
 
 **Parameters:**
 
-| Veri adı | Veri tipi | Zorunluluk | Açıklama                                                 |
-| -------- | --------- | ---------- | -------------------------------------------------------- |
-| title | STRING   | EVET      | Anket başlığı gönderilir                         |
-                                                       
+| Veri adı | Veri tipi | Zorunluluk | Açıklama                 |
+| -------- | --------- | ---------- | ------------------------ |
+| title    | STRING    | EVET       | Anket başlığı gönderilir |
 
 **Response:**
 
@@ -428,21 +427,21 @@ Bu endpoint spesifik bir anketin yorumlarını çekmek için kullanılır
     {
         data: {
             comments: [
-            {
-                commentID: 476,
-                writer: "Kullanıcı Adı",
-                comment: "Bu kullanıcının yorumudur",
-                upvote: 10,
-                report: 2,
-            },
-            {
-                commentID: 477,
-                writer: "İkinci kullanıcı adı",
-                comment: "Bu başka kullanıcının yorumudur",
-                upvote: 2,
-                report: 5
-            }
-        ]
+                {
+                    commentID: 476,
+                    writer: 'Kullanıcı Adı',
+                    comment: 'Bu kullanıcının yorumudur',
+                    upvote: 10,
+                    report: 2,
+                },
+                {
+                    commentID: 477,
+                    writer: 'İkinci kullanıcı adı',
+                    comment: 'Bu başka kullanıcının yorumudur',
+                    upvote: 2,
+                    report: 5,
+                },
+            ],
         },
         message: 'Yorumlar döndürüldü',
     },
@@ -450,8 +449,6 @@ Bu endpoint spesifik bir anketin yorumlarını çekmek için kullanılır
 ```
 
 ---
-
-
 
 ### **Add Comment**
 
@@ -463,12 +460,11 @@ Bu endpoint ankete yorum yapmak için kullanılır
 
 **Parameters:**
 
-| Veri adı | Veri tipi | Zorunluluk | Açıklama                                                 |
-| -------- | --------- | ---------- | -------------------------------------------------------- |
-| title | STRING   | EVET      | Anket başlığı gereklidir |
-| comment | STRING   | EVET      | Yorum metni gereklidir |
-| parentID | NUMBER   | HAYIR    | Yoruma yorum yapılacaksa bu parametre gönderilir |
-                                                       
+| Veri adı | Veri tipi | Zorunluluk | Açıklama                                         |
+| -------- | --------- | ---------- | ------------------------------------------------ |
+| title    | STRING    | EVET       | Anket başlığı gereklidir                         |
+| comment  | STRING    | EVET       | Yorum metni gereklidir                           |
+| parentID | NUMBER    | HAYIR      | Yoruma yorum yapılacaksa bu parametre gönderilir |
 
 **Response:**
 
@@ -476,7 +472,7 @@ Bu endpoint ankete yorum yapmak için kullanılır
 ;[
     {
         data: {
-            commentID : 478
+            commentID: 478,
         },
         message: 'Yorum eklendi',
     },
@@ -484,10 +480,6 @@ Bu endpoint ankete yorum yapmak için kullanılır
 ```
 
 ---
-
-
-
-
 
 ### **Upvote Comment**
 
@@ -499,27 +491,22 @@ Bu endpoint yoruma oy vermek için kullanılır
 
 **Parameters:**
 
-| Veri adı | Veri tipi | Zorunluluk | Açıklama                                                 |
-| -------- | --------- | ---------- | -------------------------------------------------------- |
-| commentID | NUMBER   | EVET      | Yorum ID'si gereklidir |
-
-                                                       
+| Veri adı  | Veri tipi | Zorunluluk | Açıklama               |
+| --------- | --------- | ---------- | ---------------------- |
+| commentID | NUMBER    | EVET       | Yorum ID'si gereklidir |
 
 **Response:**
 
 ```javascript
 ;[
     {
-        data: {
-        },
+        data: {},
         message: 'Upvote eklendi',
     },
 ]
 ```
 
 ---
-
-
 
 ### **Report Comment**
 
@@ -531,11 +518,9 @@ Bu endpoint yorumu şikayet etmek için kullanılır
 
 **Parameters:**
 
-| Veri adı | Veri tipi | Zorunluluk | Açıklama                                                 |
-| -------- | --------- | ---------- | -------------------------------------------------------- |
-| commentID | NUMBER   | EVET      | Yorum ID'si gereklidir |
-
-                                                       
+| Veri adı  | Veri tipi | Zorunluluk | Açıklama               |
+| --------- | --------- | ---------- | ---------------------- |
+| commentID | NUMBER    | EVET       | Yorum ID'si gereklidir |
 
 **Response:**
 
@@ -543,9 +528,9 @@ Bu endpoint yorumu şikayet etmek için kullanılır
 ;[
     {
         data: {
-            reportcount : 5 // 10
+            reportcount: 5, // 10
         },
-        message: 'Report eklendi' // 'Yorum silindi',
+        message: 'Report eklendi', // 'Yorum silindi',
     },
 ]
 ```
