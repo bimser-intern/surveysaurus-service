@@ -7,8 +7,8 @@ const {
 const { tokenControl } = require('../middleware/token/tokenControl')
 const {} = require('../controller/profileController')
 
-router.get('/getUserInfo', [tokenControl, yupValidate(GetUserInfoSchema)])
+router.get('/getInfo', [tokenControl, yupValidate(GetUserInfoSchema)])
 
-router.put('/updateUserInfo', [tokenControl, yupValidate(UpdateUserSchema)])
+router.put('/update', [tokenControl, yupValidate(UpdateUserSchema)])
 
 module.exports = router
