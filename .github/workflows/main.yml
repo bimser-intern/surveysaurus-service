@@ -3,7 +3,7 @@ name: Trigger auto-build for pull requests and test if it works properly
 # When this action will be executed
 on:
   # Automatically trigger it when detected changes in repo
-  push:
+  pull_request:
     branches: 
       [ master ]
     paths:
