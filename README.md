@@ -226,6 +226,7 @@ GET /api/survey/getSurvey
 ```
 
 Bu endpoint spesifik bir anketi almak için kullanılır
+Geri dönüşteki counts dizisi seçeneklerin yüzdelik oranlarını verir
 
 **Parameters:**
 
@@ -239,8 +240,9 @@ Bu endpoint spesifik bir anketi almak için kullanılır
 {
     data: {
         question: 'Which animals do you like most',
-        choice: [['Gold Fish', 'Dog', 'Cat']],
-        counts: [[1, 1, 0]],
+        choice: ['Gold Fish', 'Dog', 'Cat'],
+        counts: [2,2,1],
+        percent: [40,40,20]
     },
     message: 'Anket alındı',
 }
@@ -337,3 +339,100 @@ Bu endpoint City listesi almak için kullanılır
 
 
 ```
+
+### **Get User Info**
+
+```
+POST /api/userpanel/getinfo
+```
+
+Bu endpoint kullanıcının bilgilerini almak için kullanılır
+
+**Parameters:**
+
+| Veri adı | Veri tipi | Zorunluluk | Açıklama                                                 |
+| -------- | --------- | ---------- | -------------------------------------------------------- |
+|  |     |        |Bu endpointte parametre ve header vermenize gerek yoktur      |
+
+**Response:**
+
+```javascript
+;[
+    {
+        data: {
+            email: 'example@example.com',
+            name: 'NAME SURNAME',
+            gender: 'Male',
+            city: 'CITY NAME',
+            country: 'COUNTRY',
+        },
+        message: 'Kullanıcı bilgileri gönderildi',
+    },
+]
+```
+
+---
+
+### **Update User Info**
+
+```
+POST /api/userpanel/update
+```
+
+Bu endpoint kullanıcı bilgilerinin güncellenmesi için kullanılır
+
+**Parameters:**
+
+| Veri adı | Veri tipi | Zorunluluk | Açıklama                                                 |
+| -------- | --------- | ---------- | -------------------------------------------------------- |
+| userName | STRING   | EVET      | bu veri eşşiz (unique) olmalıdır                         |
+| email    | STRING   | EVET      | email formatında olmalı örn. example@example.com         |
+| password | STRING   | EVET      | Bir büyük harf, bir küçük harf, bir nokta tavsiye edilir |
+| gender   | ENUM     | EVET      | seçenekler : male, famale                                |
+| city     | STRING   | EVET      |                                                          |
+| country  | STRING   | EVET      |                                                          |
+
+**Response:**
+
+```javascript
+;[
+    {
+        data: {},
+        message: 'Kullanıcı bilgileri güncellendi',
+    },
+]
+```
+
+---
+
+### **Get Comments**
+
+```
+GET /api/comment/get
+```
+
+Bu endpoint spesifik bir 
+
+**Parameters:**
+
+| Veri adı | Veri tipi | Zorunluluk | Açıklama                                                 |
+| -------- | --------- | ---------- | -------------------------------------------------------- |
+| userName | STRING   | EVET      | bu veri eşşiz (unique) olmalıdır                         |
+| email    | STRING   | EVET      | email formatında olmalı örn. example@example.com         |
+| password | STRING   | EVET      | Bir büyük harf, bir küçük harf, bir nokta tavsiye edilir |
+| gender   | ENUM     | EVET      | seçenekler : male, famale                                |
+| city     | STRING   | EVET      |                                                          |
+| country  | STRING   | EVET      |                                                          |
+
+**Response:**
+
+```javascript
+;[
+    {
+        data: {},
+        message: 'Kullanıcı bilgileri güncellendi',
+    },
+]
+```
+
+---
