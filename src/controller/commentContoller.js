@@ -1,28 +1,26 @@
 const CustomError = require('../helper/error/CustomError')
 const asyncHandler = require('express-async-handler')
-const { createUser, getUser } = require('../model/User')
-const { sendJWTUser } = require('../helper/token/token')
-const {
-    addCommentController,
-} = require('../model/Comment')
-const { request } = require('express')
+const { addComment } = require('../model/Comment')
 
 const addCommentController = asyncHandler(async (req, res, next) => {
     const { title, comment, parentID } = req.body
     try {
         const { status, data, message } = await addComment({
             email: req.user.email,
-            title:title,
-            comment:comment,
-            parentID:parentID,
+            title,
+            comment,
+            parentID,
         })
 
         if (!status) return next(new CustomError(message))
 
-        res.status(200).json({ data: {}, message: 'Comment Add Succesfully' })
+        res.status(200).json({
+            data: { ...data },
+            message: 'Comment is added Succesfully',
+        })
     } catch (error) {
         return next(new CustomError(error.message))
     }
 })
 
-module.exports = {addCommentController, }
+module.exports = { addCommentController }

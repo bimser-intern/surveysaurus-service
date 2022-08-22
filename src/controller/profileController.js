@@ -1,6 +1,10 @@
 const CustomError = require('../helper/error/CustomError')
 const asyncHandler = require('express-async-handler')
-const { updateUserInfoModel, getUserInfoModel, updatePasswordModel } = require('../model/Profile')
+const {
+    updateUserInfoModel,
+    getUserInfoModel,
+    updatePasswordModel,
+} = require('../model/Profile')
 const { sendJWTUser } = require('../helper/token/token')
 
 module.exports = {
@@ -17,12 +21,7 @@ module.exports = {
 
             if (!status) return next(new CustomError(message))
 
-            sendJWTUser(data.user, res)
-
-            res.status(200).json({
-                data: { ...data },
-                message: 'User informations updated successfully',
-            })
+            sendJWTUser(data.user, res, 'Kullanıcı güncellendi')
         } catch (error) {
             return next(new CustomError(error.message))
         }
@@ -34,7 +33,7 @@ module.exports = {
             const { status, data, message } = await updatePasswordModel({
                 email: req.user.email,
                 oldPassword: oldPassword,
-                newPassword: newPassword
+                newPassword: newPassword,
             })
             if (!status) return next(new CustomError(message))
 
@@ -52,6 +51,8 @@ module.exports = {
             const { status, data, message } = await getUserInfoModel({
                 email: req.user.email,
             })
+
+            console.log(status)
 
             if (!status) return next(new CustomError(message))
 

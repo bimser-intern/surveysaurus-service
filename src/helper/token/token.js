@@ -17,7 +17,7 @@ module.exports = {
 
     getTokenFromCookie: (req) => req.headers.authorization,
 
-    sendJWTUser: (user, res) => {
+    sendJWTUser: (user, res, message) => {
         const { JWT_EXPIRE } = process.env
 
         const token = generateJWTFromUser(user)
@@ -38,7 +38,7 @@ module.exports = {
                     city: user.city,
                     country: user.country,
                 },
-                message: 'Giriş Yapıldı',
+                message: message || 'Giriş Yapıldı',
             })
     },
 }

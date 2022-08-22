@@ -1,19 +1,11 @@
 const { executeCypherQuery } = require('../helper/db/dbHelper')
 
 module.exports = {
-
-    addComment : async ({
-        email,
-        title,
-        comment,
-        parentID,
-    }) => {
+    addComment: async ({ email, title, comment, parentID }) => {
         try {
-
             let writeQuery = ''
 
-            if(parentID==null){
-
+            if (parentID === undefined) {
                 writeQuery = `MATCH (n:User) WHERE n.email = "${email}"
                 MATCH (m:Survey) WHERE m.title = "${title}"
                 MATCH (p:CommentCounter)
@@ -22,10 +14,8 @@ module.exports = {
                 CREATE (s)-[r:TO]->(m)
                 return p.count as result
                 `
-            }
-
-        else{
-            writeQuery = `MATCH (n:User) WHERE n.email = "${email}"
+            } else {
+                writeQuery = `MATCH (n:User) WHERE n.email = "${email}"
             MATCH (k:Comment) WHERE k.commentID=${parentID}
             MATCH (p:CommentCounter)
             CREATE (s:Comment{commentID:p.count+1, comment:"${comment}",time: datetime.realtime('+03:00'),upvote:0,report:0, surveytitle: "${title}"})
@@ -34,16 +24,17 @@ module.exports = {
             CREATE (s)-[r:TO]->(k)
             return p.count as result
             `
-        }
-             
-            const writeResult = await executeCypherQuery(writeQuery)
-            for (const record of writeResult.records) {
-                const survey1Node = record.get('result')
-               
             }
+
+            const writeResult = await executeCypherQuery(writeQuery)
+
+            const [commentID] = writeResult.records.map((_rec) =>
+                _rec.get('result')
+            )
+
             return {
                 status: true,
-                data: {survey1Node},
+                data: { commentID },
                 message: 'Added Comment Successfully',
             }
         } catch (error) {
@@ -54,6 +45,5 @@ module.exports = {
                 message: `Something went wrong: ${error.message}`,
             }
         }
-    }
-    
+    },
 }

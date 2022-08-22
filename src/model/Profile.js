@@ -1,6 +1,5 @@
 const { executeCypherQuery } = require('../helper/db/dbHelper')
 
-
 const getUserInfoModel = async ({ email }) => {
     try {
         const writeQuery = `MATCH (n:User) WHERE n.email = "${email}" RETURN n.name AS na, n.gender AS g, n.city AS ci, n.country AS co`
@@ -9,15 +8,18 @@ const getUserInfoModel = async ({ email }) => {
         const gender = writeResult.records[0]?.get('g')
         const city = writeResult.records[0]?.get('ci')
         const country = writeResult.records[0]?.get('co')
+
+        if (!name) throw Error('User didnt find')
+        
         return {
             status: true,
-            data: { 
-                email : email,
+            data: {
+                email: email,
                 name: name,
                 gender: gender,
                 city: city,
-                country : country
-             },
+                country: country,
+            },
             message: 'User informations returned successfully',
         }
     } catch (error) {
@@ -29,7 +31,13 @@ const getUserInfoModel = async ({ email }) => {
     }
 }
 
-const updateUserInfoModel = async ({oldEmail, userName, newEmail, city, country}) => {
+const updateUserInfoModel = async ({
+    oldEmail,
+    userName,
+    newEmail,
+    city,
+    country,
+}) => {
     //Data içerisinde user objesi olacak, email
     try {
         const writeQuery = `MATCH (n:User) WHERE n.email = "${oldEmail}" SET n.name = "${userName}", n.email = "${newEmail}", n.city = "${city}", n.country = "${country}" RETURN n.email AS r`
@@ -38,9 +46,9 @@ const updateUserInfoModel = async ({oldEmail, userName, newEmail, city, country}
         return {
             status: true,
             data: {
-                user:{
-                    email 
-                }
+                user: {
+                    email,
+                },
             },
             message: 'User informations updated successfully',
         }
@@ -53,28 +61,27 @@ const updateUserInfoModel = async ({oldEmail, userName, newEmail, city, country}
     }
 }
 
-const updatePasswordModel = async ({email, oldPassword, newPassword}) => {
+const updatePasswordModel = async ({ email, oldPassword, newPassword }) => {
     try {
         const writeQuery = `MATCH (n:User) WHERE n.email = "${email}" AND n.password = "${oldPassword}" RETURN COUNT(n) AS r`
         const writeResult = await executeCypherQuery(writeQuery)
         const res1 = writeResult.records[0]?.get('r')
-        if(res1 != 0){
+        if (res1 != 0) {
             const Query = `MATCH (n:User) WHERE n.email = "${email}" SET n.password = "${newPassword}" RETURN COUNT(n) AS r`
             const Result = await executeCypherQuery(Query)
             const res = Result.records[0]?.get('r')
             return {
                 status: true,
                 data: {
-                    user:[email] 
+                    user: [email],
                 },
-            message: 'Password updated',
+                message: 'Password updated',
             }
-        }
-        else{
+        } else {
             return {
                 status: false,
                 data: {},
-            message: 'Password did not match',
+                message: 'Password did not match',
             }
         }
     } catch (error) {
@@ -85,13 +92,6 @@ const updatePasswordModel = async ({email, oldPassword, newPassword}) => {
         }
     }
 }
-
-
-
-
-
-
-
 
 module.exports = {
     getUserInfoModel,

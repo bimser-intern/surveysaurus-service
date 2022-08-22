@@ -1,9 +1,13 @@
 const router = require('express').Router()
+const { tokenControl } = require('../middleware/token/tokenControl')
 const yupValidate = require('../middleware/yup/yup')
-const { addComment } = require('../model/Comment')
-const {
-    addCommentSchema,
-} = require('../schema/commentSchema')
+const { addCommentController } = require('../controller/commentContoller')
+const { addCommentSchema } = require('../schema/commentSchema')
 
-router.post('/addComment', [tokenControl, yupValidate(addCommentSchema)], addComment)
+router.post(
+    '/addcomment',
+    [tokenControl, yupValidate(addCommentSchema)],
+    addCommentController
+)
 
+module.exports = router
