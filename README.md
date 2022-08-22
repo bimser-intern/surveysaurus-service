@@ -4,7 +4,7 @@
 
 Below is the script you need to use to revoke the Rest API.
 
-To install dependencies
+To install dependencies :
 
 ```
 npm install
