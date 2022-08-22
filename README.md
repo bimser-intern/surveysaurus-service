@@ -343,7 +343,7 @@ Bu endpoint City listesi almak için kullanılır
 ### **Get User Info**
 
 ```
-POST /api/userpanel/getinfo
+POST /api/profile/getinfo
 ```
 
 Bu endpoint kullanıcının bilgilerini almak için kullanılır
@@ -376,7 +376,7 @@ Bu endpoint kullanıcının bilgilerini almak için kullanılır
 ### **Update User Info**
 
 ```
-POST /api/userpanel/update
+POST /api/profile/update
 ```
 
 Bu endpoint kullanıcı bilgilerinin güncellenmesi için kullanılır
@@ -385,7 +385,7 @@ Bu endpoint kullanıcı bilgilerinin güncellenmesi için kullanılır
 
 | Veri adı | Veri tipi | Zorunluluk | Açıklama                                                 |
 | -------- | --------- | ---------- | -------------------------------------------------------- |
-| userName | STRING   | EVET      | bu veri eşşiz (unique) olmalıdır                         |
+| userName | STRING   | EVET      | bu veri eşşiz (unique) olmalıdır                        |
 | email    | STRING   | EVET      | email formatında olmalı örn. example@example.com         |
 | password | STRING   | EVET      | Bir büyük harf, bir küçük harf, bir nokta tavsiye edilir |
 | gender   | ENUM     | EVET      | seçenekler : male, famale                                |
@@ -397,6 +397,7 @@ Bu endpoint kullanıcı bilgilerinin güncellenmesi için kullanılır
 ```javascript
 ;[
     {
+        accessToken: 'ey.....',
         data: {},
         message: 'Kullanıcı bilgileri güncellendi',
     },
@@ -411,26 +412,140 @@ Bu endpoint kullanıcı bilgilerinin güncellenmesi için kullanılır
 GET /api/comment/get
 ```
 
-Bu endpoint spesifik bir 
+Bu endpoint spesifik bir anketin yorumlarını çekmek için kullanılır
 
 **Parameters:**
 
 | Veri adı | Veri tipi | Zorunluluk | Açıklama                                                 |
 | -------- | --------- | ---------- | -------------------------------------------------------- |
-| userName | STRING   | EVET      | bu veri eşşiz (unique) olmalıdır                         |
-| email    | STRING   | EVET      | email formatında olmalı örn. example@example.com         |
-| password | STRING   | EVET      | Bir büyük harf, bir küçük harf, bir nokta tavsiye edilir |
-| gender   | ENUM     | EVET      | seçenekler : male, famale                                |
-| city     | STRING   | EVET      |                                                          |
-| country  | STRING   | EVET      |                                                          |
+| title | STRING   | EVET      | Anket başlığı gönderilir                         |
+                                                       
 
 **Response:**
 
 ```javascript
 ;[
     {
-        data: {},
-        message: 'Kullanıcı bilgileri güncellendi',
+        data: {
+            comments: [
+            {
+                commentID: 476,
+                writer: "Kullanıcı Adı",
+                comment: "Bu kullanıcının yorumudur",
+                upvote: 10,
+                report: 2,
+            },
+            {
+                commentID: 477,
+                writer: "İkinci kullanıcı adı",
+                comment: "Bu başka kullanıcının yorumudur",
+                upvote: 2,
+                report: 5
+            }
+        ]
+        },
+        message: 'Yorumlar döndürüldü',
+    },
+]
+```
+
+---
+
+
+
+### **Add Comment**
+
+```
+POST /api/comment/add
+```
+
+Bu endpoint ankete yorum yapmak için kullanılır
+
+**Parameters:**
+
+| Veri adı | Veri tipi | Zorunluluk | Açıklama                                                 |
+| -------- | --------- | ---------- | -------------------------------------------------------- |
+| title | STRING   | EVET      | Anket başlığı gereklidir |
+| comment | STRING   | EVET      | Yorum metni gereklidir |
+| parentID | NUMBER   | HAYIR    | Yoruma yorum yapılacaksa bu parametre gönderilir |
+                                                       
+
+**Response:**
+
+```javascript
+;[
+    {
+        data: {
+            commentID : 478
+        },
+        message: 'Yorum eklendi',
+    },
+]
+```
+
+---
+
+
+
+
+
+### **Upvote Comment**
+
+```
+POST /api/comment/upvote
+```
+
+Bu endpoint yoruma oy vermek için kullanılır
+
+**Parameters:**
+
+| Veri adı | Veri tipi | Zorunluluk | Açıklama                                                 |
+| -------- | --------- | ---------- | -------------------------------------------------------- |
+| commentID | NUMBER   | EVET      | Yorum ID'si gereklidir |
+
+                                                       
+
+**Response:**
+
+```javascript
+;[
+    {
+        data: {
+        },
+        message: 'Upvote eklendi',
+    },
+]
+```
+
+---
+
+
+
+### **Report Comment**
+
+```
+POST /api/comment/report
+```
+
+Bu endpoint yorumu şikayet etmek için kullanılır
+
+**Parameters:**
+
+| Veri adı | Veri tipi | Zorunluluk | Açıklama                                                 |
+| -------- | --------- | ---------- | -------------------------------------------------------- |
+| commentID | NUMBER   | EVET      | Yorum ID'si gereklidir |
+
+                                                       
+
+**Response:**
+
+```javascript
+;[
+    {
+        data: {
+            reportcount : 5 // 10
+        },
+        message: 'Report eklendi' // 'Yorum silindi',
     },
 ]
 ```
