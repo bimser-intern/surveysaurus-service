@@ -150,6 +150,40 @@ const getSurvey = async ({ title }) => {
     console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
 }
 
+const getUserInfo = async ({}) => {
+    const res = await axios.get('http://localhost:5500/api/profile/getinfo', {
+    })
+    console.log(
+        '=============================================================='
+    )
+    console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
+}
+
+const updateUserInfo = async ({ userName, email, city, country}) => {
+    const res = await axios.post('http://localhost:5500/api/profile/update', {
+        userName,
+        email,
+        city,
+        country
+    })
+    console.log(
+        '=============================================================='
+    )
+    console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
+}
+
+const updatePass = async ({ oldPassword, newPassword }) => {
+    const res = await axios.put('http://localhost:5500/api/profile/updatepassword', {
+        oldPassword, 
+        newPassword
+    })
+    console.log(
+        '=============================================================='
+    )
+    console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
+}
+
+
 const main = async () => {
     await signIn({ email: 'felat@gmail.com', password: 'Felat123.' })
 
@@ -160,14 +194,15 @@ const main = async () => {
     // })
     // await getSurveys({})
     //await getSamples({})
-    // await signUp();
+    //await signUp();
     // await isFilledTest({ title: 'yemek anketi' })
     // await fillSurvey({ title: 'animaldoyoulike', answer: 1 })
-
-    await getSurvey({ title: 'animaldoyoulike' })
-
+    //await getSurvey({ title: 'animaldoyoulike' })
     // await getCountries()
     // await getCities({ country: 'Turkey' })
+    await getUserInfo({})
+    //await updateUserInfo({email:"felat@gmail.com", userName: "felat", city: "Ankara", country:"Turkey"})
+    //await updatePass({oldPassword:"Felat123.", newPassword:"felat"})
 }
 main()
     .then(() => {

@@ -343,7 +343,7 @@ Bu endpoint City listesi almak için kullanılır
 ### **Get User Info**
 
 ```
-POST /api/profile/getinfo
+GET /api/profile/getinfo
 ```
 
 Bu endpoint kullanıcının bilgilerini almak için kullanılır
@@ -407,7 +407,7 @@ Bu endpoint kullanıcı bilgilerinin güncellenmesi için kullanılır
 ### **Update User Password**
 
 ```
-POST /api/profile/updatepassword
+PUT /api/profile/updatepassword
 ```
 
 Bu endpoint kullanıcı parolasının güncellenmesi için kullanılır

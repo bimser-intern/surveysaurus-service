@@ -13,6 +13,6 @@ const { getProfile } = require('../controller/profileController')
 
 router.get('/getInfo', [tokenControl, yupValidate(GetUserInfoSchema)],getProfile)
 router.put('/updatepassword', [tokenControl, yupValidate(UpdatePasswordSchema)],updatePass)
-router.put('/update', [tokenControl, yupValidate(UpdateUserSchema)],updateUser)
+router.post('/update', [tokenControl, yupValidate(UpdateUserSchema)],updateUser)
 
 module.exports = router
