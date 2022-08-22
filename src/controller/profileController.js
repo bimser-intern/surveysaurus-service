@@ -1,6 +1,6 @@
 const CustomError = require('../helper/error/CustomError')
 const asyncHandler = require('express-async-handler')
-const { updateUserInfoModel, getUserInfoModel } = require('../model/Profile')
+const { updateUserInfoModel, getUserInfoModel, updatePasswordModel } = require('../model/Profile')
 const { sendJWTUser } = require('../helper/token/token')
 
 module.exports = {
@@ -21,7 +21,26 @@ module.exports = {
 
             res.status(200).json({
                 data: { ...data },
-                message: 'Kullanıcı update edildi',
+                message: 'User informations updated successfully',
+            })
+        } catch (error) {
+            return next(new CustomError(error.message))
+        }
+    }),
+
+    updatePass: asyncHandler(async (req, res, next) => {
+        const { oldPassword, newPassword } = req.body
+        try {
+            const { status, data, message } = await updatePasswordModel({
+                email: req.user.email,
+                oldPassword: oldPassword,
+                newPassword: newPassword
+            })
+            if (!status) return next(new CustomError(message))
+
+            res.status(200).json({
+                data: { ...data },
+                message: 'Password updated',
             })
         } catch (error) {
             return next(new CustomError(error.message))

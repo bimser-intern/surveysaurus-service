@@ -67,7 +67,7 @@ const getSurveyModel = async ({ title }) => {
 
         const question = writeResult.records[0]?.get('q')
 
-        const choice = writeResult.records.map((_record) => _record.get('ch'))[0]
+        const choice = writeResult.records.map((_record) => _record.get('ch'))[0]            
         const counts = writeResult.records.map((_record) =>
             _record.get('count')
         )[0]

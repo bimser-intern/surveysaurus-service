@@ -323,7 +323,7 @@ Bu endpoint City listesi almak için kullanılır
 ```javascript
  {
     data: {
-        surveys: [
+        cities: [
             'Adana',
             'Zonguldak',
             'Yozgat',
@@ -387,8 +387,6 @@ Bu endpoint kullanıcı bilgilerinin güncellenmesi için kullanılır
 | -------- | --------- | ---------- | -------------------------------------------------------- |
 | userName | STRING    | EVET       | bu veri eşşiz (unique) olmalıdır                         |
 | email    | STRING    | EVET       | email formatında olmalı örn. example@example.com         |
-| password | STRING    | EVET       | Bir büyük harf, bir küçük harf, bir nokta tavsiye edilir |
-| gender   | ENUM      | EVET       | seçenekler : male, famale                                |
 | city     | STRING    | EVET       |                                                          |
 | country  | STRING    | EVET       |                                                          |
 
@@ -399,7 +397,35 @@ Bu endpoint kullanıcı bilgilerinin güncellenmesi için kullanılır
     {
         accessToken: 'ey.....',
         data: {},
-        message: 'Kullanıcı bilgileri güncellendi',
+        message: 'User informations updated successfully',
+    },
+]
+```
+
+---
+
+### **Update User Password**
+
+```
+POST /api/profile/updatepassword
+```
+
+Bu endpoint kullanıcı parolasının güncellenmesi için kullanılır
+
+**Parameters:**
+
+| Veri adı | Veri tipi | Zorunluluk | Açıklama                                                 |
+| -------- | --------- | ---------- | -------------------------------------------------------- |
+| oldPassword | STRING    | EVET       | Kullanıcının eski parolası gereklidir |
+| newPassword | STRING    | EVET       | Bir büyük harf, bir küçük harf, bir nokta tavsiye edilir |
+
+**Response:**
+
+```javascript
+;[
+    {
+        data: {},
+        message: 'Password updated',
     },
 ]
 ```
