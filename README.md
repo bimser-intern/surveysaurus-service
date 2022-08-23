@@ -239,10 +239,10 @@ Geri dönüşteki counts dizisi seçeneklerin yüzdelik oranlarını verir
 ```javascript
 {
     data: {
-        question: 'Which animals do you like most',
-        choice: ['Gold Fish', 'Dog', 'Cat'],
-        counts: [2,2,1],
-        percent: [40,40,20]
+        "question": 'Which animals do you like most',
+        "choice": ['Gold Fish', 'Dog', 'Cat'],
+        "counts": [2,2,1],
+        "percent": [40,40,20]
     },
     message: 'Anket alındı',
 }

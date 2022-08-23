@@ -319,17 +319,17 @@ const getComments = async ({ title }) => {
 const main = async () => {
     await signIn({ email: 'aliveli@gmail.com', password: 'AliVeli123.' })
 
-    // await createSurvey({
-    //     question: 'En sevilen şehir hangisidir? ',
-    //     title: 'En Çok Sevilen Şehirler',
-    //     choice: ['Ankara', 'İstanbul', 'İzmir'],
+     //await createSurvey({
+     //    question: 'denemeee',
+    //     title: 'denemeee',
+    //     choice: ['şık1', 'şık2', 'şık3'],
     // })
     // await getSurveys({})
     //await getSamples({})
     //await signUp();
     // await isFilledTest({ title: 'yemek anketi' })
     // await fillSurvey({ title: 'animaldoyoulike', answer: 1 })
-    //await getSurvey({ title: 'animaldoyoulike' })
+    await getSurvey({ title: 'animaldoyoulike' })
     // await getCountries()
     // await getCities({ country: 'Turkey' })
     // await getUserInfo({})
@@ -350,7 +350,7 @@ const main = async () => {
 
     //await getComments({ title: 'fhklşm' })
 
-    await upVote({ commentID: 9 })
+    //await upVote({ commentID: 9 })
     //await report({ commentID: 2 })
 }
 main()

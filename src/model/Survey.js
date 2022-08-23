@@ -71,10 +71,11 @@ const getSurveyModel = async ({ title }) => {
         const counts = writeResult.records.map((_record) =>
             _record.get('count')
         )[0]
-        let percent;
+        let percent=[];
         const sumcounts = counts.reduce((partialSum, a) => partialSum + a, 0);
         for(let i = 0; i<counts.length;i++){
-            percent[i] = (count[i]/sumcounts)*100
+            console.log("For içerisinde: "+i)
+            percent[i] = (counts[i]/sumcounts)*100
         }
         return {
             status: true,
