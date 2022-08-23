@@ -351,8 +351,8 @@ const main = async () => {
 
     // await getComments({ title: 'bestie' })
 
-    // await upVote({ commentID: 6 })
-    await report({ commentID: 6 })
+    //await upVote({ commentID: 6 })
+    //await report({ commentID: 6 })
 }
 main()
     .then(() => {

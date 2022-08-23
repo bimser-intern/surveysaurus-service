@@ -541,6 +541,7 @@ POST /api/comment/report
 ```
 
 Bu endpoint yorumu şikayet etmek için kullanılır
+reportcount değeri için -1 alınması yorumun 10 report'a ulaştığını ve silindiğini ifade eder.
 
 **Parameters:**
 
@@ -554,9 +555,9 @@ Bu endpoint yorumu şikayet etmek için kullanılır
 ;[
     {
         data: {
-            reportcount: 5, // 10
+            reportcount: 5, // -1 
         },
-        message: 'Report eklendi', // 'Yorum silindi',
+        message: 'Reported successfully', // 'Comment deleted',
     },
 ]
 ```
