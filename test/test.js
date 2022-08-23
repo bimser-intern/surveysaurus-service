@@ -256,6 +256,66 @@ const addComment = async ({ title, comment, parentID }) => {
 
 // ----------------------------------------------------------------------
 
+const upVote = async ({ commentID }) => {
+    const res = await axios.post(
+        'http://localhost:5500/api/comment/upVote',
+        {
+            commentID,
+        },
+        {
+            headers: {
+                authorization: user.token,
+            },
+        }
+    )
+    console.log(
+        '=============================================================='
+    )
+    console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
+}
+
+// ----------------------------------------------------------------------
+
+const report = async ({ commentID }) => {
+    const res = await axios.post(
+        'http://localhost:5500/api/comment/report',
+        {
+            commentID,
+        },
+        {
+            headers: {
+                authorization: user.token,
+            },
+        }
+    )
+    console.log(
+        '=============================================================='
+    )
+    console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
+}
+
+// ----------------------------------------------------------------------
+
+const getComments = async ({ title }) => {
+    const res = await axios.post(
+        'http://localhost:5500/api/comment/comments',
+        {
+            title,
+        },
+        {
+            headers: {
+                authorization: user.token,
+            },
+        }
+    )
+    console.log(
+        '=============================================================='
+    )
+    console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
+}
+
+// ----------------------------------------------------------------------
+
 const main = async () => {
     await signIn({ email: 'test1@gmail.com', password: 'felat' })
 
@@ -283,11 +343,16 @@ const main = async () => {
 
     // await updatePass({ oldPassword: 'Felat123.', newPassword: 'felat' })
 
-    await addComment({
-        title: 'bestie',
-        comment: 'Süper bir anket',
-        parentID: 7,
-    })
+    // await addComment({
+    //     title: 'bestie',
+    //     comment: 'Süper bir anket',
+    //     parentID: 7,
+    // })
+
+    // await getComments({ title: 'bestie' })
+
+    // await upVote({ commentID: 6 })
+    await report({ commentID: 6 })
 }
 main()
     .then(() => {

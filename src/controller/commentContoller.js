@@ -1,6 +1,11 @@
 const CustomError = require('../helper/error/CustomError')
 const asyncHandler = require('express-async-handler')
-const { addComment } = require('../model/Comment')
+const {
+    addComment,
+    upVote,
+    report,
+    getCommentsModel,
+} = require('../model/Comment')
 
 const addCommentController = asyncHandler(async (req, res, next) => {
     const { title, comment, parentID } = req.body
@@ -24,9 +29,9 @@ const addCommentController = asyncHandler(async (req, res, next) => {
 })
 
 const upVoteController = asyncHandler(async (req, res, next) => {
-    const {commentID } = req.body
+    const { commentID } = req.body
     try {
-        const { status, data, message } = await addComment({
+        const { status, data, message } = await upVote({
             email: req.user.email,
             commentID,
         })
@@ -43,9 +48,9 @@ const upVoteController = asyncHandler(async (req, res, next) => {
 })
 
 const reportController = asyncHandler(async (req, res, next) => {
-    const {commentID } = req.body
+    const { commentID } = req.body
     try {
-        const { status, data, message } = await addComment({
+        const { status, data, message } = await report({
             email: req.user.email,
             commentID,
         })
@@ -61,4 +66,27 @@ const reportController = asyncHandler(async (req, res, next) => {
     }
 })
 
-module.exports = { addCommentController, upVoteController, reportController}
+const getCommentsController = asyncHandler(async (req, res, next) => {
+    const { title } = req.body
+    try {
+        const { status, data, message } = await getCommentsModel({
+            title,
+        })
+
+        if (!status) return next(new CustomError(message))
+
+        res.status(200).json({
+            data: { data },
+            message: 'Report Succesfully',
+        })
+    } catch (error) {
+        return next(new CustomError(error.message))
+    }
+})
+
+module.exports = {
+    addCommentController,
+    upVoteController,
+    reportController,
+    getCommentsController,
+}

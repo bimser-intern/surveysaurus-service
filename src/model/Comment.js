@@ -47,27 +47,23 @@ module.exports = {
         }
     },
 
-
-    upVote: async ({email, commentID, }) => {
+    upVote: async ({ email, commentID }) => {
         try {
             let writeQuery = ''
 
-            
-                writeQuery = `MATCH (n:User) WHERE n.email = "${email}"
-                MATCH (m:Comment) WHERE m.commentID = ${commentID}"
+            writeQuery = `MATCH (n:User) WHERE n.email = "${email}"
+                MATCH (m:Comment) WHERE m.commentID = ${commentID}
                 SET m.upvote = m.upvote+1
                 CREATE (n)-[r:UPVOTED]->(m)
                 RETURN r`
 
             const writeResult = await executeCypherQuery(writeQuery)
 
-            const [commentID] = writeResult.records.map((_rec) =>
-                _rec.get('r')
-            )
+            const [commentId] = writeResult.records.map((_rec) => _rec.get('r'))
 
             return {
                 status: true,
-                data: { commentID },
+                data: { commentId },
                 message: 'upVote Successfully',
             }
         } catch (error) {
@@ -80,32 +76,24 @@ module.exports = {
         }
     },
 
-    report: async ({email, commentID, }) => {
+    report: async ({ email, commentID }) => {
+        // var | let |
         try {
             let writeQuery = ''
 
-            
-                writeQuery = `MATCH (n:User) WHERE n.email = "${email}"
-                MATCH (m:Comment) WHERE m.commentID = ${commentID}"
+            writeQuery = `MATCH (n:User) WHERE n.email = "${email}"
+                MATCH (m:Comment) WHERE m.commentID = ${commentID}
                 SET m.report = m.report+1
                 CREATE (n)-[r:REPORTED]->(m)
                 RETURN m.report AS result`
 
-                if(report >= 10){
-
-
-
-                }
-
             const writeResult = await executeCypherQuery(writeQuery)
 
-            const [commentID] = writeResult.records.map((_rec) =>
-                _rec.get('r')
-            )
+            let result = writeResult.records.map((_rec) => _rec.get('result'))
 
             return {
                 status: true,
-                data: {result},
+                data: { result },
                 message: 'Report Successfully',
             }
         } catch (error) {
@@ -118,4 +106,29 @@ module.exports = {
         }
     },
 
+    getCommentsModel: async ({ title }) => {
+        try {
+            let writeQuery = ''
+
+            writeQuery = `MATCH (s:Survey)-[:WRITED]->(c:Comment) WHERE s.title = "${title}" RETURN c`
+
+            const writeResult = await executeCypherQuery(writeQuery)
+
+            const comments = writeResult.records.map((_rec) => _rec.get('c'))
+
+            console.log(comments)
+            return {
+                status: true,
+                data: { comments },
+                message: 'Report Successfully',
+            }
+        } catch (error) {
+            ////////////////////////////////////////////
+            return {
+                status: false,
+                data: {},
+                message: `Something went wrong: ${error.message}`,
+            }
+        }
+    },
 }

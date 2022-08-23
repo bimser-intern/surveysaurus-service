@@ -9,8 +9,8 @@ const getUserInfoModel = async ({ email }) => {
         const city = writeResult.records[0]?.get('ci')
         const country = writeResult.records[0]?.get('co')
 
-        if (!name) throw Error('User didnt find')
-        
+        if (name === undefined) throw Error('User didnt find')
+
         return {
             status: true,
             data: {

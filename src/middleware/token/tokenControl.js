@@ -24,15 +24,14 @@ module.exports = {
 
         jwt.verify(token, JWT_SECRET_KEY, (err, decoded) => {
             if (err) next(new CustomError('You authorize is invalid', 401))
-
             req.user = {
                 email: decoded.email,
             }
             return next()
         })
     }),
-    userControl: asyncHandler((req, res, next) => {
-        const { status, data, message } = getUserInfoModel({
+    userControl: asyncHandler(async (req, res, next) => {
+        const { status, data, message } = await getUserInfoModel({
             email: req.user.email,
         })
 
