@@ -317,7 +317,7 @@ const getComments = async ({ title }) => {
 // ----------------------------------------------------------------------
 
 const main = async () => {
-    await signIn({ email: 'test1@gmail.com', password: 'felat' })
+    await signIn({ email: 'aliveli@gmail.com', password: 'AliVeli123.' })
 
     // await createSurvey({
     //     question: 'En sevilen şehir hangisidir? ',
@@ -351,8 +351,8 @@ const main = async () => {
 
     // await getComments({ title: 'bestie' })
 
-    //await upVote({ commentID: 6 })
-    //await report({ commentID: 6 })
+    //await upVote({ commentID: 8 })
+    await report({ commentID: 2 })
 }
 main()
     .then(() => {

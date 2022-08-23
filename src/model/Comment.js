@@ -49,31 +49,32 @@ module.exports = {
 
     upVote: async ({ email, commentID }) => {
         try {
-
-            const writeQuery = `MATCH (n:User) WHERE n.email = "${email}"
+            const Query1 = `MATCH (n:User) WHERE n.email = "${email}"
             MATCH (m:Comment) WHERE m.commentID = ${commentID}
-            WITH m.upvote AS u
-            MERGE (n)-[r:UPVOTED]->(m)
-            ON CREATE SET m.upvote = m.upvote+1
-           RETURN m.upvote-u AS res`
-            const writeResult = await executeCypherQuery(writeQuery)
-            const [commentId] = writeResult.records.map((_rec) => _rec.get('res'))
-            if (res == 0) {
+            MATCH (n)-[r:UPVOTED]->(m)
+            RETURN COUNT(r) AS c`
+            const Result1 = await executeCypherQuery(Query1)
+            const res1 = Result1.records.map((_rec) => _rec.get('c'))
+            if (res1 == 0) {
+                const writeQuery = `MATCH (n:User) WHERE n.email = "${email}"
+                                    MATCH (m:Comment) WHERE m.commentID = ${commentID}
+                                    CREATE (n)-[r:UPVOTED]->(m)
+                                    SET m.upvote = m.upvote+1 RETURN r`
+                const writeResult = await executeCypherQuery(writeQuery)
+                writeResult.records.map((_rec) => _rec.get('r'))
+                return {
+                    status: true,
+                    data: { commentID },
+                    message: 'Comment upvoted successfully',
+                }
+            } else {
                 return {
                     status: false,
-                    data: { commentId },
+                    data: { commentID },
                     message: 'An user cannot upvote twice',
                 }
             }
-            else {
-                return {
-                    status: true,
-                    data: { commentId },
-                    message: 'Upvoted successfully',
-                }
-            }
         } catch (error) {
-            ////////////////////////////////////////////
             return {
                 status: false,
                 data: {},
@@ -84,47 +85,31 @@ module.exports = {
 
     report: async ({ email, commentID }) => {
         try {
-            let writeQuery = `MATCH (n:User) WHERE n.email = "${email}"
+            const Query1 = `MATCH (n:User) WHERE n.email = "${email}"
             MATCH (m:Comment) WHERE m.commentID = ${commentID}
-            WITH m.report AS u
-            MERGE (n)-[r:REPORTED]->(m)
-            ON CREATE SET m.report = m.report+1
-            RETURN m.report-u AS a, m.report AS result`
-            const writeResult = await executeCypherQuery(writeQuery)
-            let res1 = writeResult.records.map((_rec) => _rec.get('a'))
-            let result = writeResult.records.map((_rec) => _rec.get('result'))
+            MATCH (n)-[r:REPORTED]->(m)
+            RETURN COUNT(r) AS c`
+            const Result1 = await executeCypherQuery(Query1)
+            const res1 = Result1.records.map((_rec) => _rec.get('c'))
             if (res1 == 0) {
+                const writeQuery = `MATCH (n:User) WHERE n.email = "${email}"
+                                    MATCH (m:Comment) WHERE m.commentID = ${commentID}
+                                    CREATE (n)-[r:REPORTED]->(m)
+                                    SET m.report = m.report+1 RETURN r`
+                const writeResult = await executeCypherQuery(writeQuery)
+                writeResult.records.map((_rec) => _rec.get('r'))
+                return {
+                    status: true,
+                    data: { commentID },
+                    message: 'Comment reported successfully',
+                }
+            } else {
                 return {
                     status: false,
-                    data: { result },
+                    data: { commentID },
                     message: 'An user cannot report twice',
                 }
             }
-            else {
-                if (result >= 10) {
-                    const Query = `MATCH (s:Comment) WHERE s.commentID = ${commentID} 
-                MATCH (m:Comment)-[:TO]-(s)
-                DETACH DELETE (m);
-                MATCH (n:Comment) WHERE n.commentID = ${commentID} 
-                DETACH DELETE (n)
-                RETURN -1 as res`
-                    const result = await executeCypherQuery(Query)
-                    let res = result.records.map((_rec) => _rec.get('res'))
-                    return {
-                        status: true,
-                        data: { res },
-                        message: 'Comment deleted successfully',
-                    }
-                }
-                else {
-                    return {
-                        status: true,
-                        data: { result },
-                        message: 'Reported Successfully',
-                    }
-                }
-            }
-
         } catch (error) {
             return {
                 status: false,
@@ -133,6 +118,9 @@ module.exports = {
             }
         }
     },
+
+
+
 
     getCommentsModel: async ({ title }) => {
         try {
@@ -179,8 +167,6 @@ module.exports = {
             
             */
 
-
-
             const writeResult = await executeCypherQuery(writeQuery)
 
             const comments = writeResult.records.map((_rec) => _rec.get('c'))
@@ -198,5 +184,5 @@ module.exports = {
                 message: `Something went wrong: ${error.message}`,
             }
         }
-    }
+    },
 }
