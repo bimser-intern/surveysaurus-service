@@ -343,16 +343,15 @@ const main = async () => {
 
     // await updatePass({ oldPassword: 'Felat123.', newPassword: 'felat' })
 
-    // await addComment({
-    //     title: 'bestie',
-    //     comment: 'Süper bir anket',
-    //     parentID: 7,
+     //await addComment({
+     //    title: 'fhklşm',
+     //    comment: 'garip bir anket',
     // })
 
-    // await getComments({ title: 'bestie' })
+    //await getComments({ title: 'fhklşm' })
 
-    //await upVote({ commentID: 8 })
-    await report({ commentID: 2 })
+    await upVote({ commentID: 9 })
+    //await report({ commentID: 2 })
 }
 main()
     .then(() => {

@@ -9,7 +9,7 @@ module.exports = {
                 writeQuery = `MATCH (n:User) WHERE n.email = "${email}"
                 MATCH (m:Survey) WHERE m.title = "${title}"
                 MATCH (p:CommentCounter)
-                CREATE (s:Comment{commentID:p.count+1, comment:"${comment}",time: datetime.realtime('+03:00'),upvote:0,report:0, surveytitle: "${tittle}" })
+                CREATE (s:Comment{commentID:p.count+1, comment:"${comment}",time: datetime.realtime('+03:00'),upvote:0,report:0, surveytitle: "${title}" })
                 CREATE (n)-[:WRITED]->(s)
                 CREATE (s)-[r:TO]->(m)
                 return p.count as result
