@@ -1,6 +1,7 @@
 const { executeCypherQuery } = require('../helper/db/dbHelper')
 
 module.exports = {
+    /*
     addComment: async ({ email, title, comment, parentID }) => {
         try {
             let writeQuery = ''
@@ -28,9 +29,51 @@ module.exports = {
 
             const writeResult = await executeCypherQuery(writeQuery)
 
-            const [commentID] = writeResult.records.map((_rec) =>
-                _rec.get('result')
-            )
+            const [commentID] = writeResult.records.map((_rec) => _rec.get('result'))
+
+            return {
+                status: true,
+                data: { commentID },
+                message: 'Added Comment Successfully',
+            }
+        } catch (error) {
+            ////////////////////////////////////////////
+            return {
+                status: false,
+                data: {},
+                message: `Something went wrong: ${error.message}`,
+            }
+        }
+    },
+*/
+    addComment: async ({ email, title, comment, parentID }) => {
+        try {
+            let writeQuery
+            if (parentID == undefined) {
+                writeQuery = `MATCH(u:User) WHERE u.email = "${email}"
+            MATCH (s:Survey) WHERE s.title = "${title}"
+            MATCH (p:CommentCounter)
+            CREATE (c:Comment{commentID:p.count+1, comment:"${comment}",time: datetime.realtime('+03:00'),upvote:0,report:0, surveytitle: "${title}", path : [p.count+1]}) 
+            SET p.count = p.count+1
+            CREATE (c)-[r:TO]->(s)
+            CREATE (u)-[t:WRITED]->(c)
+            RETURN c.commentID as result`
+            } else {
+                writeQuery = `MATCH(u:User) WHERE u.email = "${email}"
+                MATCH (s:Survey) WHERE s.title = "${title}"
+                MATCH (c1: Comment) WHERE c1.commentID = ${parentID}
+                MATCH (p:CommentCounter)
+                CREATE (c:Comment{commentID:p.count+1, comment:"${comment}",time: datetime.realtime('+03:00'),upvote:0,report:0, surveytitle: "${title}", 
+                path : c1.path + (p.count+1)}) 
+                SET p.count = p.count+1
+                CREATE (c)-[r:TO]->(c1)
+                CREATE (u)-[t:WRITED]->(c)
+                RETURN c.commentID as result`
+            }
+
+            const writeResult = await executeCypherQuery(writeQuery)
+
+            const [commentID] = writeResult.records.map((_rec) => _rec.get('result'))
 
             return {
                 status: true,
@@ -119,63 +162,17 @@ module.exports = {
         }
     },
 
-
-
-
     getCommentsModel: async ({ title }) => {
         try {
-            let writeQuery = ''
-
-            writeQuery = `MATCH (s:Survey)-[:WRITED]->(c:Comment) WHERE s.title = "${title}" RETURN c`
-
+            let writeQuery = `MATCH (s:Survey) WHERE s.title = "${title}"
+            MATCH (c:Comment) WHERE c.surveytitle = "${title}"
+            RETURN c ORDER BY c.commentID`
             const writeResult = await executeCypherQuery(writeQuery)
-
-            const comments = writeResult.records.map((_rec) => _rec.get('c'))
-
-            console.log(comments)
+            const comments = writeResult.records.map((_rec) => _rec.get('c').properties)
             return {
                 status: true,
                 data: { comments },
-                message: 'Report Successfully',
-            }
-        } catch (error) {
-            return {
-                status: false,
-                data: {},
-                message: `Something went wrong: ${error.message}`,
-            }
-        }
-    },
-
-    getCommentModelV2: async ({ email, title }) => {
-        try {
-            writeQuery = `MATCH (s:Survey) WHERE s.title = "${title}"
-                          MATCH (u:User) WHERE u.email = "${email}"
-
-                        
-            
-            
-            
-            
-            `
-
-            /*
-                        MATCH (s:Survey) WHERE s.title = "bestie"
-                        MATCH (u:User) WHERE u.email = "test1@gmail.com"
-                        MATCH (c1:Comment) WHERE c1.surveytitle = "bestie" 
-                        RETURN c1
-            
-            */
-
-            const writeResult = await executeCypherQuery(writeQuery)
-
-            const comments = writeResult.records.map((_rec) => _rec.get('c'))
-
-            console.log(comments)
-            return {
-                status: true,
-                data: { comments },
-                message: 'Report Successfully',
+                message: 'Comments returned successfully',
             }
         } catch (error) {
             return {

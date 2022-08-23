@@ -69,14 +69,14 @@ const reportController = asyncHandler(async (req, res, next) => {
 const getCommentsController = asyncHandler(async (req, res, next) => {
     const { title } = req.body
     try {
-        const { status, data, message } = await getCommentsModel({
+        const { status, data:{comments}, message } = await getCommentsModel({
             title,
         })
 
         if (!status) return next(new CustomError(message))
 
         res.status(200).json({
-            data: { data },
+            data: { comments },
             message: 'Report Succesfully',
         })
     } catch (error) {
