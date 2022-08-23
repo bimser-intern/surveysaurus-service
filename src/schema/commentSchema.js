@@ -12,4 +12,20 @@ module.exports = {
         params: Yup.object({}),
     }),
 
+    upVoteSchema: Yup.object({
+        body: Yup.object({
+            commentID: Yup.number(),
+        }),
+        query: Yup.object({}),
+        params: Yup.object({}),
+    }),
+
+    reportSchema: Yup.object({
+        body: Yup.object({
+            commentID: Yup.number(),
+        }),
+        query: Yup.object({}),
+        params: Yup.object({}),
+    }),
+
 }
