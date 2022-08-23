@@ -226,6 +226,7 @@ GET /api/survey/getSurvey
 ```
 
 Bu endpoint spesifik bir anketi almak için kullanılır
+Geri dönüşteki counts dizisi seçeneklerin yüzdelik oranlarını verir
 
 **Parameters:**
 
@@ -239,8 +240,9 @@ Bu endpoint spesifik bir anketi almak için kullanılır
 {
     data: {
         question: 'Which animals do you like most',
-        choice: [['Gold Fish', 'Dog', 'Cat']],
-        counts: [[1, 1, 0]],
+        choice: ['Gold Fish', 'Dog', 'Cat'],
+        counts: [2,2,1],
+        percent: [40,40,20]
     },
     message: 'Anket alındı',
 }
@@ -305,7 +307,7 @@ Bu endpoint Country listesi almak için kullanılır
 ### **List Cities**
 
 ```
-GET /api/user/countries
+POST /api/user/cities
 ```
 
 Bu endpoint City listesi almak için kullanılır
@@ -321,7 +323,7 @@ Bu endpoint City listesi almak için kullanılır
 ```javascript
  {
     data: {
-        surveys: [
+        cities: [
             'Adana',
             'Zonguldak',
             'Yozgat',
@@ -337,3 +339,226 @@ Bu endpoint City listesi almak için kullanılır
 
 
 ```
+
+### **Get User Info**
+
+```
+GET /api/profile/getinfo
+```
+
+Bu endpoint kullanıcının bilgilerini almak için kullanılır
+
+**Parameters:**
+
+| Veri adı | Veri tipi | Zorunluluk | Açıklama                                                 |
+| -------- | --------- | ---------- | -------------------------------------------------------- |
+|          |           |            | Bu endpointte parametre ve header vermenize gerek yoktur |
+
+**Response:**
+
+```javascript
+;[
+    {
+        data: {
+            email: 'example@example.com',
+            name: 'NAME SURNAME',
+            gender: 'Male',
+            city: 'CITY NAME',
+            country: 'COUNTRY',
+        },
+        message: 'Kullanıcı bilgileri gönderildi',
+    },
+]
+```
+
+---
+
+### **Update User Info**
+
+```
+POST /api/profile/update
+```
+
+Bu endpoint kullanıcı bilgilerinin güncellenmesi için kullanılır
+
+**Parameters:**
+
+| Veri adı | Veri tipi | Zorunluluk | Açıklama                                                 |
+| -------- | --------- | ---------- | -------------------------------------------------------- |
+| userName | STRING    | EVET       | bu veri eşşiz (unique) olmalıdır                         |
+| email    | STRING    | EVET       | email formatında olmalı örn. example@example.com         |
+| city     | STRING    | EVET       |                                                          |
+| country  | STRING    | EVET       |                                                          |
+
+**Response:**
+
+```javascript
+;[
+    {
+        accessToken: 'ey.....',
+        data: {},
+        message: 'User informations updated successfully',
+    },
+]
+```
+
+---
+
+### **Update User Password**
+
+```
+PUT /api/profile/updatepassword
+```
+
+Bu endpoint kullanıcı parolasının güncellenmesi için kullanılır
+
+**Parameters:**
+
+| Veri adı | Veri tipi | Zorunluluk | Açıklama                                                 |
+| -------- | --------- | ---------- | -------------------------------------------------------- |
+| oldPassword | STRING    | EVET       | Kullanıcının eski parolası gereklidir |
+| newPassword | STRING    | EVET       | Bir büyük harf, bir küçük harf, bir nokta tavsiye edilir |
+
+**Response:**
+
+```javascript
+;[
+    {
+        data: {},
+        message: 'Password updated',
+    },
+]
+```
+
+---
+
+### **Get Comments**
+
+```
+GET /api/comment/get
+```
+
+Bu endpoint spesifik bir anketin yorumlarını çekmek için kullanılır
+
+**Parameters:**
+
+| Veri adı | Veri tipi | Zorunluluk | Açıklama                 |
+| -------- | --------- | ---------- | ------------------------ |
+| title    | STRING    | EVET       | Anket başlığı gönderilir |
+
+**Response:**
+
+```javascript
+;[
+    {
+        data: {
+            comments: [
+                {
+                    commentID: 476,
+                    writer: 'Kullanıcı Adı',
+                    comment: 'Bu kullanıcının yorumudur',
+                    upvote: 10,
+                    report: 2,
+                },
+                {
+                    commentID: 477,
+                    writer: 'İkinci kullanıcı adı',
+                    comment: 'Bu başka kullanıcının yorumudur',
+                    upvote: 2,
+                    report: 5,
+                },
+            ],
+        },
+        message: 'Yorumlar döndürüldü',
+    },
+]
+```
+
+---
+
+### **Add Comment**
+
+```
+POST /api/comment/add
+```
+
+Bu endpoint ankete yorum yapmak için kullanılır
+
+**Parameters:**
+
+| Veri adı | Veri tipi | Zorunluluk | Açıklama                                         |
+| -------- | --------- | ---------- | ------------------------------------------------ |
+| title    | STRING    | EVET       | Anket başlığı gereklidir                         |
+| comment  | STRING    | EVET       | Yorum metni gereklidir                           |
+| parentID | NUMBER    | HAYIR      | Yoruma yorum yapılacaksa bu parametre gönderilir |
+
+**Response:**
+
+```javascript
+;[
+    {
+        data: {
+            commentID: 478,
+        },
+        message: 'Yorum eklendi',
+    },
+]
+```
+
+---
+
+### **Upvote Comment**
+
+```
+POST /api/comment/upvote
+```
+
+Bu endpoint yoruma oy vermek için kullanılır
+
+**Parameters:**
+
+| Veri adı  | Veri tipi | Zorunluluk | Açıklama               |
+| --------- | --------- | ---------- | ---------------------- |
+| commentID | NUMBER    | EVET       | Yorum ID'si gereklidir |
+
+**Response:**
+
+```javascript
+;[
+    {
+        data: {},
+        message: 'Upvote eklendi',
+    },
+]
+```
+
+---
+
+### **Report Comment**
+
+```
+POST /api/comment/report
+```
+
+Bu endpoint yorumu şikayet etmek için kullanılır
+
+**Parameters:**
+
+| Veri adı  | Veri tipi | Zorunluluk | Açıklama               |
+| --------- | --------- | ---------- | ---------------------- |
+| commentID | NUMBER    | EVET       | Yorum ID'si gereklidir |
+
+**Response:**
+
+```javascript
+;[
+    {
+        data: {
+            reportcount: 5, // 10
+        },
+        message: 'Report eklendi', // 'Yorum silindi',
+    },
+]
+```
+
+---

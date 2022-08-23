@@ -1,0 +1,10 @@
+***  Get Survey üzerinde döndürülen sonuca yüzdelik eklenecek
+
+
+#76  ankete verilen oranların görüntülenmesi 
+     Bu görev için GetSurvey kullanılabilir
+
+
+
+
+

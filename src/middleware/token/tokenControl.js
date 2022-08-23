@@ -6,6 +6,7 @@ const {
 } = require('../../helper/token/token')
 
 const jwt = require('jsonwebtoken')
+const { getUserInfoModel } = require('../../model/Profile')
 
 module.exports = {
     tokenControl: asyncHandler((req, res, next) => {
@@ -29,5 +30,14 @@ module.exports = {
             }
             return next()
         })
+    }),
+    userControl: asyncHandler((req, res, next) => {
+        const { status, data, message } = getUserInfoModel({
+            email: req.user.email,
+        })
+
+        if (!status) return next(new CustomError('User is not found!', 401))
+
+        return next()
     }),
 }
