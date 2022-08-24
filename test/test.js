@@ -13,9 +13,7 @@ const signIn = async ({ email, password }) => {
 
     const data = res.data
 
-    console.log(
-        '=============================================================='
-    )
+    console.log('==============================================================')
     console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
 
     if (res.status === 200) {
@@ -40,9 +38,7 @@ const isFilledTest = async ({ title }) => {
 
     const data = res.data
 
-    console.log(
-        '=============================================================='
-    )
+    console.log('==============================================================')
     console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
 }
 
@@ -57,9 +53,7 @@ const signUp = async ({ userName, email, password, gender, city, country }) => {
         city,
         country,
     })
-    console.log(
-        '=============================================================='
-    )
+    console.log('==============================================================')
 
     console.log(`Status : ${res.status} \n data : ${res.data}`)
 }
@@ -80,9 +74,7 @@ const createSurvey = async ({ title, question, choice }) => {
             },
         }
     )
-    console.log(
-        '=============================================================='
-    )
+    console.log('==============================================================')
     console.log(`Status : ${res.status} \n data : ${res.data}`)
 }
 
@@ -101,9 +93,7 @@ const fillSurvey = async ({ title, answer }) => {
             },
         }
     )
-    console.log(
-        '=============================================================='
-    )
+    console.log('==============================================================')
     console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
 }
 
@@ -134,9 +124,7 @@ const getCountries = async () => {
 
         {}
     )
-    console.log(
-        '=============================================================='
-    )
+    console.log('==============================================================')
     console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
 }
 
@@ -151,9 +139,7 @@ const getCities = async ({ country }) => {
 
         {}
     )
-    console.log(
-        '=============================================================='
-    )
+    console.log('==============================================================')
     console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
 }
 
@@ -163,9 +149,7 @@ const getSurvey = async ({ title }) => {
     const res = await axios.post('http://localhost:5500/api/survey/getSurvey', {
         title,
     })
-    console.log(
-        '=============================================================='
-    )
+    console.log('==============================================================')
     console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
 }
 
@@ -177,9 +161,7 @@ const getUserInfo = async ({}) => {
             authorization: user.token,
         },
     })
-    console.log(
-        '=============================================================='
-    )
+    console.log('==============================================================')
     console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
 }
 
@@ -201,9 +183,7 @@ const updateUserInfo = async ({ userName, email, city, country }) => {
             },
         }
     )
-    console.log(
-        '=============================================================='
-    )
+    console.log('==============================================================')
     console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
 
     if (res.data.accessToken) {
@@ -226,9 +206,7 @@ const updatePass = async ({ oldPassword, newPassword }) => {
             },
         }
     )
-    console.log(
-        '=============================================================='
-    )
+    console.log('==============================================================')
     console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
 }
 
@@ -248,21 +226,77 @@ const addComment = async ({ title, comment, parentID }) => {
             },
         }
     )
-    console.log(
-        '=============================================================='
-    )
+    console.log('==============================================================')
     console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
 }
 
 // ----------------------------------------------------------------------
 
-const main = async () => {
-    await signIn({ email: 'test1@gmail.com', password: 'felat' })
+const upVote = async ({ commentID }) => {
+    const res = await axios.post(
+        'http://localhost:5500/api/comment/upVote',
+        {
+            commentID,
+        },
+        {
+            headers: {
+                authorization: user.token,
+            },
+        }
+    )
+    console.log('==============================================================')
+    console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
+}
 
-    // await createSurvey({
-    //     question: 'En sevilen şehir hangisidir? ',
-    //     title: 'En Çok Sevilen Şehirler',
-    //     choice: ['Ankara', 'İstanbul', 'İzmir'],
+// ----------------------------------------------------------------------
+
+const report = async ({ commentID }) => {
+    const res = await axios.post(
+        'http://localhost:5500/api/comment/report',
+        {
+            commentID,
+        },
+        {
+            headers: {
+                authorization: user.token,
+            },
+        }
+    )
+    console.log('==============================================================')
+    console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
+}
+
+// ----------------------------------------------------------------------
+
+const getComments = async ({ title }) => {
+    const res = await axios.post(
+        'http://localhost:5500/api/comment/comments',
+        {
+            title,
+        },
+        {
+            headers: {
+                authorization: user.token,
+            },
+        }
+    )
+    console.log('==============================================================')
+    console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
+}
+
+function sleep(n) {
+    return new Promise((resolve) => setTimeout(resolve, n))
+}
+
+// ----------------------------------------------------------------------
+
+const main = async () => {
+    await signIn({ email: 'aliveli@gmail.com', password: 'AliVeli123.' })
+    //await sleep(2000)
+    //await createSurvey({
+    //    question: 'denemeee',
+    //     title: 'denemeee',
+    //     choice: ['şık1', 'şık2', 'şık3'],
     // })
     // await getSurveys({})
     //await getSamples({})
@@ -282,12 +316,18 @@ const main = async () => {
     // await getUserInfo({})
 
     // await updatePass({ oldPassword: 'Felat123.', newPassword: 'felat' })
-
+    /*
     await addComment({
-        title: 'bestie',
-        comment: 'Süper bir anket',
-        parentID: 7,
+        title: 'fhklşm',
+        comment: 'alt yorum 3',
+        parentID: 17
     })
+*/
+
+    await getComments({ title: 'fhklşm' })
+
+    //await upVote({ commentID: 9 })
+    //await report({ commentID: 2 })
 }
 main()
     .then(() => {

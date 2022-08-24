@@ -6,7 +6,10 @@ const {
     sampleSurveySchema,
     getSurveySchema,
 } = require('../schema/SurveySchema')
-const { tokenControl } = require('../middleware/token/tokenControl')
+const {
+    tokenControl,
+    userControl,
+} = require('../middleware/token/tokenControl')
 const {
     createSurvey,
     fillSurvey,
@@ -18,19 +21,23 @@ const { isFilledSchema } = require('../schema/SurveySchema')
 
 router.post(
     '/createSurvey',
-    [tokenControl, yupValidate(createSurveySchema)],
+    [tokenControl, userControl, yupValidate(createSurveySchema)],
     createSurvey
 )
 
 router.post(
     '/fillSurvey',
-    [tokenControl, yupValidate(fillSurveySchema)],
+    [tokenControl, userControl, yupValidate(fillSurveySchema)],
     fillSurvey
 )
 
 router.get('/sample', [yupValidate(sampleSurveySchema)], sampleSurvey)
 
-router.post('/isfilled', [tokenControl, yupValidate(isFilledSchema)], isfilled)
+router.post(
+    '/isfilled',
+    [tokenControl, userControl, yupValidate(isFilledSchema)],
+    isfilled
+)
 
 router.post('/getSurvey', [yupValidate(getSurveySchema)], getSurvey)
 

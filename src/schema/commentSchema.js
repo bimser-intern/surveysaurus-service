@@ -1,7 +1,6 @@
 const Yup = require('yup')
 
 module.exports = {
-  
     addCommentSchema: Yup.object({
         body: Yup.object({
             title: Yup.string().required(),
@@ -12,4 +11,27 @@ module.exports = {
         params: Yup.object({}),
     }),
 
+    upVoteSchema: Yup.object({
+        body: Yup.object({
+            commentID: Yup.number(),
+        }),
+        query: Yup.object({}),
+        params: Yup.object({}),
+    }),
+
+    reportSchema: Yup.object({
+        body: Yup.object({
+            commentID: Yup.number(),
+        }),
+        query: Yup.object({}),
+        params: Yup.object({}),
+    }),
+
+    getCommentsSchema: Yup.object({
+        body: Yup.object({
+            title: Yup.string().required('Title is required'),
+        }),
+        query: Yup.object({}),
+        params: Yup.object({}),
+    }),
 }
