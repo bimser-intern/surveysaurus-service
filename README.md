@@ -454,19 +454,26 @@ Bu endpoint spesifik bir anketin yorumlarını çekmek için kullanılır
         data: {
             comments: [
                 {
-                    commentID: 476,
-                    writer: 'Kullanıcı Adı',
-                    comment: 'Bu kullanıcının yorumudur',
-                    upvote: 10,
-                    report: 2,
+                    report: 0,
+                    commentID: 4,
+                    comment: 'Süper bir anket',
+                    surveytitle: 'bestie',
+                    time: {
+                        year: 2022,
+                        month: 8,
+                        day: 23,
+                        hour: 0,
+                        minute: 15,
+                        second: 45,
+                        nanosecond: 275127000,
+                        timeZoneOffsetSeconds: 10800,
+                    },
+                    upvote: 0,
+                    author: 'felat',
                 },
-                {
-                    commentID: 477,
-                    writer: 'İkinci kullanıcı adı',
-                    comment: 'Bu başka kullanıcının yorumudur',
-                    upvote: 2,
-                    report: 5,
-                },
+                .
+                .
+                .
             ],
         },
         message: 'Yorumlar döndürüldü',

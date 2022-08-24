@@ -1,51 +1,6 @@
 const { executeCypherQuery } = require('../helper/db/dbHelper')
 
 module.exports = {
-    /*
-    addComment: async ({ email, title, comment, parentID }) => {
-        try {
-            let writeQuery = ''
-
-            if (parentID === undefined) {
-                writeQuery = `MATCH (n:User) WHERE n.email = "${email}"
-                MATCH (m:Survey) WHERE m.title = "${title}"
-                MATCH (p:CommentCounter)
-                CREATE (s:Comment{commentID:p.count+1, comment:"${comment}",time: datetime.realtime('+03:00'),upvote:0,report:0, surveytitle: "${title}" })
-                CREATE (n)-[:WRITED]->(s)
-                CREATE (s)-[r:TO]->(m)
-                return p.count as result
-                `
-            } else {
-                writeQuery = `MATCH (n:User) WHERE n.email = "${email}"
-            MATCH (k:Comment) WHERE k.commentID=${parentID}
-            MATCH (p:CommentCounter)
-            CREATE (s:Comment{commentID:p.count+1, comment:"${comment}",time: datetime.realtime('+03:00'),upvote:0,report:0, surveytitle: "${title}"})
-            SET p.count = p.count+1
-            CREATE (n)-[:WRITED]->(s)
-            CREATE (s)-[r:TO]->(k)
-            return p.count as result
-            `
-            }
-
-            const writeResult = await executeCypherQuery(writeQuery)
-
-            const [commentID] = writeResult.records.map((_rec) => _rec.get('result'))
-
-            return {
-                status: true,
-                data: { commentID },
-                message: 'Added Comment Successfully',
-            }
-        } catch (error) {
-            ////////////////////////////////////////////
-            return {
-                status: false,
-                data: {},
-                message: `Something went wrong: ${error.message}`,
-            }
-        }
-    },
-*/
     addComment: async ({ email, title, comment, parentID }) => {
         try {
             let writeQuery
@@ -53,7 +8,7 @@ module.exports = {
                 writeQuery = `MATCH(u:User) WHERE u.email = "${email}"
             MATCH (s:Survey) WHERE s.title = "${title}"
             MATCH (p:CommentCounter)
-            CREATE (c:Comment{commentID:p.count+1, comment:"${comment}",time: datetime.realtime('+03:00'),upvote:0,report:0, surveytitle: "${title}", path : [p.count+1]}) 
+            CREATE (c:Comment{commentID:p.count+1, comment:"${comment}",time: datetime.realtime('+03:00'),upvote:0,report:0, path : [p.count+1]}) 
             SET p.count = p.count+1
             CREATE (c)-[r:TO]->(s)
             CREATE (u)-[t:WRITED]->(c)
@@ -63,7 +18,7 @@ module.exports = {
                 MATCH (s:Survey) WHERE s.title = "${title}"
                 MATCH (c1: Comment) WHERE c1.commentID = ${parentID}
                 MATCH (p:CommentCounter)
-                CREATE (c:Comment{commentID:p.count+1, comment:"${comment}",time: datetime.realtime('+03:00'),upvote:0,report:0, surveytitle: "${title}", 
+                CREATE (c:Comment{commentID:p.count+1, comment:"${comment}",time: datetime.realtime('+03:00'),upvote:0,report:0, 
                 path : c1.path + (p.count+1)}) 
                 SET p.count = p.count+1
                 CREATE (c)-[r:TO]->(c1)
@@ -167,9 +122,19 @@ module.exports = {
             let writeQuery = `MATCH (s:Survey) WHERE s.title = "${title}"
             MATCH (c:Comment)-[:TO]-(s)
             MATCH (u:User)-[:WRITED]->(c)
-            RETURN u.name AS u, c.comment AS c, c.commentID AS id, c.report AS r, c.time AS t, c.upvote AS up ORDER BY c.commentID DESC`
+            RETURN u.name AS u, c ORDER BY c.commentID DESC`
             const writeResult = await executeCypherQuery(writeQuery)
+            const names = writeResult.records.map((_rec) => _rec.get('u'))
+            const comment = writeResult.records.map((_rec) => _rec.get('c').properties)
+            const comments = comment.map((_comment,idx)=>({..._comment,author : names[idx]}))
+            /*
+            const names = writeResult.records.map((_rec) => _rec.get('u').properties)
             const comments = writeResult.records.map((_rec) => _rec.get('c').properties)
+            const commentIDs = writeResult.records.map((_rec) => _rec.get('id').properties)
+            const times = writeResult.records.map((_rec) => _rec.get('t').properties)
+            const upvotes = writeResult.records.map((_rec) => _rec.get('up').properties)
+            const reports = writeResult.records.map((_rec) => _rec.get('r').properties)
+            */
             return {
                 status: true,
                 data: { comments },

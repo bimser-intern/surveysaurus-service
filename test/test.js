@@ -324,7 +324,7 @@ const main = async () => {
     })
 */
 
-    await getComments({ title: 'fhklşm' })
+    await getComments({ title: 'bestie' })
 
     //await upVote({ commentID: 9 })
     //await report({ commentID: 2 })
