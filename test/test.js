@@ -284,6 +284,17 @@ const getComments = async ({ title }) => {
     console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
 }
 
+const getMap = async ({ title }) => {
+    const res = await axios.post(
+        'http://localhost:5500/api/map/getmap',
+        {
+            title,
+        }
+    )
+    console.log('==============================================================')
+    console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
+}
+
 function sleep(n) {
     return new Promise((resolve) => setTimeout(resolve, n))
 }
@@ -291,8 +302,9 @@ function sleep(n) {
 // ----------------------------------------------------------------------
 
 const main = async () => {
-    await signIn({ email: 'aliveli@gmail.com', password: 'AliVeli123.' })
+    //await signIn({ email: 'apertek1@gmail.com', password: '12345678' })
     //await sleep(2000)
+    //await signUp({userName:"Sefa Can Pehlivan", email:"sefacan779@gmail.com", password:"sefa123",gender:"Male",city:"Bangkok",country:"Thailand"});
     //await createSurvey({
     //    question: 'denemeee',
     //     title: 'denemeee',
@@ -300,9 +312,8 @@ const main = async () => {
     // })
     // await getSurveys({})
     //await getSamples({})
-    //await signUp();
     // await isFilledTest({ title: 'yemek anketi' })
-    // await fillSurvey({ title: 'animaldoyoulike', answer: 1 })
+    //await fillSurvey({ title: 'animaldoyoulike', answer: 0 })
     //await getSurvey({ title: 'animaldoyoulike' })
     // await getCountries()
     // await getCities({ country: 'Turkey' })
@@ -324,10 +335,11 @@ const main = async () => {
     })
 */
 
-    await getComments({ title: 'bestie' })
+    //await getComments({ title: 'bestie' })
 
     //await upVote({ commentID: 9 })
     //await report({ commentID: 2 })
+    await getMap({title:"karadenizin en güzel şehirleri"})
 }
 main()
     .then(() => {
