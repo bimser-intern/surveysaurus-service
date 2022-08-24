@@ -165,8 +165,9 @@ module.exports = {
     getCommentsModel: async ({ title }) => {
         try {
             let writeQuery = `MATCH (s:Survey) WHERE s.title = "${title}"
-            MATCH (c:Comment) WHERE c.surveytitle = "${title}"
-            RETURN c ORDER BY c.commentID`
+            MATCH (c:Comment)-[:TO]-(s)
+            MATCH (u:User)-[:WRITED]->(c)
+            RETURN u.name AS u, c.comment AS c, c.commentID AS id, c.report AS r, c.time AS t, c.upvote AS up ORDER BY c.commentID DESC`
             const writeResult = await executeCypherQuery(writeQuery)
             const comments = writeResult.records.map((_rec) => _rec.get('c').properties)
             return {

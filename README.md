@@ -383,12 +383,12 @@ Bu endpoint kullanıcı bilgilerinin güncellenmesi için kullanılır
 
 **Parameters:**
 
-| Veri adı | Veri tipi | Zorunluluk | Açıklama                                                 |
-| -------- | --------- | ---------- | -------------------------------------------------------- |
-| userName | STRING    | EVET       | bu veri eşşiz (unique) olmalıdır                         |
-| email    | STRING    | EVET       | email formatında olmalı örn. example@example.com         |
-| city     | STRING    | EVET       |                                                          |
-| country  | STRING    | EVET       |                                                          |
+| Veri adı | Veri tipi | Zorunluluk | Açıklama                                         |
+| -------- | --------- | ---------- | ------------------------------------------------ |
+| userName | STRING    | EVET       | bu veri eşşiz (unique) olmalıdır                 |
+| email    | STRING    | EVET       | email formatında olmalı örn. example@example.com |
+| city     | STRING    | EVET       |                                                  |
+| country  | STRING    | EVET       |                                                  |
 
 **Response:**
 
@@ -414,9 +414,9 @@ Bu endpoint kullanıcı parolasının güncellenmesi için kullanılır
 
 **Parameters:**
 
-| Veri adı | Veri tipi | Zorunluluk | Açıklama                                                 |
-| -------- | --------- | ---------- | -------------------------------------------------------- |
-| oldPassword | STRING    | EVET       | Kullanıcının eski parolası gereklidir |
+| Veri adı    | Veri tipi | Zorunluluk | Açıklama                                                 |
+| ----------- | --------- | ---------- | -------------------------------------------------------- |
+| oldPassword | STRING    | EVET       | Kullanıcının eski parolası gereklidir                    |
 | newPassword | STRING    | EVET       | Bir büyük harf, bir küçük harf, bir nokta tavsiye edilir |
 
 **Response:**
@@ -435,7 +435,7 @@ Bu endpoint kullanıcı parolasının güncellenmesi için kullanılır
 ### **Get Comments**
 
 ```
-GET /api/comment/get
+GET /api/comment/comments
 ```
 
 Bu endpoint spesifik bir anketin yorumlarını çekmek için kullanılır
@@ -555,7 +555,7 @@ reportcount değeri için -1 alınması yorumun 10 report'a ulaştığını ve s
 ;[
     {
         data: {
-            reportcount: 5, // -1 
+            reportcount: 5, // -1
         },
         message: 'Reported successfully', // 'Comment deleted',
     },
