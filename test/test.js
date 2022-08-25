@@ -1,4 +1,5 @@
 const { default: axios } = require('axios')
+const { parseAsync } = require('json2csv')
 
 const user = {
     token: '',
@@ -285,12 +286,17 @@ const getComments = async ({ title }) => {
 }
 
 const getMap = async ({ title }) => {
-    const res = await axios.post(
-        'http://localhost:5500/api/map/getmap',
-        {
-            title,
-        }
-    )
+    const res = await axios.get('http://localhost:5500/api/map/getmap?title=karadenizin%20en%20g%C3%BCzel%20%C5%9Fehirleri', {
+        title,
+    })
+    console.log(res.data.data)
+    const fields = ["countryname","countrycode","choicein","ch"]
+    const opts = { fields }
+    parseAsync(res.data.data.data, opts)
+       .then((csv) => {const formatted = csv.replace(/["']/g, "")
+       console.log(formatted)})
+        .catch((err) => console.error(err))
+    
     console.log('==============================================================')
     console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
 }
@@ -339,7 +345,7 @@ const main = async () => {
 
     //await upVote({ commentID: 9 })
     //await report({ commentID: 2 })
-    await getMap({title:"karadenizin en güzel şehirleri"})
+    await getMap({ title: 'karadenizin en güzel şehirleri' })
 }
 main()
     .then(() => {
