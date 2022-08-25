@@ -77,7 +77,7 @@ const getCommentsController = asyncHandler(async (req, res, next) => {
 
         res.status(200).json({
             data: { comments },
-            message: 'Report Succesfully',
+            message: 'Comments listed successfully',
         })
     } catch (error) {
         return next(new CustomError(error.message))

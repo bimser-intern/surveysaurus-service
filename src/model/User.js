@@ -4,14 +4,7 @@ module.exports = {
     /*
    Create user model
   */
-    createUser: async ({
-        userName,
-        email,
-        gender,
-        country,
-        city,
-        password,
-    }) => {
+    createUser: async ({ userName, email, gender, country, city, password }) => {
         try {
             let a = false
             const Query = `MATCH(n:User ) WHERE n.email = '${email}' OR n.name = '${userName}' RETURN count(n) AS result`
@@ -23,8 +16,9 @@ module.exports = {
             })
 
             if (a == 0) {
-                const writeQuery = `CREATE (p1:User {name: '${userName}', email: '${email}', gender: '${gender}', country: '${country}', city: '${city}', password: '${password}'})
-                              RETURN p1`
+                const writeQuery = `MATCH (m:Country) WHERE m.name = '${country}'
+                CREATE (p1:User {name: '${userName}', email: '${email}', gender: '${gender}', country: '${country}', city: '${city}', password: '${password}'})
+                CREATE (p1)-[:LIVES]->(m) RETURN p1`
                 const writeResult = await executeCypherQuery(writeQuery)
 
                 for (const record of writeResult.records) {
@@ -110,9 +104,7 @@ module.exports = {
             const writeQuery = `MATCH (n:User)-[:CREATED]->(m:Survey) WHERE n.email = "${email}"  RETURN m`
             const writeResult = await executeCypherQuery(writeQuery)
 
-            const surveys = writeResult.records.map(
-                (_record) => _record.get('m').properties
-            )
+            const surveys = writeResult.records.map((_record) => _record.get('m').properties)
 
             return {
                 status: true,
@@ -133,9 +125,7 @@ module.exports = {
         try {
             const writeQuery = `MATCH (n:Country) RETURN n.name AS m`
             const writeResult = await executeCypherQuery(writeQuery)
-            const countries = writeResult.records.map((_record) =>
-                _record.get('m')
-            )
+            const countries = writeResult.records.map((_record) => _record.get('m'))
             return {
                 status: true,
                 data: { countries },
@@ -155,9 +145,7 @@ module.exports = {
         try {
             const writeQuery = `MATCH (a)-[r:LOCATED]->(n) WHERE n.name ="${country}" RETURN a`
             const writeResult = await executeCypherQuery(writeQuery)
-            const cities = writeResult.records.map(
-                (_record) => _record.get('a').properties.name
-            )
+            const cities = writeResult.records.map((_record) => _record.get('a').properties.name)
             return {
                 status: true,
                 data: { cities },

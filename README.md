@@ -383,12 +383,12 @@ Bu endpoint kullanıcı bilgilerinin güncellenmesi için kullanılır
 
 **Parameters:**
 
-| Veri adı | Veri tipi | Zorunluluk | Açıklama                                                 |
-| -------- | --------- | ---------- | -------------------------------------------------------- |
-| userName | STRING    | EVET       | bu veri eşşiz (unique) olmalıdır                         |
-| email    | STRING    | EVET       | email formatında olmalı örn. example@example.com         |
-| city     | STRING    | EVET       |                                                          |
-| country  | STRING    | EVET       |                                                          |
+| Veri adı | Veri tipi | Zorunluluk | Açıklama                                         |
+| -------- | --------- | ---------- | ------------------------------------------------ |
+| userName | STRING    | EVET       | bu veri eşşiz (unique) olmalıdır                 |
+| email    | STRING    | EVET       | email formatında olmalı örn. example@example.com |
+| city     | STRING    | EVET       |                                                  |
+| country  | STRING    | EVET       |                                                  |
 
 **Response:**
 
@@ -414,9 +414,9 @@ Bu endpoint kullanıcı parolasının güncellenmesi için kullanılır
 
 **Parameters:**
 
-| Veri adı | Veri tipi | Zorunluluk | Açıklama                                                 |
-| -------- | --------- | ---------- | -------------------------------------------------------- |
-| oldPassword | STRING    | EVET       | Kullanıcının eski parolası gereklidir |
+| Veri adı    | Veri tipi | Zorunluluk | Açıklama                                                 |
+| ----------- | --------- | ---------- | -------------------------------------------------------- |
+| oldPassword | STRING    | EVET       | Kullanıcının eski parolası gereklidir                    |
 | newPassword | STRING    | EVET       | Bir büyük harf, bir küçük harf, bir nokta tavsiye edilir |
 
 **Response:**
@@ -435,7 +435,7 @@ Bu endpoint kullanıcı parolasının güncellenmesi için kullanılır
 ### **Get Comments**
 
 ```
-GET /api/comment/get
+GET /api/comment/comments
 ```
 
 Bu endpoint spesifik bir anketin yorumlarını çekmek için kullanılır
@@ -454,19 +454,26 @@ Bu endpoint spesifik bir anketin yorumlarını çekmek için kullanılır
         data: {
             comments: [
                 {
-                    commentID: 476,
-                    writer: 'Kullanıcı Adı',
-                    comment: 'Bu kullanıcının yorumudur',
-                    upvote: 10,
-                    report: 2,
+                    report: 0,
+                    commentID: 4,
+                    comment: 'Süper bir anket',
+                    surveytitle: 'bestie',
+                    time: {
+                        year: 2022,
+                        month: 8,
+                        day: 23,
+                        hour: 0,
+                        minute: 15,
+                        second: 45,
+                        nanosecond: 275127000,
+                        timeZoneOffsetSeconds: 10800,
+                    },
+                    upvote: 0,
+                    author: 'felat',
                 },
-                {
-                    commentID: 477,
-                    writer: 'İkinci kullanıcı adı',
-                    comment: 'Bu başka kullanıcının yorumudur',
-                    upvote: 2,
-                    report: 5,
-                },
+                .
+                .
+                .
             ],
         },
         message: 'Yorumlar döndürüldü',
@@ -532,8 +539,6 @@ Bu endpoint yoruma oy vermek için kullanılır
 ]
 ```
 
----
-
 ### **Report Comment**
 
 ```
@@ -555,11 +560,44 @@ reportcount değeri için -1 alınması yorumun 10 report'a ulaştığını ve s
 ;[
     {
         data: {
-            reportcount: 5, // -1 
+            reportcount: 5, // -1
         },
         message: 'Reported successfully', // 'Comment deleted',
     },
 ]
 ```
 
----
+### **Get Map**
+
+```
+POST /api/map/getmap
+```
+
+Bu endpoint anket ile ilgili geomap istatistiklerini kullanıcıya verir.
+
+**Parameters:**
+
+| Veri adı | Veri tipi | Zorunluluk | Açıklama                   |
+| -------- | --------- | ---------- | -------------------------- |
+| title    | STRING    | EVET       | Anket başlığı verilmelidir |
+
+**Response:**
+
+```javascript
+{
+  data: {
+    csv: 'countryname,countrycode,bestindex,bestchoice\n' +
+      'Turkey,TUR,0,samsun\n' +
+      'Germany,DEU,1,trabzon\n' +
+      'France,FRA,2,rize'
+  },
+  message: 'Map Values listed successfully'
+}
+```
+
+#### Not
+
+Bu endpoint sonucunu en güzel kullanmak için d3 kütüphanesini kullanmalısınız.
+
+-   [Ana kütüphane linki](https://www.npmjs.com/package/d3)
+-   [Component kütüphane linki](https://d3-graph-gallery.com/index.html)
