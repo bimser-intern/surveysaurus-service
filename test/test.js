@@ -5,7 +5,7 @@ const user = {
     token: '',
 }
 
-// ----------------------------------------------------------------------
+// ---------------------------------------------------------------------
 const signIn = async ({ email, password }) => {
     const res = await axios.post('http://localhost:5500/api/user/login', {
         email,
@@ -22,7 +22,7 @@ const signIn = async ({ email, password }) => {
     }
 }
 
-// ----------------------------------------------------------------------
+// ---------------------------------------------------------------------
 
 const isFilledTest = async ({ title }) => {
     const res = await axios.post(
