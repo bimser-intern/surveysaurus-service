@@ -539,8 +539,6 @@ Bu endpoint yoruma oy vermek için kullanılır
 ]
 ```
 
----
-
 ### **Report Comment**
 
 ```
@@ -569,4 +567,37 @@ reportcount değeri için -1 alınması yorumun 10 report'a ulaştığını ve s
 ]
 ```
 
----
+### **Get Map**
+
+```
+POST /api/map/getmap
+```
+
+Bu endpoint anket ile ilgili geomap istatistiklerini kullanıcıya verir.
+
+**Parameters:**
+
+| Veri adı | Veri tipi | Zorunluluk | Açıklama                   |
+| -------- | --------- | ---------- | -------------------------- |
+| title    | STRING    | EVET       | Anket başlığı verilmelidir |
+
+**Response:**
+
+```javascript
+{
+  data: {
+    csv: 'countryname,countrycode,bestindex,bestchoice\n' +
+      'Turkey,TUR,0,samsun\n' +
+      'Germany,DEU,1,trabzon\n' +
+      'France,FRA,2,rize'
+  },
+  message: 'Map Values listed successfully'
+}
+```
+
+#### Not
+
+Bu endpoint sonucunu en güzel kullanmak için d3 kütüphanesini kullanmalısınız.
+
+-   [Ana kütüphane linki](https://www.npmjs.com/package/d3)
+-   [Component kütüphane linki](https://d3-graph-gallery.com/index.html)

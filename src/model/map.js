@@ -6,13 +6,12 @@ const returnMapModel = async ({ title }) => {
         RETURN collect(DISTINCT c.code) AS a`
         const getCountriesResult = await executeCypherQuery(getCountriesQuery)
         const countries = getCountriesResult.records.map((_rec) => _rec.get('a'))[0]
-        console.log(countries)
-        const values = ''
-        //let responseArr = []
+
         let countrynames = []
         let countrycodes = []
         let choiceindex = []
         let choices = []
+
         for (i = 0; i < countries.length; i++) {
             const getValuesQuery = `MATCH (u:User)-[r1:LIVES]->(c:Country) WHERE c.code = "${countries[i]}"
             MATCH (u)-[r:VOTED]->(s:Survey) WHERE s.title = "${title}"
@@ -37,21 +36,18 @@ const returnMapModel = async ({ title }) => {
             choiceindex.push(maxitem)
             choices.push(choice)
         }
-        const data = countrynames.map((countryname,index)=>({countryname,countrycode:countrycodes[index],choicein:choiceindex[index],ch : choices[index]})) 
+        const data = countrynames.map((countryname, index) => ({
+            countryname,
+            countrycode: countrycodes[index],
+            bestindex: choiceindex[index],
+            bestchoice: choices[index],
+        }))
 
-/*
-        return {
-            status: true,
-            data: { mapValue: responseArr },
-            message: `Başarılı`,
-        }
- */       
         return {
             status: true,
             data: { data },
             message: `Başarılı`,
         }
-        
     } catch (error) {
         return {
             status: false,

@@ -126,7 +126,7 @@ module.exports = {
             const writeResult = await executeCypherQuery(writeQuery)
             const names = writeResult.records.map((_rec) => _rec.get('u'))
             const comment = writeResult.records.map((_rec) => _rec.get('c').properties)
-            const comments = comment.map((_comment,idx)=>({..._comment,author : names[idx]}))
+            const comments = comment.map((_comment, idx) => ({ ..._comment, author: names[idx] }))
             /*
             const names = writeResult.records.map((_rec) => _rec.get('u').properties)
             const comments = writeResult.records.map((_rec) => _rec.get('c').properties)
