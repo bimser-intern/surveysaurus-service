@@ -8,7 +8,7 @@ module.exports = {
                 writeQuery = `MATCH(u:User) WHERE u.email = "${email}"
             MATCH (s:Survey) WHERE s.title = "${title}"
             MATCH (p:CommentCounter)
-            CREATE (c:Comment{commentID:p.count+1, comment:"${comment}",time: datetime.realtime('+03:00'),upvote:0,report:0, path : [p.count+1]}) 
+            CREATE (c:Comment{commentID:p.count+1, comment:"${comment}",time: datetime.realtime('+03:00'),upvote:0,report:0, surveytitle: "${title}", path : [p.count+1]}) 
             SET p.count = p.count+1
             CREATE (c)-[r:TO]->(s)
             CREATE (u)-[t:WRITED]->(c)
@@ -18,7 +18,7 @@ module.exports = {
                 MATCH (s:Survey) WHERE s.title = "${title}"
                 MATCH (c1: Comment) WHERE c1.commentID = ${parentID}
                 MATCH (p:CommentCounter)
-                CREATE (c:Comment{commentID:p.count+1, comment:"${comment}",time: datetime.realtime('+03:00'),upvote:0,report:0, 
+                CREATE (c:Comment{commentID:p.count+1, comment:"${comment}",time: datetime.realtime('+03:00'),upvote:0,report:0, surveytitle: "${title}",  
                 path : c1.path + (p.count+1)}) 
                 SET p.count = p.count+1
                 CREATE (c)-[r:TO]->(c1)
@@ -119,8 +119,7 @@ module.exports = {
 
     getCommentsModel: async ({ title }) => {
         try {
-            let writeQuery = `MATCH (s:Survey) WHERE s.title = "${title}"
-            MATCH (c:Comment)-[:TO]-(s)
+            let writeQuery= `MATCH (c:Comment) WHERE c.surveytitle = "${title}"
             MATCH (u:User)-[:WRITED]->(c)
             RETURN u.name AS u, c ORDER BY c.commentID DESC`
             const writeResult = await executeCypherQuery(writeQuery)

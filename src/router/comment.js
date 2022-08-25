@@ -13,6 +13,6 @@ router.post('/upVote', [tokenControl, userControl, yupValidate(upVoteSchema)], u
 
 router.post('/report', [tokenControl, userControl, yupValidate(reportSchema)], reportController)
 
-router.post('/comments', [tokenControl, userControl, yupValidate(getCommentsSchema)], getCommentsController)
+router.post('/comments', [yupValidate(getCommentsSchema)], getCommentsController)
 
 module.exports = router
