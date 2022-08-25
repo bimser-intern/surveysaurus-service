@@ -4,10 +4,7 @@ const customErrorHandler = require('./middleware/error/customErrorHandler')
 const { connectDB } = require('./helper/db/dbHelper')
 const { configSchema } = require('./schema/configSchema')
 const cors = require('cors')
-
-// uncomment when development stage
-// const dotenv = require('dotenv')
-// dotenv.config()
+const { PORT } = require('./config')
 
 configSchema
     .validate(process.env)
@@ -35,8 +32,6 @@ configSchema
         // routing
         app.use('/api', router)
         app.use(customErrorHandler)
-
-        const PORT = process.env.PORT
 
         app.listen(PORT, () => {
             console.log(`${PORT} is listened successfuly`)

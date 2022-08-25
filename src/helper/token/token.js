@@ -1,8 +1,7 @@
 const jwt = require('jsonwebtoken')
+const { JWT_EXPIRE, JWT_SECRET_KEY } = require('../../config')
 
 const generateJWTFromUser = (user) => {
-    const { JWT_SECRET_KEY, JWT_EXPIRE } = process.env
-
     const payload = {
         email: user.email,
         exp: Date.now() + parseInt(JWT_EXPIRE),
@@ -18,8 +17,6 @@ module.exports = {
     getTokenFromCookie: (req) => req.headers.authorization,
 
     sendJWTUser: (user, res, message) => {
-        const { JWT_EXPIRE } = process.env
-
         const token = generateJWTFromUser(user)
 
         res.status(200)
