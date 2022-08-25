@@ -4,8 +4,8 @@
     "description": "This project includes Rest API service for surveysaurus. Also project is powered by Bimser Tech.",
     "main": "src/index.js",
     "scripts": {
-        "dev": "nodemon src/index.js",
-        "start": "node src/index.js",
+        "dev": "NODE_ENV=dev nodemon src/index.js",
+        "start": "NODE_ENV=prod node src/index.js",
         "format:check": "prettier --check .",
         "format:write": "prettier --write .",
         "lint:check": "eslint .",

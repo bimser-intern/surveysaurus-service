@@ -1,24 +1,14 @@
 const asyncHandler = require('express-async-handler')
 const CustomError = require('../../helper/error/CustomError')
-const {
-    isTokenIncluded,
-    getTokenFromCookie,
-} = require('../../helper/token/token')
+const { isTokenIncluded, getTokenFromCookie } = require('../../helper/token/token')
 
 const jwt = require('jsonwebtoken')
 const { getUserInfoModel } = require('../../model/Profile')
+const { JWT_SECRET_KEY } = require('../../config')
 
 module.exports = {
     tokenControl: asyncHandler((req, res, next) => {
-        const { JWT_SECRET_KEY } = process.env
-
-        if (isTokenIncluded(req))
-            return next(
-                new CustomError(
-                    'You are not authorized, Please login an account',
-                    401
-                )
-            )
+        if (isTokenIncluded(req)) return next(new CustomError('You are not authorized, Please login an account', 401))
 
         const token = getTokenFromCookie(req)
 
