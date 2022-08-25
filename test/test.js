@@ -270,17 +270,9 @@ const report = async ({ commentID }) => {
 // ----------------------------------------------------------------------
 
 const getComments = async ({ title }) => {
-    const res = await axios.post(
-        'http://localhost:5500/api/comment/comments',
-        {
-            title,
-        },
-        {
-            headers: {
-                authorization: user.token,
-            },
-        }
-    )
+    const res = await axios.post('http://localhost:5500/api/comment/comments', {
+        title,
+    })
     console.log('==============================================================')
     console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
 }
@@ -301,7 +293,7 @@ function sleep(n) {
 // ----------------------------------------------------------------------
 
 const main = async () => {
-    //await signIn({ email: 'apertek1@gmail.com', password: '12345678' })
+    await signIn({ email: 'denemea@gmail.com', password: 'as45687dgfs.A' })
     //await sleep(2000)
     //await signUp({userName:"Sefa Can Pehlivan", email:"sefacan779@gmail.com", password:"sefa123",gender:"Male",city:"Bangkok",country:"Thailand"});
     //await createSurvey({
@@ -313,7 +305,7 @@ const main = async () => {
     //await getSamples({})
     // await isFilledTest({ title: 'yemek anketi' })
     //await fillSurvey({ title: 'animaldoyoulike', answer: 0 })
-    //await getSurvey({ title: 'animaldoyoulike' })
+    //await getSurvey({ title: 'karadenizin en güzel şehirleri' })
     // await getCountries()
     // await getCities({ country: 'Turkey' })
     // await getUserInfo({})
@@ -326,19 +318,19 @@ const main = async () => {
     // await getUserInfo({})
 
     // await updatePass({ oldPassword: 'Felat123.', newPassword: 'felat' })
-    /*
+   /* 
     await addComment({
-        title: 'fhklşm',
-        comment: 'alt yorum 3',
-        parentID: 17
+        title: 'karadenizin en güzel şehirleri',
+        comment: 'değerli yorumun için teşekkürler',
+        parentID: 53
     })
 */
 
-    //await getComments({ title: 'bestie' })
+    await getComments({ title: 'karadenizin en güzel şehirleri' })
 
     //await upVote({ commentID: 9 })
     //await report({ commentID: 2 })
-    await getMap({ title: 'karadenizin en güzel şehirleri' })
+    //await getMap({ title: 'karadenizin en güzel şehirleri' })
 }
 main()
     .then(() => {

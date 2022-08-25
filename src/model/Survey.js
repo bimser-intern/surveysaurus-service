@@ -63,23 +63,20 @@ const getSurveyModel = async ({ title }) => {
         const writeQuery = `MATCH (n:Survey) WHERE n.title = "${title}" RETURN n.question AS q, n.choices AS ch, n.counts AS count, COUNT(n) as c`
         const writeResult = await executeCypherQuery(writeQuery)
 
-        if (!writeResult.records[0]?.get("c")) throw Error('Survey is not found!')
+        if (!writeResult.records[0]?.get('c')) throw Error('Survey is not found!')
 
         const question = writeResult.records[0]?.get('q')
 
-        const choice = writeResult.records.map((_record) => _record.get('ch'))[0]            
-        const counts = writeResult.records.map((_record) =>
-            _record.get('count')
-        )[0]
-        let percent=[];
-        const sumcounts = counts.reduce((partialSum, a) => partialSum + a, 0);
-        for(let i = 0; i<counts.length;i++){
-            console.log("For içerisinde: "+i)
-            percent[i] = (counts[i]/sumcounts)*100
+        const choice = writeResult.records.map((_record) => _record.get('ch'))[0]
+        const counts = writeResult.records.map((_record) => _record.get('count'))[0]
+        let percent = []
+        const sumcounts = counts.reduce((partialSum, a) => partialSum + a, 0)
+        for (let i = 0; i < counts.length; i++) {
+            percent[i] = Math.round((counts[i] / sumcounts) * 1000) / 10
         }
         return {
             status: true,
-            data: { question, choice, counts, percent},
+            data: { question, choice, counts, percent },
             message: 'Survey sended successfully',
         }
     } catch (error) {
@@ -147,9 +144,7 @@ const sampleSurveyModel = async ({ count }) => {
         const writeResult = await executeCypherQuery(writeQuery)
 
         console.log(writeResult)
-        const surveys = writeResult.records.map(
-            (_record) => _record.get('n').properties
-        )
+        const surveys = writeResult.records.map((_record) => _record.get('n').properties)
 
         return {
             status: true,
