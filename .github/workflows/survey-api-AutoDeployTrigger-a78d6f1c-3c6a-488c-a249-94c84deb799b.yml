@@ -8,7 +8,7 @@ on:
       [ master ]
     paths:
     - '**'
-    - '.github/workflows/survey-api-AutoDeployTrigger-0d669484-0652-4479-b0e9-6746262fcaee.yml'
+    - '.github/workflows/survey-api-AutoDeployTrigger-a78d6f1c-3c6a-488c-a249-94c84deb799b.yml'
 
   # Allow mannually trigger 
   workflow_dispatch:      
