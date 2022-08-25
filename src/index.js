@@ -6,8 +6,8 @@ const { configSchema } = require('./schema/configSchema')
 const cors = require('cors')
 
 // uncomment when development stage
-const dotenv = require('dotenv')
-dotenv.config()
+// const dotenv = require('dotenv')
+// dotenv.config()
 
 configSchema
     .validate(process.env)
