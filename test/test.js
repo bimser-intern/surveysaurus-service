@@ -316,7 +316,7 @@ const deleteComment = async ({ commentID }) => {
 // ----------------------------------------------------------------------
 
 const main = async () => {
-    //await signIn({ email: 'eray@gmail.com', password: 'Eray123.' })
+    await signIn({ email: 'eray@gmail.com', password: 'Eray123.' })
     //await sleep(2000)
     //await signUp({userName:"Deneme", email:"nacnof@hizli.email", password:"deneme",gender:"Male",city:"Bangkok",country:"Thailand"});
     //await createSurvey({
@@ -326,7 +326,7 @@ const main = async () => {
     // })
     //await getSurveys({})
     //await getSamples({})
-    // await isFilledTest({ title: 'yemek anketi' })
+    //await isFilledTest({ title: 'yemek anketi' })
     //await fillSurvey({ title: 'animaldoyoulike', answer: 0 })
     //await getSurvey({ title: 'yemek anketi' })
     // await getCountries()
@@ -352,7 +352,7 @@ const main = async () => {
     //await report({ commentID: 154 })
     //await getMap({ title: 'karadenizin en güzel şehirleri' })
     //await deleteComment({commentID:128 })
-    //await getComments({ title: 'animaldoyoulike' })
+    await getComments({ title: 'animaldoyoulike' })
 }
 main()
     .then(() => {

@@ -138,6 +138,8 @@ Bu endpoint kişinin kendi anketlerini göstermek için kullanılmalı
 | -------- | --------- | ---------- | -------------------------------------------- |
 |          |           |            | Not : Bu bölümde parametreye ihtiyaç yoktur. |
 
+**Not: Header'da token gönderilmelidir.**
+
 **Response:**
 
 ```javascript
@@ -157,6 +159,7 @@ Bu endpoint kişinin kendi anketlerini göstermek için kullanılmalı
                     45,
                     223
                 ]
+                percent: [30.9, 11.6, 57.5]
             },
             {
                 title: "En Güzel Yemek Yarışması",
@@ -171,6 +174,7 @@ Bu endpoint kişinin kendi anketlerini göstermek için kullanılmalı
                     5123,
                     12414
                 ]
+                percent: [6.6, 27.3, 66.1]
             }
         ]
     },
@@ -202,15 +206,17 @@ Bu endpoint Homepage sayfasında örnek gösterilecek anketleri almak için kull
         surveys: [
             {
                 question: "En sevilen şehir hangisidir? ",
-                counts: [0, 0, 0],
+                counts: [3, 2, 5],
                 title: "En Çok Sevilen Şehirler",
                 choices: ["Ankara", "İstanbul", "İzmir"]
+                percent: [30.0, 20.0, 50.0]
             },
             {
                 question: "hangi yemeği daha çok seviyorunuz",
-                counts: [0, 1],
+                counts: [1, 2],
                 choices: ["pizza", "lahmacun"],
                 title: "yemek anketi"
+                percent: [33.3, 66.7]
             }
         ]
     },
@@ -245,6 +251,32 @@ Geri dönüşteki counts dizisi seçeneklerin yüzdelik oranlarını verir
         "percent": [40,40,20]
     },
     message: 'Anket alındı',
+}
+
+```
+
+### **Is Filled**
+
+```
+POST /api/survey/isfilled
+```
+
+Bu endpoint bir anketin kullanıcı tarafından doldurulup doldurulmadığını, doldurulduysa da verilen cevabı görmek için kullanılır. Get Survey ile birlikte kullanıcı giriş yaptıysa kullanılması tavsiye edilir.
+
+**Parameters:**
+
+| Veri adı | Veri tipi | Zorunluluk | Açıklama                                    |
+| -------- | --------- | ---------- | ------------------------------------------- |
+| title    | STRING    | EVET       | Sistemde kayıtlı bir anketin title'ı olmalı |
+
+**Not: Header'da token gönderilmelidir.**
+
+**Response:**
+
+```javascript
+{
+    data:{"choice":0},
+    message:"Anket daha önce işaretlenmiş"
 }
 
 ```
@@ -325,12 +357,14 @@ Bu endpoint City listesi almak için kullanılır
     data: {
         cities: [
             'Adana',
-            'Zonguldak',
-            'Yozgat',
-            'Yalova',
-            'Ağrı',
-            'Afyonkarahisar',
             'Adıyaman',
+            'Afyonkarahisar',
+            'Ağrı',
+            .
+            .
+            'Yalova',
+            'Yozgat',
+            'Zonguldak',
             ...
         ],
     },
@@ -438,13 +472,15 @@ Bu endpoint kullanıcı parolasının güncellenmesi için kullanılır
 GET /api/comment/comments
 ```
 
-Bu endpoint spesifik bir anketin yorumlarını çekmek için kullanılır
+Bu endpoint spesifik bir anketin yorumlarını çekmek için kullanılır. Token gönderilirse kullanıcının silebileceği yorumlarda deletable değeri true döner.
 
 **Parameters:**
 
 | Veri adı | Veri tipi | Zorunluluk | Açıklama                 |
 | -------- | --------- | ---------- | ------------------------ |
 | title    | STRING    | EVET       | Anket başlığı gönderilir |
+
+**Not: Header'da token gönderilebilir (isteğe bağlıdır)**
 
 **Response:**
 
@@ -470,6 +506,7 @@ Bu endpoint spesifik bir anketin yorumlarını çekmek için kullanılır
                     },
                     upvote: 0,
                     author: 'felat',
+                    deletable:true
                 },
                 .
                 .
@@ -508,6 +545,37 @@ Bu endpoint ankete yorum yapmak için kullanılır
             commentID: 478,
         },
         message: 'Yorum eklendi',
+    },
+]
+```
+
+---
+
+### **Delete Comment**
+
+```
+POST /api/comment/delete
+```
+
+Bu endpoint yorum silmek için kullanılır.
+Yorum sadece yorum sahibinin token'ı gönderilirse silinir.
+Bir yorumun silinmesi halinde o yorumun tüm alt yorumları da silinir.
+
+**Parameters:**
+
+| Veri adı  | Veri tipi | Zorunluluk | Açıklama                                        |
+| --------- | --------- | ---------- | ----------------------------------------------- |
+| commentID | NUMBER    | EVET       | Silinecek yorumun comment ID değeri gereklidir. |
+
+**NOT:Header'da token gönderilmesi gereklidir.**
+
+**Response:**
+
+```javascript
+;[
+    {
+        data: {},
+        message: 'Comment deleted successfully',
     },
 ]
 ```
@@ -601,4 +669,3 @@ Bu endpoint sonucunu en güzel kullanmak için d3 kütüphanesini kullanmalısı
 
 -   [Ana kütüphane linki](https://www.npmjs.com/package/d3)
 -   [Component kütüphane linki](https://d3-graph-gallery.com/index.html)
-
