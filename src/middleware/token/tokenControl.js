@@ -20,6 +20,26 @@ module.exports = {
             return next()
         })
     }),
+    tokenDecoder: asyncHandler((req, res, next) => {
+        if (!isTokenIncluded(req)) {
+            const token = getTokenFromCookie(req)
+
+            try {
+                const decoded = jwt.verify(token, JWT_SECRET_KEY)
+
+                req.user = {
+                    email: decoded.email,
+                }
+            } catch (error) {
+                console.log(err)
+            }
+        }
+        else{
+            req.user = {}
+        }       
+
+        return next()
+    }),
     userControl: asyncHandler(async (req, res, next) => {
         const { status, data, message } = await getUserInfoModel({
             email: req.user.email,

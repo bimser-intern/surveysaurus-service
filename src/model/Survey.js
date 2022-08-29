@@ -142,10 +142,17 @@ const sampleSurveyModel = async ({ count }) => {
 
         const writeQuery = `MATCH (n:Survey) RETURN n ORDER BY toInteger(apoc.coll.sum(n.counts)) DESC LIMIT ${count}`
         const writeResult = await executeCypherQuery(writeQuery)
-
-        console.log(writeResult)
-        const surveys = writeResult.records.map((_record) => _record.get('n').properties)
-
+        const surveys2 = writeResult.records.map((_record) => _record.get('n').properties)
+        const counts = surveys2[0].counts
+        let percent = []
+        const sumcounts = counts.reduce((partialSum, a) => partialSum + a, 0)
+        for (let i = 0; i < counts.length; i++) {
+            percent[i] = Math.round((counts[i] / sumcounts) * 1000) / 10
+        }
+        const surveys = surveys2.map((_surveys2) => ({
+            ..._surveys2,
+            percent: percent,
+        }))
         return {
             status: true,
             data: { surveys },

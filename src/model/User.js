@@ -104,8 +104,17 @@ module.exports = {
             const writeQuery = `MATCH (n:User)-[:CREATED]->(m:Survey) WHERE n.email = "${email}"  RETURN m`
             const writeResult = await executeCypherQuery(writeQuery)
 
-            const surveys = writeResult.records.map((_record) => _record.get('m').properties)
-
+            const surveys2 = writeResult.records.map((_record) => _record.get('m').properties)
+            const counts = surveys2[0].counts
+            let percent = []
+            const sumcounts = counts.reduce((partialSum, a) => partialSum + a, 0)
+            for (let i = 0; i < counts.length; i++) {
+                percent[i] = Math.round((counts[i] / sumcounts) * 1000) / 10
+            }
+            const surveys = surveys2.map((_surveys2) => ({
+                ..._surveys2,
+                percent: percent,
+            }))
             return {
                 status: true,
                 data: { surveys },
@@ -123,7 +132,7 @@ module.exports = {
 
     countryListModel: async ({}) => {
         try {
-            const writeQuery = `MATCH (n:Country) RETURN n.name AS m`
+            const writeQuery = `MATCH (n:Country) RETURN n.name AS m ORDER BY m`
             const writeResult = await executeCypherQuery(writeQuery)
             const countries = writeResult.records.map((_record) => _record.get('m'))
             return {
@@ -143,7 +152,7 @@ module.exports = {
 
     cityListModel: async ({ country }) => {
         try {
-            const writeQuery = `MATCH (a)-[r:LOCATED]->(n) WHERE n.name ="${country}" RETURN a`
+            const writeQuery = `MATCH (a)-[r:LOCATED]->(n) WHERE n.name ="${country}" RETURN a ORDER BY a.name`
             const writeResult = await executeCypherQuery(writeQuery)
             const cities = writeResult.records.map((_record) => _record.get('a').properties.name)
             return {
