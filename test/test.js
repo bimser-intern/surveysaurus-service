@@ -316,19 +316,19 @@ const deleteComment = async ({ commentID }) => {
 // ----------------------------------------------------------------------
 
 const main = async () => {
-    //await signIn({ email: 'nacnof@hizli.email', password: 'Nacnof.123' })
+    //await signIn({ email: 'eray@gmail.com', password: 'Eray123.' })
     //await sleep(2000)
-    //await signUp({userName:"Sefa Can Pehlivan", email:"sefacan779@gmail.com", password:"sefa123",gender:"Male",city:"Bangkok",country:"Thailand"});
+    //await signUp({userName:"Deneme", email:"nacnof@hizli.email", password:"deneme",gender:"Male",city:"Bangkok",country:"Thailand"});
     //await createSurvey({
     //    question: 'yeni anket denemesi',
     //     title: 'ankeet',
     //   choice: ['şık1', 'şık2', 'şık3'],
     // })
-    // await getSurveys({})
+    //await getSurveys({})
     //await getSamples({})
     // await isFilledTest({ title: 'yemek anketi' })
     //await fillSurvey({ title: 'animaldoyoulike', answer: 0 })
-    //await getSurvey({ title: 'karadenizin en güzel şehirleri' })
+    //await getSurvey({ title: 'yemek anketi' })
     // await getCountries()
     // await getCities({ country: 'Turkey' })
     // await getUserInfo({})

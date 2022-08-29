@@ -104,8 +104,17 @@ module.exports = {
             const writeQuery = `MATCH (n:User)-[:CREATED]->(m:Survey) WHERE n.email = "${email}"  RETURN m`
             const writeResult = await executeCypherQuery(writeQuery)
 
-            const surveys = writeResult.records.map((_record) => _record.get('m').properties)
-
+            const surveys2 = writeResult.records.map((_record) => _record.get('m').properties)
+            const counts = surveys2[0].counts
+            let percent = []
+            const sumcounts = counts.reduce((partialSum, a) => partialSum + a, 0)
+            for (let i = 0; i < counts.length; i++) {
+                percent[i] = Math.round((counts[i] / sumcounts) * 1000) / 10
+            }
+            const surveys = surveys2.map((_surveys2) => ({
+                ..._surveys2,
+                percent: percent,
+            }))
             return {
                 status: true,
                 data: { surveys },
