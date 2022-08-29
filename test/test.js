@@ -272,6 +272,11 @@ const report = async ({ commentID }) => {
 const getComments = async ({ title }) => {
     const res = await axios.post('http://localhost:5500/api/comment/comments', {
         title,
+    },
+    {
+        headers: {
+            authorization: user.token,
+        },
     })
     console.log('==============================================================')
     console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
@@ -292,14 +297,32 @@ function sleep(n) {
 
 // ----------------------------------------------------------------------
 
+const deleteComment = async ({ commentID }) => {
+    const res = await axios.post(
+        'http://localhost:5500/api/comment/delete',
+        {
+            commentID,
+        },
+        {
+            headers: {
+                authorization: user.token,
+            },
+        }
+    )
+    console.log('==============================================================')
+    console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
+}
+
+// ----------------------------------------------------------------------
+
 const main = async () => {
-    await signIn({ email: 'denemea@gmail.com', password: 'as45687dgfs.A' })
+    //await signIn({ email: 'nacnof@hizli.email', password: 'Nacnof.123' })
     //await sleep(2000)
     //await signUp({userName:"Sefa Can Pehlivan", email:"sefacan779@gmail.com", password:"sefa123",gender:"Male",city:"Bangkok",country:"Thailand"});
     //await createSurvey({
-    //    question: 'denemeee',
-    //     title: 'denemeee',
-    //     choice: ['şık1', 'şık2', 'şık3'],
+    //    question: 'yeni anket denemesi',
+    //     title: 'ankeet',
+    //   choice: ['şık1', 'şık2', 'şık3'],
     // })
     // await getSurveys({})
     //await getSamples({})
@@ -318,19 +341,18 @@ const main = async () => {
     // await getUserInfo({})
 
     // await updatePass({ oldPassword: 'Felat123.', newPassword: 'felat' })
-   /* 
+    /*
     await addComment({
-        title: 'karadenizin en güzel şehirleri',
-        comment: 'değerli yorumun için teşekkürler',
-        parentID: 53
+        title: 'ankeet',
+        comment: 'bu bir yorum denemesidir',
+        //parentID: 53
     })
 */
-
-    await getComments({ title: 'karadenizin en güzel şehirleri' })
-
     //await upVote({ commentID: 9 })
-    //await report({ commentID: 2 })
+    //await report({ commentID: 154 })
     //await getMap({ title: 'karadenizin en güzel şehirleri' })
+    //await deleteComment({commentID:128 })
+    //await getComments({ title: 'animaldoyoulike' })
 }
 main()
     .then(() => {

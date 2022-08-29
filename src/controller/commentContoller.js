@@ -5,6 +5,7 @@ const {
     upVote,
     report,
     getCommentsModel,
+    deleteCommentsModel,
 } = require('../model/Comment')
 
 const addCommentController = asyncHandler(async (req, res, next) => {
@@ -70,6 +71,7 @@ const getCommentsController = asyncHandler(async (req, res, next) => {
     const { title } = req.body
     try {
         const { status, data:{comments}, message } = await getCommentsModel({
+            email : req.user?.email ? req.user.email : undefined,
             title,
         })
 
@@ -84,9 +86,29 @@ const getCommentsController = asyncHandler(async (req, res, next) => {
     }
 })
 
+const deleteController = asyncHandler(async (req, res, next) => {
+    const { commentID } = req.body
+    try {
+        const { status, data, message } = await deleteCommentsModel({
+            email: req.user.email,
+            commentID,
+        })
+
+        if (!status) return next(new CustomError(message))
+
+        res.status(200).json({
+            data: {},
+            message,
+        })
+    } catch (error) {
+        return next(new CustomError(error.message))
+    }
+})
+
 module.exports = {
     addCommentController,
     upVoteController,
     reportController,
     getCommentsController,
+    deleteController,
 }

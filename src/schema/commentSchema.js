@@ -34,4 +34,12 @@ module.exports = {
         query: Yup.object({}),
         params: Yup.object({}),
     }),
+
+    deleteSchema: Yup.object({
+        body: Yup.object({
+            commentID: Yup.number(),
+        }),
+        query: Yup.object({}),
+        params: Yup.object({}),
+    }),
 }

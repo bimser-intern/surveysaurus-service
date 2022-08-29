@@ -123,7 +123,7 @@ module.exports = {
 
     countryListModel: async ({}) => {
         try {
-            const writeQuery = `MATCH (n:Country) RETURN n.name AS m`
+            const writeQuery = `MATCH (n:Country) RETURN n.name AS m ORDER BY m`
             const writeResult = await executeCypherQuery(writeQuery)
             const countries = writeResult.records.map((_record) => _record.get('m'))
             return {
@@ -143,7 +143,7 @@ module.exports = {
 
     cityListModel: async ({ country }) => {
         try {
-            const writeQuery = `MATCH (a)-[r:LOCATED]->(n) WHERE n.name ="${country}" RETURN a`
+            const writeQuery = `MATCH (a)-[r:LOCATED]->(n) WHERE n.name ="${country}" RETURN a ORDER BY a.name`
             const writeResult = await executeCypherQuery(writeQuery)
             const cities = writeResult.records.map((_record) => _record.get('a').properties.name)
             return {

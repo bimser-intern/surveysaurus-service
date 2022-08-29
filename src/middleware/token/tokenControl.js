@@ -34,8 +34,9 @@ module.exports = {
                 console.log(err)
             }
         }
-
-        req.user = {}
+        else{
+            req.user = {}
+        }       
 
         return next()
     }),
