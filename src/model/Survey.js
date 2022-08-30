@@ -25,10 +25,10 @@ const createSurveyModel = async ({
                 counts.push(0)
             }
             const writeQuery = `MATCH (m:User) WHERE m.email= "${email}"
-            CREATE (p1:Survey {title: "${title}", question: "${question}",  choices : ${JSON.stringify(
-                choice
-            )}, counts : ${JSON.stringify(counts)}})
+            CREATE (p1:Survey {title: "${title}", question: "${question}",  choices : ${JSON.stringify(choice)},
+            counts : ${JSON.stringify(counts)}})
             CREATE (m)-[r:CREATED]->(p1)
+            SET m.point = m.point +20
             RETURN p1`
             const writeResult = await executeCypherQuery(writeQuery)
 
@@ -107,6 +107,11 @@ const fillSurveyModel = async ({
             MATCH (m:Survey) WHERE m.title = "${title}"
             CREATE (n)-[r:VOTED {choice : ${answer}}]->(m)
             SET m.counts = apoc.coll.set(m.counts,${answer},m.counts[${answer}]+1)
+            WITH m,n,r
+            MATCH (u:User)-[:CREATED]->(m) SET u.point = u.point + 5
+            WITH m,n,r,u
+            MATCH ()-[v:VOTED]->(m) WITH floor(COUNT(v)/100)-floor((COUNT(v)-1)/100) AS v, m, u
+            SET u.point = u.point+v*50
             RETURN m.title as d`
         } else {
             writeQuery = `MATCH (a:User)-[b:VOTED]->(c:Survey) WHERE a.email="${email}" AND c.title = "${title}"

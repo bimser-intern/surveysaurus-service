@@ -2,12 +2,16 @@ const { executeCypherQuery } = require('../helper/db/dbHelper')
 
 const getUserInfoModel = async ({ email }) => {
     try {
-        const writeQuery = `MATCH (n:User) WHERE n.email = "${email}" RETURN n.name AS na, n.gender AS g, n.city AS ci, n.country AS co`
+        const writeQuery = `MATCH (n:User) WHERE n.email = "${email}" 
+        MATCH (n)-[:PP]->(i)
+        RETURN n.name AS na, n.gender AS g, n.city AS ci, n.country AS co, n.point as p, i.name AS i`
         const writeResult = await executeCypherQuery(writeQuery)
         const name = writeResult.records[0]?.get('na')
         const gender = writeResult.records[0]?.get('g')
         const city = writeResult.records[0]?.get('ci')
         const country = writeResult.records[0]?.get('co')
+        const point = writeResult.records[0]?.get('p')
+        const icon = writeResult.records[0]?.get('i')
 
         if (name === undefined) throw Error('User didnt find')
 
@@ -19,6 +23,8 @@ const getUserInfoModel = async ({ email }) => {
                 gender: gender,
                 city: city,
                 country: country,
+                point:point,
+                icon:icon
             },
             message: 'User informations returned successfully',
         }
@@ -51,6 +57,33 @@ const updateUserInfoModel = async ({
                 },
             },
             message: 'User informations updated successfully',
+        }
+    } catch (error) {
+        return {
+            status: false,
+            data: {},
+            message: `Something went wrong: ${error.message}`,
+        }
+    }
+}
+
+const updateIconModel = async ({
+    email,
+    icon,
+}) => {
+    try {
+        const writeQuery = `MATCH (n:User) WHERE n.email = "`+email+`" 
+        MATCH (n)-[r:PP]->() DELETE r
+        WITH n
+        MATCH (i:Icon) WHERE i.name = "${icon}"
+        CREATE (n)-[k:PP]->(i)
+        RETURN COUNT(k) AS r`
+        const writeResult = await executeCypherQuery(writeQuery)
+        writeResult.records[0]?.get('r')
+        return {
+            status: true,
+            data: {},
+            message: 'User icon updated successfully',
         }
     } catch (error) {
         return {
@@ -97,4 +130,5 @@ module.exports = {
     getUserInfoModel,
     updateUserInfoModel,
     updatePasswordModel,
+    updateIconModel
 }

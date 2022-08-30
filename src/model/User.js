@@ -17,7 +17,9 @@ module.exports = {
 
             if (a == 0) {
                 const writeQuery = `MATCH (m:Country) WHERE m.name = '${country}'
-                CREATE (p1:User {name: '${userName}', email: '${email}', gender: '${gender}', country: '${country}', city: '${city}', password: '${password}'})
+                CREATE (p1:User {name: '${userName}', email: '${email}', gender: '${gender}', country: '${country}', city: '${city}', password: '${password}', point : 30})
+                MATCH (i:Icon) WHERE i.name = "polar"
+                CREATE (p1)-[:PP]->(i)
                 CREATE (p1)-[:LIVES]->(m) RETURN p1`
                 const writeResult = await executeCypherQuery(writeQuery)
 
@@ -61,7 +63,7 @@ module.exports = {
             })
 
             if (a) {
-                const readQuery = `MATCH(n:User) WHERE n.email = '${email}' AND n.password = '${password}' RETURN n.name + "|"+ n.email+ "|"+n.gender+ "|"+n.country+ "|"+n.city AS result`
+                const readQuery = `MATCH(n:User) WHERE n.email = '${email}' AND n.password = '${password}' RETURN n.name + "|"+ n.email+ "|"+n.gender+ "|"+n.country+ "|"+n.city + "|"+n.point AS result`
                 const readResult = await executeCypherQuery(readQuery, {
                     email,
                     password,
@@ -77,6 +79,7 @@ module.exports = {
                             gender: array[2],
                             country: array[3],
                             city: array[4],
+                            point: array[5],
                         },
                         message: '',
                     }
