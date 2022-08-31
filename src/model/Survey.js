@@ -264,7 +264,7 @@ const creatorsProfileModel = async ({ author }) => {
         const writeResult = await executeCypherQuery(writeQuery)
         const point =  writeResult.records.map((_rec) => _rec.get('n'))[0]
         const surveycount = writeResult.records.map((_rec) => _rec.get('c')).reduce((a, b) => a + b, 0)
-        const surveys = writeResult.records.map((_rec) => _rec.get('s'))
+        const surveys = writeResult.records.map((_rec) => _rec.get('s').properties)
             return {
                 status: true,
                 data: { point, surveycount, surveys },

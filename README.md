@@ -57,6 +57,7 @@ Bu endpoint kullanıcı girişi için kullanılmalı
             gender: 'Male',
             city: 'CITY NAME',
             country: 'COUNTRY',
+            point: 240
         },
         message: 'Giriş Yapıldı',
     },
@@ -71,7 +72,8 @@ Bu endpoint kullanıcı girişi için kullanılmalı
 POST /api/user/register
 ```
 
-Bu endpoint kullanıcı kaydı için kullanılmalı
+Bu endpoint kullanıcı kaydı için kullanılmalı.
+Kullanıcı hesap açtıpı anda 30 puan kazanır
 
 **Parameters:**
 
@@ -104,6 +106,8 @@ POST /api/survey/createSurvey
 ```
 
 Bu endpoint anket oluşturmak için kullanılmalı
+Survey oluşturulduğunda oluşturan kullanıcıya 20 puan eklenir.
+
 
 **Parameters:**
 
@@ -210,6 +214,8 @@ Bu endpoint Homepage sayfasında örnek gösterilecek anketleri almak için kull
                 title: "En Çok Sevilen Şehirler",
                 choices: ["Ankara", "İstanbul", "İzmir"]
                 percent: [30.0, 20.0, 50.0]
+                author: "sefa",
+                icon: "bear"
             },
             {
                 question: "hangi yemeği daha çok seviyorunuz",
@@ -217,13 +223,109 @@ Bu endpoint Homepage sayfasında örnek gösterilecek anketleri almak için kull
                 choices: ["pizza", "lahmacun"],
                 title: "yemek anketi"
                 percent: [33.3, 66.7]
+                author: "sefa",
+                icon: "bear"
             }
         ]
     },
-    message: "Survey filled"
+    message: "Survey Listed"
 }
 
 ```
+### **All Surveys**
+
+```
+GET /api/survey/allsurveys?queue=x
+```
+
+Bu endpoint all surveys sayfasında gösterilecek anketleri almak için kullanılmalı.
+all surveys sayfasına ilk girişte queue değeri için 0 gönderilir, kullanıcı her show more tuşuna bastığında, bu sayı 1 arttırılarak gönderilir.
+yeni sonuç onceki sonuçların sonuna eklenmelidir.
+Linkteki x değeri yerine queue değeri yerleştirilir.
+
+
+
+**Parameters:**
+
+| Veri adı | Veri tipi | Zorunluluk | Açıklama                                                        |
+| -------- | --------- | ---------- | --------------------------------------------------------------- |
+| queue    | NUMBER    |  EVET      | Show more tıklanma sayısıdır queryde yollanır                   |
+
+**Response:**
+
+```javascript
+{
+    data: {
+        surveys: [
+            {
+                question: "En sevilen şehir hangisidir? ",
+                counts: [3, 2, 5],
+                title: "En Çok Sevilen Şehirler",
+                choices: ["Ankara", "İstanbul", "İzmir"]
+                percent: [30.0, 20.0, 50.0]
+                author: "sefa",
+                icon: "bear"
+            },
+            {
+                question: "hangi yemeği daha çok seviyorunuz",
+                counts: [1, 2],
+                choices: ["pizza", "lahmacun"],
+                title: "yemek anketi"
+                percent: [33.3, 66.7]
+                author: "sefa",
+                icon: "bear"
+            }
+        ]
+    },
+    message: "Survey Listed Succesfully"
+}
+
+```
+### **Creators Profile**
+
+```
+POST /api/survey/creatorProfile
+```
+
+Bu endpoint farklı bir kullanıcının panelinin gösterilmesi için kullanılır.
+
+
+
+**Parameters:**
+
+| Veri adı | Veri tipi | Zorunluluk | Açıklama                                                        |
+| -------- | --------- | ---------- | --------------------------------------------------------------- |
+| author   | STRİNG    |  EVET      | Anket yazarının kullanıcı adıdır.                               |
+
+**Response:**
+
+```javascript
+{
+   "data":{
+      "point":70,
+      "surveycount":2,
+      "surveys":[
+         {
+            "question":"en se di\n\n\nen sevdiğin spor",
+            "counts":[
+               0,
+               0,
+               0
+            ],
+            "choices":[
+               "futbol",
+               "basketbol",
+               "voleybol"
+            ],
+            "title":"spor"
+         },
+      ]
+   },
+   "message":"User profile returned"
+}
+```
+
+
 
 ### **Get Survey**
 
@@ -288,6 +390,7 @@ GET /api/survey/fillSurvey
 ```
 
 Bu endpoint belirli bir ankete oylama yapmak için kullanılmalı
+Bu endpoint çalıştırılıp ankete her oylama yapıldığında anket sahibine 5 puan eklenir ve her 100 doldurmada ekstra 50 puan verilir.
 
 **Parameters:**
 
@@ -399,6 +502,8 @@ Bu endpoint kullanıcının bilgilerini almak için kullanılır
             gender: 'Male',
             city: 'CITY NAME',
             country: 'COUNTRY',
+            point: 250,
+            icon: "polar"
         },
         message: 'Kullanıcı bilgileri gönderildi',
     },
@@ -432,6 +537,35 @@ Bu endpoint kullanıcı bilgilerinin güncellenmesi için kullanılır
         accessToken: 'ey.....',
         data: {},
         message: 'User informations updated successfully',
+    },
+]
+```
+---
+
+### **Update User Icon**
+
+```
+PUT /api/profile/updateicon
+```
+
+Bu endpoint kullanıcı iconunun güncellenmesi için kullanılır
+
+**Parameters:**
+
+| Veri adı | Veri tipi | Zorunluluk | Açıklama                                         |
+| -------- | --------- | ---------- | ------------------------------------------------ |
+| icon     | STRING    | EVET       | kullanıcının seçtiği ikonun adıdıdır             |
+
+**NOT: Headerda token gönderilmelidir**
+
+
+**Response:**
+
+```javascript
+;[
+    {
+        data: {},
+        message: 'Icon updated successfully',
     },
 ]
 ```
@@ -473,6 +607,7 @@ GET /api/comment/comments
 ```
 
 Bu endpoint spesifik bir anketin yorumlarını çekmek için kullanılır. Token gönderilirse kullanıcının silebileceği yorumlarda deletable değeri true döner.
+Commentler beğeni sırasına göre sıralanmaktadır.
 
 **Parameters:**
 
@@ -588,7 +723,8 @@ Bir yorumun silinmesi halinde o yorumun tüm alt yorumları da silinir.
 POST /api/comment/upvote
 ```
 
-Bu endpoint yoruma oy vermek için kullanılır
+Bu endpoint yoruma oy vermek için kullanılır.
+Eğer önceden upvote verildiyse tekrar tıklanması halinde upvote geri alınır.
 
 **Parameters:**
 
@@ -613,8 +749,10 @@ Bu endpoint yoruma oy vermek için kullanılır
 POST /api/comment/report
 ```
 
-Bu endpoint yorumu şikayet etmek için kullanılır
-reportcount değeri için -1 alınması yorumun 10 report'a ulaştığını ve silindiğini ifade eder.
+Bu endpoint yorumu şikayet etmek için kullanılır.
+Eğer önceden report yapıldıysa tekrar tıklanması halinde report geri alınır.
+Kullanıcı kendi yorumuna report vermeye çalışır ise bu işlem geçersiz sayılır.
+Yorum 10. report'a ulaştığında otomatik olarak silinir.
 
 **Parameters:**
 
