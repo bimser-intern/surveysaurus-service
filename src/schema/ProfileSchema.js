@@ -24,5 +24,12 @@ module.exports = {
         query: Yup.object({}),
         params: Yup.object({}),
     }),
+    UpdateIconSchema: Yup.object({
+        body: Yup.object({
+            icon: Yup.string().required()
+        }),
+        query: Yup.object({}),
+        params: Yup.object({}),
+    }),
 }
 

@@ -213,6 +213,24 @@ const updatePass = async ({ oldPassword, newPassword }) => {
 
 // ----------------------------------------------------------------------
 
+const updateIcon = async ({ icon }) => {
+    const res = await axios.put(
+        'http://localhost:5500/api/profile/updateicon',
+        {
+            icon,
+        },
+        {
+            headers: {
+                authorization: user.token,
+            },
+        }
+    )
+    console.log('==============================================================')
+    console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
+}
+
+// ----------------------------------------------------------------------
+
 const addComment = async ({ title, comment, parentID }) => {
     const res = await axios.post(
         'http://localhost:5500/api/comment/addcomment',
@@ -316,7 +334,7 @@ const deleteComment = async ({ commentID }) => {
 // ----------------------------------------------------------------------
 
 const main = async () => {
-    await signIn({ email: 'eray@gmail.com', password: 'Eray123.' })
+    await signIn({ email: 'ahmet@example.com', password: 'Ahmet123.' })
     //await sleep(2000)
     //await signUp({userName:"Deneme", email:"nacnof@hizli.email", password:"deneme",gender:"Male",city:"Bangkok",country:"Thailand"});
     //await createSurvey({
@@ -325,21 +343,20 @@ const main = async () => {
     //   choice: ['şık1', 'şık2', 'şık3'],
     // })
     //await getSurveys({})
+    //await updateIcon({icon: "bear"})
     //await getSamples({})
     //await isFilledTest({ title: 'yemek anketi' })
-    //await fillSurvey({ title: 'animaldoyoulike', answer: 0 })
+    //await fillSurvey({ title: 'animaldoyoulike', answer: 1 })
     //await getSurvey({ title: 'yemek anketi' })
     // await getCountries()
     // await getCities({ country: 'Turkey' })
-    // await getUserInfo({})
+    //await getUserInfo({})
     // await updateUserInfo({
     //     email: 'test1@gmail.com',
     //     userName: 'felat',
     //     city: 'Ankara',
     //     country: 'Turkey',
     // })
-    // await getUserInfo({})
-
     // await updatePass({ oldPassword: 'Felat123.', newPassword: 'felat' })
     /*
     await addComment({
@@ -352,7 +369,7 @@ const main = async () => {
     //await report({ commentID: 154 })
     //await getMap({ title: 'karadenizin en güzel şehirleri' })
     //await deleteComment({commentID:128 })
-    await getComments({ title: 'animaldoyoulike' })
+    //await getComments({ title: 'animaldoyoulike' })
 }
 main()
     .then(() => {
