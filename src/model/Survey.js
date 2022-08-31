@@ -145,10 +145,14 @@ const sampleSurveyModel = async ({ count }) => {
         // downgrade
         if (count > 20) count = 20
 
-        const writeQuery = `MATCH (n:Survey) RETURN n ORDER BY toInteger(apoc.coll.sum(n.counts)) DESC LIMIT ${count}`
+        const writeQuery = `MATCH (n:Survey) MATCH (u:User)-[:CREATED]->(s)
+        MATCH (u)-[:PP]->(i) RETURN n, u.name AS u, i.name AS i ORDER BY toInteger(apoc.coll.sum(n.counts)) DESC LIMIT ${count}`
         const writeResult = await executeCypherQuery(writeQuery)
         const surveys2 = writeResult.records.map((_record) => _record.get('n').properties)
+        const author = writeResult.records.map((_record) => _record.get('u'))
+        const icon = writeResult.records.map((_record) => _record.get('i'))
         const counts = surveys2[0].counts
+        //console.log()
         let percent = []
         const sumcounts = counts.reduce((partialSum, a) => partialSum + a, 0)
         for (let i = 0; i < counts.length; i++) {
@@ -158,6 +162,7 @@ const sampleSurveyModel = async ({ count }) => {
             ..._surveys2,
             percent: percent,
         }))
+
         return {
             status: true,
             data: { surveys },

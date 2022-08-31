@@ -18,18 +18,15 @@ module.exports = {
             if (a == 0) {
                 const writeQuery = `MATCH (m:Country) WHERE m.name = '${country}'
                 CREATE (p1:User {name: '${userName}', email: '${email}', gender: '${gender}', country: '${country}', city: '${city}', password: '${password}', point : 30})
+                WITH p1,m
                 MATCH (i:Icon) WHERE i.name = "polar"
                 CREATE (p1)-[:PP]->(i)
                 CREATE (p1)-[:LIVES]->(m) RETURN p1`
                 const writeResult = await executeCypherQuery(writeQuery)
-
-                for (const record of writeResult.records) {
-                    const person1Node = record.get('p1')
-                    return {
-                        status: true,
-                        data: {},
-                        message: 'User created successfully',
-                    }
+                return {
+                    status: true,
+                    data: {},
+                    message: 'User created successfully',
                 }
             } else {
                 return {
