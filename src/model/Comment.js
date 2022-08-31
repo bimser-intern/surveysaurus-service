@@ -66,11 +66,19 @@ module.exports = {
                     message: 'Comment upvoted successfully',
                 }
             } else {
+                const writeQuery = `MATCH (n:User) WHERE n.email = "${email}"
+                MATCH (m:Comment) WHERE m.commentID = ${commentID}
+                MATCH (n)-[r:UPVOTED]->(m)
+                WITH r,m
+                SET m.upvote = m.upvote-1
+                DELETE r`
+                const writeResult = await executeCypherQuery(writeQuery)
                 return {
-                    status: false,
+                    status: true,
                     data: { commentID },
-                    message: 'An user cannot upvote twice',
+                    message: 'Upvote deleted successfully',
                 }
+
             }
         } catch (error) {
             return {
@@ -113,11 +121,18 @@ module.exports = {
                     }
                 }
             } else {
-                return {
-                    status: false,
-                    data: { commentID },
-                    message: 'An user cannot report twice',
-                }
+                const writeQuery = `MATCH (n:User) WHERE n.email = "${email}"
+                                    MATCH (m:Comment) WHERE m.commentID = ${commentID}
+                                    MATCH (n)-[r:REPORTED]->(m)
+                                    WITH m,r
+                                    SET m.report = m.report-1 
+                                    DELETE r`
+                    const writeResult = await executeCypherQuery(writeQuery)
+                    return {
+                        status: true,
+                        data: { commentID },
+                        message: 'Report Deleted successfully',
+                    }
             }
         } catch (error) {
             return {
@@ -151,9 +166,8 @@ module.exports = {
             MATCH (c1:Comment)-[:TO]->(s)
             MATCH (c:Comment) WHERE apoc.coll.contains(c.path,c1.commentID) = true
             MATCH (u:User)-[:WRITED]->(c) 
-            RETURN u.name AS u, u.email = "${
-                email ? email : 'hjkfhsghkudlfhvkjidhbvkjdshv'
-            }" AS d, c ORDER BY c.commentID DESC`
+            RETURN u.name AS u, u.email = "${email ? email : 'hjkfhsghkudlfhvkjidhbvkjdshv'
+                }" AS d, c ORDER BY c.commentID DESC`
             console.log(writeQuery)
             const writeResult = await executeCypherQuery(writeQuery)
             const names = writeResult.records.map((_rec) => _rec.get('u'))
@@ -206,7 +220,7 @@ module.exports = {
                     data: {},
                     message: 'Comment deleted successfully',
                 }
-            }         
+            }
         } catch (error) {
             return {
                 status: false,
