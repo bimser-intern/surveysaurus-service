@@ -56,7 +56,7 @@ const signUp = async ({ userName, email, password, gender, city, country }) => {
     })
     console.log('==============================================================')
 
-    console.log(`Status : ${res.status} \n data : ${res.data}`)
+    console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
 }
 
 // ----------------------------------------------------------------------
@@ -334,9 +334,9 @@ const deleteComment = async ({ commentID }) => {
 // ----------------------------------------------------------------------
 
 const main = async () => {
-    await signIn({ email: 'ahmet@example.com', password: 'Ahmet123.' })
+    //await signIn({ email: 'ahmet@example.com', password: 'Ahmet123.' })
     //await sleep(2000)
-    //await signUp({userName:"Deneme", email:"nacnof@hizli.email", password:"deneme",gender:"Male",city:"Bangkok",country:"Thailand"});
+    await signUp({userName:"Çatuğ", email:"nasadcnsof@sswhsaizli.email", password:"deneme",gender:"Male",city:"Bangkok",country:"Thailand"});
     //await createSurvey({
     //    question: 'yeni anket denemesi',
     //     title: 'ankeet',
@@ -365,8 +365,8 @@ const main = async () => {
         //parentID: 53
     })
 */
-    //await upVote({ commentID: 9 })
-    //await report({ commentID: 154 })
+    //await upVote({ commentID: 53 })
+    //await report({ commentID: 53 })
     //await getMap({ title: 'karadenizin en güzel şehirleri' })
     //await deleteComment({commentID:128 })
     //await getComments({ title: 'animaldoyoulike' })

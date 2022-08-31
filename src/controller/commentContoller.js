@@ -41,7 +41,7 @@ const upVoteController = asyncHandler(async (req, res, next) => {
 
         res.status(200).json({
             data: { ...data },
-            message: 'UpVote Succesfully',
+            message: message,
         })
     } catch (error) {
         return next(new CustomError(error.message))
@@ -60,7 +60,7 @@ const reportController = asyncHandler(async (req, res, next) => {
 
         res.status(200).json({
             data: { data },
-            message: 'Report Succesfully',
+            message: message,
         })
     } catch (error) {
         return next(new CustomError(error.message))
