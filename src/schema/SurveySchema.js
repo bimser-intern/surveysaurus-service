@@ -51,5 +51,13 @@ module.exports = {
         query: Yup.object({}),
         params: Yup.object({}),
     }),
+
+    creatorsProfileSchema: Yup.object({
+        body: Yup.object({
+            author: Yup.string().required(),
+        }),
+        query: Yup.object({}),
+        params: Yup.object({}),
+    }),
 }
 //

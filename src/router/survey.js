@@ -6,6 +6,7 @@ const {
     sampleSurveySchema,
     getSurveySchema,
     allSurveysSchema,
+    creatorsProfileSchema,
 } = require('../schema/SurveySchema')
 const {
     tokenControl,
@@ -17,6 +18,7 @@ const {
     sampleSurvey,
     getSurvey,
     allSurveys,
+    creatorsProfile,
 } = require('../controller/surveyController')
 const { isfilled } = require('../controller/surveyController')
 const { isFilledSchema } = require('../schema/SurveySchema')
@@ -43,6 +45,8 @@ router.post(
 )
 
 router.post('/getSurvey', [yupValidate(getSurveySchema)], getSurvey)
+
+router.post('/creatorProfile', [yupValidate(creatorsProfileSchema)], creatorsProfile)
 
 module.exports = router
 //

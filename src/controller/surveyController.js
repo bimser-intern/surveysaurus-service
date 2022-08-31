@@ -9,6 +9,7 @@ const {
     isFilledModel,
     getSurveyModel,
     AllSurveysModel,
+    creatorsProfileModel,
 } = require('../model/Survey')
 const { request } = require('express')
 
@@ -83,7 +84,7 @@ const allSurveys = asyncHandler(async (req, res, next) => {
 
     try {
         const { status, data, message } = await AllSurveysModel({
-            queue:queue, 
+            queue: queue,
         })
 
         if (!status) return next(new CustomError(message))
@@ -136,6 +137,23 @@ const getSurvey = asyncHandler(async (req, res, next) => {
         return next(new CustomError(error.message))
     }
 })
-module.exports = { createSurvey, fillSurvey, sampleSurvey, isfilled, getSurvey, allSurveys }
+
+const creatorsProfile = asyncHandler(async (req, res, next) => {
+    const { author } = req.body
+    try {
+        const { status, data, message } = await creatorsProfileModel({
+            author,
+        })
+        if (!status) return next(new CustomError(message))
+
+        res.status(200).json({
+            data: { ...data },
+            message: message,
+        })
+    } catch (error) {
+        return next(new CustomError(error.message))
+    }
+})
+module.exports = { createSurvey, fillSurvey, sampleSurvey, isfilled, getSurvey, allSurveys, creatorsProfile }
 
 //

@@ -163,6 +163,16 @@ const getSurvey = async ({ title }) => {
 
 // ----------------------------------------------------------------------
 
+const creatorProfile = async ({ author }) => {
+    const res = await axios.post('http://localhost:5500/api/survey/creatorProfile', {
+        author,
+    })
+    console.log('==============================================================')
+    console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
+}
+
+// ----------------------------------------------------------------------
+
 const getUserInfo = async ({}) => {
     const res = await axios.get('http://localhost:5500/api/profile/getinfo', {
         headers: {
@@ -341,7 +351,7 @@ const deleteComment = async ({ commentID }) => {
 // ----------------------------------------------------------------------
 
 const main = async () => {
-    //await signIn({ email: 'ahmet@example.com', password: 'Ahmet123.' })
+    await signIn({ email: 'ahmet@example.com', password: 'Ahmet123.' })
     //await sleep(2000)
     //await signUp({userName:"Çatuğ", email:"nasadcnsof@sswhsaizli.email", password:"deneme",gender:"Male",city:"Bangkok",country:"Thailand"});
     //await createSurvey({
@@ -374,10 +384,11 @@ const main = async () => {
     })
 */
     //await upVote({ commentID: 53 })
-    //await report({ commentID: 53 })
+    await report({ commentID: 53 })
     //await getMap({ title: 'karadenizin en güzel şehirleri' })
     //await deleteComment({commentID:128 })
-    await getComments({ title: 'animaldoyoulike' })
+    //await getComments({ title: 'animaldoyoulike' })
+    //await creatorProfile({author:"wiozeo"})
 }
 main()
     .then(() => {

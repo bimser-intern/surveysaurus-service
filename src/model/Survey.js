@@ -254,6 +254,33 @@ const isFilledModel = async ({ email, title }) => {
     }
 }
 
+//CreatorsProfile
+
+const creatorsProfileModel = async ({ author }) => {
+    try {
+        const writeQuery = `MATCH (n:User) WHERE n.name = "${author}" 
+        MATCH (n)-[r:CREATED]->(s:Survey)
+        RETURN n.point AS n, COUNT(r) AS c, s`
+        const writeResult = await executeCypherQuery(writeQuery)
+        const point =  writeResult.records.map((_rec) => _rec.get('n'))[0]
+        const surveycount = writeResult.records.map((_rec) => _rec.get('c')).reduce((a, b) => a + b, 0)
+        const surveys = writeResult.records.map((_rec) => _rec.get('s'))
+            return {
+                status: true,
+                data: { point, surveycount, surveys },
+                message: `User profile returned`,
+            }
+        }
+        catch (error) {
+        ////////////////////////////////////////////
+        return {
+            status: false,
+            data: {},
+            message: `Something went wrong: ${error.message}`,
+        }
+    }
+}
+
 module.exports = {
     fillSurveyModel,
     createSurveyModel,
@@ -261,4 +288,5 @@ module.exports = {
     isFilledModel,
     getSurveyModel,
     AllSurveysModel,
+    creatorsProfileModel,
 }
