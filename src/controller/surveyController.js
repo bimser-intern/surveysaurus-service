@@ -8,6 +8,7 @@ const {
     sampleSurveyModel,
     isFilledModel,
     getSurveyModel,
+    AllSurveysModel,
 } = require('../model/Survey')
 const { request } = require('express')
 
@@ -75,6 +76,26 @@ const sampleSurvey = asyncHandler(async (req, res, next) => {
     }
 })
 
+// Sample Survey
+
+const allSurveys = asyncHandler(async (req, res, next) => {
+    const { queue } = req.query
+
+    try {
+        const { status, data, message } = await AllSurveysModel({
+            queue:queue, 
+        })
+
+        if (!status) return next(new CustomError(message))
+
+        res.status(200).json({
+            data: { surveys: data.surveys },
+            message: message,
+        })
+    } catch (error) {
+        return next(new CustomError(error.message))
+    }
+})
 // survey is filled controller ?
 
 const isfilled = asyncHandler(async (req, res, next) => {
@@ -115,6 +136,6 @@ const getSurvey = asyncHandler(async (req, res, next) => {
         return next(new CustomError(error.message))
     }
 })
-module.exports = { createSurvey, fillSurvey, sampleSurvey, isfilled, getSurvey }
+module.exports = { createSurvey, fillSurvey, sampleSurvey, isfilled, getSurvey, allSurveys }
 
 //

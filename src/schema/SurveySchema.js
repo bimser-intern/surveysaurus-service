@@ -28,6 +28,14 @@ module.exports = {
         params: Yup.object({}),
     }),
 
+    allSurveysSchema: Yup.object({
+        body: Yup.object({}),
+        query: Yup.object({
+            queue: Yup.number('number olmalıdır'),
+        }),
+        params: Yup.object({}),
+    }),
+
     isFilledSchema: Yup.object({
         body: Yup.object({
             title: Yup.string().required(),

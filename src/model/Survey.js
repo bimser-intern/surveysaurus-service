@@ -60,7 +60,8 @@ const createSurveyModel = async ({
 // Get Survey
 const getSurveyModel = async ({ title }) => {
     try {
-        const writeQuery = `MATCH (n:Survey) WHERE n.title = "${title}" RETURN n.question AS q, n.choices AS ch, n.counts AS count, COUNT(n) as c`
+        const writeQuery = `MATCH (n:Survey) WHERE n.title = "${title}" 
+        MATCH (u:User)-[:CREATED]->(n) RETURN n.question AS q, n.choices AS ch, n.counts AS count, COUNT(n) as c, u.name AS u`
         const writeResult = await executeCypherQuery(writeQuery)
 
         if (!writeResult.records[0]?.get('c')) throw Error('Survey is not found!')
@@ -69,6 +70,7 @@ const getSurveyModel = async ({ title }) => {
 
         const choice = writeResult.records.map((_record) => _record.get('ch'))[0]
         const counts = writeResult.records.map((_record) => _record.get('count'))[0]
+        const author = writeResult.records.map((_record) => _record.get('u'))[0]
         let percent = []
         const sumcounts = counts.reduce((partialSum, a) => partialSum + a, 0)
         for (let i = 0; i < counts.length; i++) {
@@ -76,7 +78,7 @@ const getSurveyModel = async ({ title }) => {
         }
         return {
             status: true,
-            data: { question, choice, counts, percent },
+            data: { question, choice, counts, percent, author },
             message: 'Survey sended successfully',
         }
     } catch (error) {
@@ -145,28 +147,76 @@ const sampleSurveyModel = async ({ count }) => {
         // downgrade
         if (count > 20) count = 20
 
-        const writeQuery = `MATCH (n:Survey) MATCH (u:User)-[:CREATED]->(s)
-        MATCH (u)-[:PP]->(i) RETURN n, u.name AS u, i.name AS i ORDER BY toInteger(apoc.coll.sum(n.counts)) DESC LIMIT ${count}`
+        const writeQuery = `MATCH (n:Survey) 
+        WITH n ORDER BY toInteger(apoc.coll.sum(n.counts)) DESC LIMIT 3
+        MATCH (u:User)-[:CREATED]->(n)
+        MATCH (u)-[:PP]->(i:Icon) 
+        RETURN  u.name AS u, i.name AS i, n ORDER BY toInteger(apoc.coll.sum(n.counts)) DESC LIMIT ${count}`
         const writeResult = await executeCypherQuery(writeQuery)
         const surveys2 = writeResult.records.map((_record) => _record.get('n').properties)
-        const author = writeResult.records.map((_record) => _record.get('u'))
-        const icon = writeResult.records.map((_record) => _record.get('i'))
-        const counts = surveys2[0].counts
-        //console.log()
-        let percent = []
-        const sumcounts = counts.reduce((partialSum, a) => partialSum + a, 0)
-        for (let i = 0; i < counts.length; i++) {
-            percent[i] = Math.round((counts[i] / sumcounts) * 1000) / 10
-        }
-        const surveys = surveys2.map((_surveys2) => ({
-            ..._surveys2,
-            percent: percent,
-        }))
+        const icons = writeResult.records.map((_record) => _record.get('i'))
+        const authors = writeResult.records.map((_record) => _record.get('u'))
+
+        const surveys = surveys2.map((_survey,index) => {
+            const sumcounts = _survey.counts.reduce((partialSum, a) => partialSum + a, 0)
+            const percent = _survey.counts.map((_count)=>(
+                Math.round((_count / sumcounts) * 1000) / 10 
+            ))
+            return {
+                ..._survey,
+                percent: percent,
+                icon:icons[index],
+                author:authors[index]
+            }
+        })
+
 
         return {
             status: true,
             data: { surveys },
-            message: 'Survey filled successfully',
+            message: 'Surveys listed successfully',
+        }
+    } catch (error) {
+        ////////////////////////////////////////////
+        return {
+            status: false,
+            data: {},
+            message: `Something went wrong: ${error.message}`,
+        }
+    }
+}
+
+// All Surveys
+
+const AllSurveysModel = async ({ queue }) => {
+    try {
+        const writeQuery = `MATCH (n:Survey) 
+        MATCH (u:User)-[:CREATED]->(n)
+        MATCH (u)-[:PP]->(i:Icon) 
+        WITH  u.name AS u, i.name AS i, n, toInteger(apoc.coll.sum(n.counts)) AS a ORDER BY a DESC, n.title ASC LIMIT (${queue}+1)*12
+        WITH u,i,n,a ORDER BY a ASC, n.title DESC LIMIT 12
+        RETURN u,i,n ORDER BY a DESC, n.title ASC`
+        console.log(writeQuery)
+        const writeResult = await executeCypherQuery(writeQuery)
+        const surveys2 = writeResult.records.map((_record) => _record.get('n').properties)
+        const icons = writeResult.records.map((_record) => _record.get('i'))
+        const authors = writeResult.records.map((_record) => _record.get('u'))
+        const surveys = surveys2.map((_survey,index) => {
+            const sumcounts = _survey.counts.reduce((partialSum, a) => partialSum + a, 0)
+            const percent = _survey.counts.map((_count)=>(
+                Math.round((_count / sumcounts) * 1000) / 10 
+            ))
+            return {
+                ..._survey,
+                percent: percent,
+                icon:icons[index],
+                author:authors[index]
+            }
+        })
+        return {
+            status: true,
+            data: { surveys },
+            message: `Surveys listed successfully`,
         }
     } catch (error) {
         ////////////////////////////////////////////
@@ -210,4 +260,5 @@ module.exports = {
     sampleSurveyModel,
     isFilledModel,
     getSurveyModel,
+    AllSurveysModel,
 }

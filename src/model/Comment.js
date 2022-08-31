@@ -167,7 +167,7 @@ module.exports = {
             MATCH (c:Comment) WHERE apoc.coll.contains(c.path,c1.commentID) = true
             MATCH (u:User)-[:WRITED]->(c) 
             RETURN u.name AS u, u.email = "${email ? email : 'hjkfhsghkudlfhvkjidhbvkjdshv'
-                }" AS d, c ORDER BY c.commentID DESC`
+                }" AS d, c ORDER BY c.upvote DESC, c.commentID DESC`
             console.log(writeQuery)
             const writeResult = await executeCypherQuery(writeQuery)
             const names = writeResult.records.map((_rec) => _rec.get('u'))
@@ -199,6 +199,7 @@ module.exports = {
             }
         }
     },
+    
     deleteCommentsModel: async ({ email, commentID }) => {
         try {
             let writeQuery = `MATCH (u:User)-[r:WRITED]->(c:Comment)

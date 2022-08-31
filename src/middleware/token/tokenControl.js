@@ -31,7 +31,7 @@ module.exports = {
                     email: decoded.email,
                 }
             } catch (error) {
-                console.log(err)
+                console.log(error)
             }
         }
         else{
