@@ -28,6 +28,14 @@ module.exports = {
         params: Yup.object({}),
     }),
 
+    allSurveysSchema: Yup.object({
+        body: Yup.object({}),
+        query: Yup.object({
+            queue: Yup.number('number olmalıdır'),
+        }),
+        params: Yup.object({}),
+    }),
+
     isFilledSchema: Yup.object({
         body: Yup.object({
             title: Yup.string().required(),
@@ -39,6 +47,14 @@ module.exports = {
     getSurveySchema: Yup.object({
         body: Yup.object({
             title: Yup.string().required(),
+        }),
+        query: Yup.object({}),
+        params: Yup.object({}),
+    }),
+
+    creatorsProfileSchema: Yup.object({
+        body: Yup.object({
+            author: Yup.string().required(),
         }),
         query: Yup.object({}),
         params: Yup.object({}),

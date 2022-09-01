@@ -78,7 +78,6 @@ module.exports = {
                     data: { commentID },
                     message: 'Upvote deleted successfully',
                 }
-
             }
         } catch (error) {
             return {
@@ -91,33 +90,44 @@ module.exports = {
 
     report: async ({ email, commentID }) => {
         try {
-            const Query1 = `MATCH (n:User) WHERE n.email = "${email}"
-            MATCH (m:Comment) WHERE m.commentID = ${commentID}
-            MATCH (n)-[r:REPORTED]->(m)
-            RETURN COUNT(r) AS c`
+            const Query1 = `MATCH (u1:User)-[w:WRITED]->(c1:Comment) WHERE u1.email = "${email}" AND c1.commentID = ${commentID}
+            MATCH (u2:User)-[r:REPORTED]->(c2:Comment) WHERE u2.email = "${email}" AND c2.commentID = ${commentID} 
+            WITH COUNT(w) AS w,COUNT(r) AS r
+            MATCH (c:Comment) WHERE c.commentID = 53 RETURN w,r,c.report AS cr`
             const Result1 = await executeCypherQuery(Query1)
-            const res1 = Result1.records.map((_rec) => _rec.get('c'))
+            const res1 = Result1.records.map((_rec) => _rec.get('r'))
+            const res2 = Result1.records.map((_rec) => _rec.get('w'))
+            const reportCount = Result1.records.map((_rec) => _rec.get('cr'))
+            console.log('report count: ' + reportCount)
             if (res1 == 0) {
-                const Query2 = `MATCH (c:Comment) WHERE c.commentID = ${commentID}
-                MATCH (u:User)-[:WRITED]->(c) RETURN u.email AS e`
-                const Result2 = await executeCypherQuery(Query2)
-                if (Result2.records.map((_rec) => _rec.get('e'))[0] != email) {
-                    const writeQuery = `MATCH (n:User) WHERE n.email = "${email}"
+                if (res2 == 0) {
+                    if (reportCount >= 9) {
+                        const deleteQuery = `MATCH (c:Comment) WHERE c.commentID= ${commentID}
+                        MATCH (c2:Comment) WHERE apoc.coll.contains(c2.path, c.commentID)
+                        DETACH DELETE c DETACH DELETE c2`
+                        await executeCypherQuery(deleteQuery)
+                        return {
+                            status: true,  //false çevirilebilir
+                            data: {},
+                            message: 'Report count has achieved 10 so comment deleted',
+                        }
+                    } else {
+                        const writeQuery = `MATCH (n:User) WHERE n.email = "${email}"
                                     MATCH (m:Comment) WHERE m.commentID = ${commentID}
                                     CREATE (n)-[r:REPORTED]->(m)
                                     SET m.report = m.report+1 RETURN r`
-                    const writeResult = await executeCypherQuery(writeQuery)
-                    writeResult.records.map((_rec) => _rec.get('r'))
-                    return {
-                        status: true,
-                        data: { commentID },
-                        message: 'Comment reported successfully',
+                        await executeCypherQuery(writeQuery)
+                        return {
+                            status: true,
+                            data: { commentID },
+                            message: 'Comment reported successfully',
+                        }
                     }
                 } else {
                     return {
                         status: false,
                         data: {},
-                        message: 'User cannot report own email',
+                        message: 'User cannot report own comment',
                     }
                 }
             } else {
@@ -127,12 +137,12 @@ module.exports = {
                                     WITH m,r
                                     SET m.report = m.report-1 
                                     DELETE r`
-                    const writeResult = await executeCypherQuery(writeQuery)
-                    return {
-                        status: true,
-                        data: { commentID },
-                        message: 'Report Deleted successfully',
-                    }
+                const writeResult = await executeCypherQuery(writeQuery)
+                return {
+                    status: true,
+                    data: { commentID },
+                    message: 'Report deleted successfully',
+                }
             }
         } catch (error) {
             return {
@@ -166,8 +176,9 @@ module.exports = {
             MATCH (c1:Comment)-[:TO]->(s)
             MATCH (c:Comment) WHERE apoc.coll.contains(c.path,c1.commentID) = true
             MATCH (u:User)-[:WRITED]->(c) 
-            RETURN u.name AS u, u.email = "${email ? email : 'hjkfhsghkudlfhvkjidhbvkjdshv'
-                }" AS d, c ORDER BY c.commentID DESC`
+            RETURN u.name AS u, u.email = "${
+                email ? email : 'hjkfhsghkudlfhvkjidhbvkjdshv'
+            }" AS d, c ORDER BY c.upvote DESC, c.commentID DESC`
             console.log(writeQuery)
             const writeResult = await executeCypherQuery(writeQuery)
             const names = writeResult.records.map((_rec) => _rec.get('u'))
@@ -199,6 +210,7 @@ module.exports = {
             }
         }
     },
+
     deleteCommentsModel: async ({ email, commentID }) => {
         try {
             let writeQuery = `MATCH (u:User)-[r:WRITED]->(c:Comment)
@@ -208,7 +220,7 @@ module.exports = {
             const writeResult = await executeCypherQuery(writeQuery)
             const result = writeResult.summary.counters.updates().nodesDeleted
             console.log(result)
-            if ((result == 0)) {
+            if (result == 0) {
                 return {
                     status: false,
                     data: {},

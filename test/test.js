@@ -119,6 +119,13 @@ const getSamples = async ({}) => {
 }
 // ----------------------------------------------------------------------
 
+const getAllSurveys = async ({queue}) => {
+    const res = await axios.get('http://localhost:5500/api/survey/allsurveys?queue='+queue, {})
+
+    console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
+}
+// ----------------------------------------------------------------------
+
 const getCountries = async () => {
     const res = await axios.get(
         'http://localhost:5500/api/user/countries',
@@ -149,6 +156,16 @@ const getCities = async ({ country }) => {
 const getSurvey = async ({ title }) => {
     const res = await axios.post('http://localhost:5500/api/survey/getSurvey', {
         title,
+    })
+    console.log('==============================================================')
+    console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
+}
+
+// ----------------------------------------------------------------------
+
+const creatorProfile = async ({ author }) => {
+    const res = await axios.post('http://localhost:5500/api/survey/creatorProfile', {
+        author,
     })
     console.log('==============================================================')
     console.log(`Status : ${res.status} \n data : ${JSON.stringify(res.data)}`)
@@ -334,9 +351,9 @@ const deleteComment = async ({ commentID }) => {
 // ----------------------------------------------------------------------
 
 const main = async () => {
-    //await signIn({ email: 'ahmet@example.com', password: 'Ahmet123.' })
+    await signIn({ email: 'ahmet@example.com', password: 'Ahmet123.' })
     //await sleep(2000)
-    await signUp({userName:"Çatuğ", email:"nasadcnsof@sswhsaizli.email", password:"deneme",gender:"Male",city:"Bangkok",country:"Thailand"});
+    //await signUp({userName:"Çatuğ", email:"nasadcnsof@sswhsaizli.email", password:"deneme",gender:"Male",city:"Bangkok",country:"Thailand"});
     //await createSurvey({
     //    question: 'yeni anket denemesi',
     //     title: 'ankeet',
@@ -347,7 +364,8 @@ const main = async () => {
     //await getSamples({})
     //await isFilledTest({ title: 'yemek anketi' })
     //await fillSurvey({ title: 'animaldoyoulike', answer: 1 })
-    //await getSurvey({ title: 'yemek anketi' })
+    //await getSurvey({ title: 'animaldoyoulike' })
+    //await getAllSurveys({queue:1}) 
     // await getCountries()
     // await getCities({ country: 'Turkey' })
     //await getUserInfo({})
@@ -366,10 +384,11 @@ const main = async () => {
     })
 */
     //await upVote({ commentID: 53 })
-    //await report({ commentID: 53 })
+    await report({ commentID: 53 })
     //await getMap({ title: 'karadenizin en güzel şehirleri' })
     //await deleteComment({commentID:128 })
     //await getComments({ title: 'animaldoyoulike' })
+    //await creatorProfile({author:"wiozeo"})
 }
 main()
     .then(() => {
