@@ -354,14 +354,14 @@ const deleteComment = async ({ commentID }) => {
 // ----------------------------------------------------------------------
 
 const main = async () => {
-    await signIn({ email: 'ahmet@example.com', password: 'Ahmet123.' })
+    await signIn({ email: 'arslanenise@gmail.com', password: '12345' })
     //await sleep(2000)
     //await signUp({userName:"Çatuğ", email:"nasadcnsof@sswhsaizli.email", password:"deneme",gender:"Male",city:"Bangkok",country:"Thailand"});
-    await createSurvey({
+    /*await createSurvey({
         question: 'yeni anket denemesi',
         title: 'Dünyanın en güzel şehri anketi',
         choice: ['şık1', 'şık2', 'şık3'],
-    })
+    })*/
     //await getSurveys({})
     //await updateIcon({icon: "bear"})
     // await getSamples({ count: 6 })
@@ -390,7 +390,7 @@ const main = async () => {
     //await upVote({ commentID: 53 })
 
     // await getComments({ title: 'animaldoyoulike' })
-    // await report({ commentID: 56 })
+    //await report({ commentID: 113 })
     // await getComments({ title: 'animaldoyoulike' })
 
     //await getMap({ title: 'karadenizin en güzel şehirleri' })
