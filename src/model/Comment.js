@@ -92,7 +92,7 @@ module.exports = {
         try {
             let isReportedCheckQuery = `MATCH (u:User)-[r:REPORTED]->(c:Comment) WHERE u.email = "${email}" AND c.commentID = ${commentID} RETURN r`
             let isWritedCheckQuery = `MATCH (u:User)-[w:WRITED]->(c:Comment) WHERE u.email = "${email}" AND c.commentID = ${commentID} RETURN w`
-            let reportCountQuery = `MATCH (c:Comment) WHERE c.commentID = 113  RETURN c.report AS c`
+            let reportCountQuery = `MATCH (c:Comment) WHERE c.commentID = ${commentID}  RETURN c.report AS c`
 
             const isReportedCheckQueryRES = await executeCypherQuery(isReportedCheckQuery)
             const isWritedCheckQueryRES = await executeCypherQuery(isWritedCheckQuery)
