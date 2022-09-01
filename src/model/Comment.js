@@ -90,24 +90,28 @@ module.exports = {
 
     report: async ({ email, commentID }) => {
         try {
-            const Query1 = `MATCH (u1:User)-[w:WRITED]->(c1:Comment) WHERE u1.email = "${email}" AND c1.commentID = ${commentID}
-            MATCH (u2:User)-[r:REPORTED]->(c2:Comment) WHERE u2.email = "${email}" AND c2.commentID = ${commentID} 
-            WITH COUNT(w) AS w,COUNT(r) AS r
-            MATCH (c:Comment) WHERE c.commentID = 53 RETURN w,r,c.report AS cr`
-            const Result1 = await executeCypherQuery(Query1)
-            const res1 = Result1.records.map((_rec) => _rec.get('r'))
-            const res2 = Result1.records.map((_rec) => _rec.get('w'))
-            const reportCount = Result1.records.map((_rec) => _rec.get('cr'))
-            console.log('report count: ' + reportCount)
-            if (res1 == 0) {
-                if (res2 == 0) {
+            let isReportedCheckQuery = `MATCH (u:User)-[r:REPORTED]->(c:Comment) WHERE u.email = "${email}" AND c.commentID = ${commentID} RETURN r`
+            let isWritedCheckQuery = `MATCH (u:User)-[w:WRITED]->(c:Comment) WHERE u.email = "${email}" AND c.commentID = ${commentID} RETURN w`
+            let reportCountQuery = `MATCH (c:Comment) WHERE c.commentID = ${commentID} RETURN count(c) as c`
+
+            const isReportedCheckQueryRES = await executeCypherQuery(isReportedCheckQuery)
+            const isWritedCheckQueryRES = await executeCypherQuery(isWritedCheckQuery)
+            const reportCountQueryRES = await executeCypherQuery(reportCountQuery)
+
+            const isReported = isReportedCheckQueryRES.records.length == 0
+            const isWrited = isWritedCheckQueryRES.records.length == 0
+
+            const reportCount = reportCountQueryRES.records.map((_rec) => _rec.get('c'))
+
+            if (isReported) {
+                if (isWrited) {
                     if (reportCount >= 9) {
                         const deleteQuery = `MATCH (c:Comment) WHERE c.commentID= ${commentID}
                         MATCH (c2:Comment) WHERE apoc.coll.contains(c2.path, c.commentID)
                         DETACH DELETE c DETACH DELETE c2`
                         await executeCypherQuery(deleteQuery)
                         return {
-                            status: true,  //false çevirilebilir
+                            status: true, //false çevirilebilir
                             data: {},
                             message: 'Report count has achieved 10 so comment deleted',
                         }

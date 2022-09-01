@@ -10,43 +10,47 @@ const createSurveyModel = async ({
     choice, //Array
 }) => {
     try {
-        let a = false
-        const Query = `MATCH(n:Survey) WHERE n.title = "${title}" RETURN count(n) AS result`
-        const Result = await executeCypherQuery(Query)
-        Result.records.forEach((record) => {
-            if (record.get('result') > 0) {
-                a = true
-            }
-        })
+        // let a = false
+        // const Query = `MATCH(n:Survey) WHERE n.title = "${title}" RETURN count(n) AS result`
+        // const Result = await executeCypherQuery(Query)
+        // Result.records.forEach((record) => {
+        //     if (record.get('result') > 0) {
+        //         a = true
+        //     }
+        // })
 
-        if (!a) {
-            var counts = []
-            for (let i = 0; i < choice.length; i++) {
-                counts.push(0)
-            }
-            const writeQuery = `MATCH (m:User) WHERE m.email= "${email}"
-            CREATE (p1:Survey {title: "${title}", question: "${question}",  choices : ${JSON.stringify(choice)},
+        // if (!a) {
+        var counts = []
+        for (let i = 0; i < choice.length; i++) {
+            counts.push(0)
+        }
+        const writeQuery = `MATCH(n:Survey) WITH count(n) as c MATCH (m:User) WHERE m.email= "${email}"
+            CREATE (p1:Survey {title: apoc.text.format("${title} #%d", [c + 1]), question: "${question}",  choices : ${JSON.stringify(choice)},
             counts : ${JSON.stringify(counts)}})
             CREATE (m)-[r:CREATED]->(p1)
             SET m.point = m.point +20
             RETURN p1`
-            const writeResult = await executeCypherQuery(writeQuery)
 
-            for (const record of writeResult.records) {
-                const survey1Node = record.get('p1')
-                return {
-                    status: true,
-                    data: {},
-                    message: 'Survey created successfully',
-                }
-            }
-        } else {
+        const writeResult = await executeCypherQuery(writeQuery)
+
+        for (const record of writeResult.records) {
+            const survey1Node = record.get('p1')
+
+            console.log(survey1Node)
+
             return {
-                status: false,
+                status: true,
                 data: {},
-                message: 'Error: Survey Title existing...',
+                message: 'Survey created successfully',
             }
         }
+        // } else {
+        //     return {
+        //         status: false,
+        //         data: {},
+        //         message: 'Error: Survey Title existing...',
+        //     }
+        // }
     } catch (error) {
         ////////////////////////////////////////////
         return {
@@ -148,7 +152,7 @@ const sampleSurveyModel = async ({ count }) => {
         if (count > 20) count = 20
 
         const writeQuery = `MATCH (n:Survey) 
-        WITH n ORDER BY toInteger(apoc.coll.sum(n.counts)) DESC LIMIT 3
+        WITH n ORDER BY toInteger(apoc.coll.sum(n.counts)) DESC LIMIT ${count}
         MATCH (u:User)-[:CREATED]->(n)
         MATCH (u)-[:PP]->(i:Icon) 
         RETURN  u.name AS u, i.name AS i, n ORDER BY toInteger(apoc.coll.sum(n.counts)) DESC LIMIT ${count}`
@@ -157,19 +161,16 @@ const sampleSurveyModel = async ({ count }) => {
         const icons = writeResult.records.map((_record) => _record.get('i'))
         const authors = writeResult.records.map((_record) => _record.get('u'))
 
-        const surveys = surveys2.map((_survey,index) => {
+        const surveys = surveys2.map((_survey, index) => {
             const sumcounts = _survey.counts.reduce((partialSum, a) => partialSum + a, 0)
-            const percent = _survey.counts.map((_count)=>(
-                Math.round((_count / sumcounts) * 1000) / 10 
-            ))
+            const percent = _survey.counts.map((_count) => Math.round((_count / sumcounts) * 1000) / 10)
             return {
                 ..._survey,
                 percent: percent,
-                icon:icons[index],
-                author:authors[index]
+                icon: icons[index],
+                author: authors[index],
             }
         })
-
 
         return {
             status: true,
@@ -201,16 +202,14 @@ const AllSurveysModel = async ({ queue }) => {
         const surveys2 = writeResult.records.map((_record) => _record.get('n').properties)
         const icons = writeResult.records.map((_record) => _record.get('i'))
         const authors = writeResult.records.map((_record) => _record.get('u'))
-        const surveys = surveys2.map((_survey,index) => {
+        const surveys = surveys2.map((_survey, index) => {
             const sumcounts = _survey.counts.reduce((partialSum, a) => partialSum + a, 0)
-            const percent = _survey.counts.map((_count)=>(
-                Math.round((_count / sumcounts) * 1000) / 10 
-            ))
+            const percent = _survey.counts.map((_count) => Math.round((_count / sumcounts) * 1000) / 10)
             return {
                 ..._survey,
                 percent: percent,
-                icon:icons[index],
-                author:authors[index]
+                icon: icons[index],
+                author: authors[index],
             }
         })
         return {
@@ -262,16 +261,15 @@ const creatorsProfileModel = async ({ author }) => {
         MATCH (n)-[r:CREATED]->(s:Survey)
         RETURN n.point AS n, COUNT(r) AS c, s`
         const writeResult = await executeCypherQuery(writeQuery)
-        const point =  writeResult.records.map((_rec) => _rec.get('n'))[0]
+        const point = writeResult.records.map((_rec) => _rec.get('n'))[0]
         const surveycount = writeResult.records.map((_rec) => _rec.get('c')).reduce((a, b) => a + b, 0)
         const surveys = writeResult.records.map((_rec) => _rec.get('s').properties)
-            return {
-                status: true,
-                data: { point, surveycount, surveys },
-                message: `User profile returned`,
-            }
+        return {
+            status: true,
+            data: { point, surveycount, surveys },
+            message: `User profile returned`,
         }
-        catch (error) {
+    } catch (error) {
         ////////////////////////////////////////////
         return {
             status: false,
