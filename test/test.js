@@ -168,7 +168,7 @@ const getUserInfo = async ({}) => {
 
 // ----------------------------------------------------------------------
 
-const updateUserInfo = async ({ userName, email, city, country }) => {
+const updateUserInfo = async ({ userName, email, city, country, gender }) => {
     const res = await axios.post(
         'http://localhost:5500/api/profile/update',
         {
@@ -176,6 +176,7 @@ const updateUserInfo = async ({ userName, email, city, country }) => {
             email,
             city,
             country,
+            gender,
         },
 
         {
@@ -301,7 +302,7 @@ function sleep(n) {
 // ----------------------------------------------------------------------
 
 const main = async () => {
-    //await signIn({ email: 'apertek1@gmail.com', password: '12345678' })
+    await signIn({ email: 'omerhms1@gmail.com', password: 'Password123.' })
     //await sleep(2000)
     //await signUp({userName:"Sefa Can Pehlivan", email:"sefacan779@gmail.com", password:"sefa123",gender:"Male",city:"Bangkok",country:"Thailand"});
     //await createSurvey({
@@ -317,12 +318,14 @@ const main = async () => {
     // await getCountries()
     // await getCities({ country: 'Turkey' })
     // await getUserInfo({})
-    // await updateUserInfo({
-    //     email: 'test1@gmail.com',
-    //     userName: 'felat',
-    //     city: 'Ankara',
-    //     country: 'Turkey',
-    // })
+     await updateUserInfo({
+         email: 'omerhms1@gmail.com',
+         userName: 'dsxxfdsfsdf',
+         city: 'Ankara',
+         country: 'Turkey',
+         gender: 'Female',
+     })
+     
     // await getUserInfo({})
 
     // await updatePass({ oldPassword: 'Felat123.', newPassword: 'felat' })
@@ -338,7 +341,7 @@ const main = async () => {
 
     //await upVote({ commentID: 9 })
     //await report({ commentID: 2 })
-    await getMap({ title: 'karadenizin en güzel şehirleri' })
+    //await getMap({ title: 'karadenizin en güzel şehirleri' })
 }
 main()
     .then(() => {

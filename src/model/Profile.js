@@ -31,26 +31,38 @@ const getUserInfoModel = async ({ email }) => {
     }
 }
 
-const updateUserInfoModel = async ({
-    oldEmail,
-    userName,
-    newEmail,
-    city,
-    country,
-}) => {
+const updateUserInfoModel = async ({ oldEmail, userName, newEmail, city, country, gender }) => {
     //Data içerisinde user objesi olacak, email
     try {
-        const writeQuery = `MATCH (n:User) WHERE n.email = "${oldEmail}" SET n.name = "${userName}", n.email = "${newEmail}", n.city = "${city}", n.country = "${country}" RETURN n.email AS r`
-        const writeResult = await executeCypherQuery(writeQuery)
-        const email = writeResult.records[0]?.get('r')
-        return {
-            status: true,
-            data: {
-                user: {
-                    email,
+        const checkQuery = `MATCH (n:User) WHERE n.name = "${userName}" OR n.email = "${newEmail}" RETURN  COUNT (n) AS n, n.email AS email`
+        const checkQueryRes = await executeCypherQuery(checkQuery)
+        const check = checkQueryRes.records.map((_rec) => _rec.get('n')).reduce((partialSum, a) => partialSum + a, 0)
+        const checkEmail = checkQueryRes.records.map((_rec) => _rec.get('email'))
+        if(check == 0 || (check == 1 && checkEmail.includes(oldEmail))){
+            let writeQuery
+            if (gender == undefined) {
+                writeQuery = `MATCH (n:User) WHERE n.email = "${oldEmail}" SET n.name = "${userName}", n.email = "${newEmail}", n.city = "${city}", n.country = "${country}" RETURN n.email AS r`
+            } else {
+                writeQuery = `MATCH (n:User) WHERE n.email = "${oldEmail}" SET n.name = "${userName}", n.email = "${newEmail}", n.city = "${city}", n.country = "${country}", n.gender = "${gender}" RETURN n.email AS r`
+            }
+            const writeResult = await executeCypherQuery(writeQuery)
+            const email = writeResult.records[0]?.get('r')
+            return {
+                status: true,
+                data: {
+                    user: {
+                        email,
+                    },
                 },
-            },
-            message: 'User informations updated successfully',
+                message: 'User informations updated successfully',
+            }
+        }
+        else{
+            return{
+                status: false,
+                data: {},
+                message: "New username or email is existing"
+            }
         }
     } catch (error) {
         return {

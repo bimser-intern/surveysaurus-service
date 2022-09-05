@@ -12,6 +12,7 @@ module.exports = {
             email: Yup.string().email().required(),
             city: Yup.string().required(),
             country: Yup.string().required(),
+            gender: Yup.string()
         }),
         query: Yup.object({}),
         params: Yup.object({}),

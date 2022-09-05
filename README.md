@@ -389,6 +389,9 @@ Bu endpoint kullanıcı bilgilerinin güncellenmesi için kullanılır
 | email    | STRING    | EVET       | email formatında olmalı örn. example@example.com |
 | city     | STRING    | EVET       |                                                  |
 | country  | STRING    | EVET       |                                                  |
+| gender   | STRING    | EVET       |                                                   |
+
+**Not: gender parametresi frontend ve android tarafının güncellemeleri için geçici bir süre zorunlu değildir**
 
 **Response:**
 
