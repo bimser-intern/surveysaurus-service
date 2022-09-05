@@ -185,7 +185,7 @@ const getUserInfo = async ({}) => {
 
 // ----------------------------------------------------------------------
 
-const updateUserInfo = async ({ userName, email, city, country }) => {
+const updateUserInfo = async ({ userName, email, city, country, gender }) => {
     const res = await axios.post(
         'http://localhost:5500/api/profile/update',
         {
@@ -193,6 +193,7 @@ const updateUserInfo = async ({ userName, email, city, country }) => {
             email,
             city,
             country,
+            gender,
         },
 
         {
@@ -377,6 +378,7 @@ const main = async () => {
     //     userName: 'felat',
     //     city: 'Ankara',
     //     country: 'Turkey',
+    //       gender: "Male",
     // })
     // await updatePass({ oldPassword: 'Felat123.', newPassword: 'felat' })
     /*
@@ -390,7 +392,7 @@ const main = async () => {
     //await upVote({ commentID: 53 })
 
     // await getComments({ title: 'animaldoyoulike' })
-    await report({ commentID: 115 })
+    //await report({ commentID: 115 })
     // await getComments({ title: 'animaldoyoulike' })
 
     //await getMap({ title: 'karadenizin en güzel şehirleri' })
