@@ -1,10 +1,6 @@
 const CustomError = require('../helper/error/CustomError')
 const asyncHandler = require('express-async-handler')
-const {
-    updateUserInfoModel,
-    getUserInfoModel,
-    updatePasswordModel,
-} = require('../model/Profile')
+const { updateUserInfoModel, getUserInfoModel, updatePasswordModel } = require('../model/Profile')
 const { sendJWTUser } = require('../helper/token/token')
 
 module.exports = {

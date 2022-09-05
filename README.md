@@ -389,7 +389,7 @@ Bu endpoint kullanıcı bilgilerinin güncellenmesi için kullanılır
 | email    | STRING    | EVET       | email formatında olmalı örn. example@example.com |
 | city     | STRING    | EVET       |                                                  |
 | country  | STRING    | EVET       |                                                  |
-| gender   | STRING    | EVET       |                                                   |
+| gender   | STRING    | EVET       |                                                  |
 
 **Not: gender parametresi frontend ve android tarafının güncellemeleri için geçici bir süre zorunlu değildir**
 
@@ -604,4 +604,3 @@ Bu endpoint sonucunu en güzel kullanmak için d3 kütüphanesini kullanmalısı
 
 -   [Ana kütüphane linki](https://www.npmjs.com/package/d3)
 -   [Component kütüphane linki](https://d3-graph-gallery.com/index.html)
-

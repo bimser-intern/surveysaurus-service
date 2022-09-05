@@ -38,7 +38,7 @@ const updateUserInfoModel = async ({ oldEmail, userName, newEmail, city, country
         const checkQueryRes = await executeCypherQuery(checkQuery)
         const check = checkQueryRes.records.map((_rec) => _rec.get('n')).reduce((partialSum, a) => partialSum + a, 0)
         const checkEmail = checkQueryRes.records.map((_rec) => _rec.get('email'))
-        if(check == 0 || (check == 1 && checkEmail.includes(oldEmail))){
+        if (check == 0 || (check == 1 && checkEmail.includes(oldEmail))) {
             let writeQuery
             if (gender == undefined) {
                 writeQuery = `MATCH (n:User) WHERE n.email = "${oldEmail}" SET n.name = "${userName}", n.email = "${newEmail}", n.city = "${city}", n.country = "${country}" RETURN n.email AS r`
@@ -56,12 +56,11 @@ const updateUserInfoModel = async ({ oldEmail, userName, newEmail, city, country
                 },
                 message: 'User informations updated successfully',
             }
-        }
-        else{
-            return{
+        } else {
+            return {
                 status: false,
                 data: {},
-                message: "New username or email is existing"
+                message: 'New username or email is existing',
             }
         }
     } catch (error) {

@@ -12,7 +12,7 @@ module.exports = {
             email: Yup.string().email().required(),
             city: Yup.string().required(),
             country: Yup.string().required(),
-            gender: Yup.string()
+            gender: Yup.string(),
         }),
         query: Yup.object({}),
         params: Yup.object({}),
@@ -20,10 +20,9 @@ module.exports = {
     UpdatePasswordSchema: Yup.object({
         body: Yup.object({
             oldPassword: Yup.string().required(),
-            newPassword: Yup.string().required()
+            newPassword: Yup.string().required(),
         }),
         query: Yup.object({}),
         params: Yup.object({}),
     }),
 }
-

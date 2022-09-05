@@ -318,14 +318,14 @@ const main = async () => {
     // await getCountries()
     // await getCities({ country: 'Turkey' })
     // await getUserInfo({})
-     await updateUserInfo({
-         email: 'omerhms1@gmail.com',
-         userName: 'dsxxfdsfsdf',
-         city: 'Ankara',
-         country: 'Turkey',
-         gender: 'Female',
-     })
-     
+    await updateUserInfo({
+        email: 'omerhms1@gmail.com',
+        userName: 'dsxxfdsfsdf',
+        city: 'Ankara',
+        country: 'Turkey',
+        gender: 'Female',
+    })
+
     // await getUserInfo({})
 
     // await updatePass({ oldPassword: 'Felat123.', newPassword: 'felat' })
