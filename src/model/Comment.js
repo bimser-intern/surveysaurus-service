@@ -135,6 +135,7 @@ module.exports = {
                     }
                 }
             } else {
+                /*
                 const writeQuery = `MATCH (n:User) WHERE n.email = "${email}"
                                     MATCH (m:Comment) WHERE m.commentID = ${commentID}
                                     MATCH (n)-[r:REPORTED]->(m)
@@ -146,6 +147,12 @@ module.exports = {
                     status: true,
                     data: { commentID },
                     message: 'Report deleted successfully',
+                }
+                */
+                return {
+                    status: false,
+                    data: { commentID },
+                    message: 'An user cannot report twice',
                 }
             }
         } catch (error) {
@@ -159,48 +166,34 @@ module.exports = {
 
     getCommentsModel: async ({ email, title }) => {
         try {
-            let writeQuery
-            /*
-            if(email == undefined){
-                writeQuery = `MATCH (s:Survey) WHERE s.title = "${title}"
+            const writeQuery = `MATCH (s:Survey) WHERE s.title = "${title}"
             MATCH (c1:Comment)-[:TO]->(s)
             MATCH (c:Comment) WHERE apoc.coll.contains(c.path,c1.commentID) = true
             MATCH (u:User)-[:WRITED]->(c) 
-            RETURN u.name AS u, c ORDER BY c.commentID DESC`
-            }
-            else{
-                writeQuery=`MATCH (s:Survey) WHERE s.title = "${title}"
-                MATCH (c1:Comment)-[:TO]->(s)
-                MATCH (c:Comment) WHERE apoc.coll.contains(c.path,c1.commentID) = true
-                MATCH (u:User)-[:WRITED]->(c) 
-                RETURN u.name AS u, u.email = ${email} AS d, c ORDER BY c.commentID DESC`
-            }
-            */
-            writeQuery = `MATCH (s:Survey) WHERE s.title = "${title}"
-            MATCH (c1:Comment)-[:TO]->(s)
-            MATCH (c:Comment) WHERE apoc.coll.contains(c.path,c1.commentID) = true
-            MATCH (u:User)-[:WRITED]->(c) 
-            MATCH (u2:User)-[:UPVOTED]->(c)
-            MATCH (u3:User)-[:REPORTED]->(c)
-            RETURN u.name AS u, u.email = "${email ? email : 'hjkfhsghkudlfhvkjidhbvkjdshv'}" AS d, c, u2.email = "${
+            RETURN u.name AS u, u.email = "${
                 email ? email : 'hjkfhsghkudlfhvkjidhbvkjdshv'
-            }" AS u2, u3.email = "${
-                email ? email : 'hjkfhsghkudlfhvkjidhbvkjdshv'
-            }" AS u3 ORDER BY c.upvote DESC, c.commentID DESC`
-            console.log(writeQuery)
+            }" AS d, c ORDER BY c.upvote DESC, c.commentID DESC`
+            const getupvotedsquery = `MATCH (c:Comment)-[:TO]->(s:Survey) WHERE s.title = "${title}"
+            MATCH (u1:User)-[:UPVOTED]->(c1:Comment) WHERE apoc.coll.contains(c1.path,c.commentID) = true AND u1.email = "${email ? email : 'hjkfhsghkudlfhvkjidhbvkjdshv'}"
+            RETURN DISTINCT(c1.commentID) AS c1 `
+            const getreportedquery = `MATCH (c:Comment)-[:TO]->(s:Survey) WHERE s.title = "${title}"
+            MATCH (u2:User)-[:REPORTED]->(c2:Comment) WHERE apoc.coll.contains(c2.path,c.commentID) = true AND u2.email = "${email ? email : 'hjkfhsghkudlfhvkjidhbvkjdshv'}"
+            RETURN DISTINCT(c2.commentID) AS c2`             
             const writeResult = await executeCypherQuery(writeQuery)
+            const resUpvoteds = await executeCypherQuery(getupvotedsquery)
+            const resReporteds = await executeCypherQuery(getreportedquery)
             const names = writeResult.records.map((_rec) => _rec.get('u'))
             const deletable = writeResult.records.map((_rec) => _rec.get('d'))
             const comment = writeResult.records.map((_rec) => _rec.get('c').properties)
-            const upvoted = writeResult.records.map((_rec) => _rec.get('u2'))
-            const reported = writeResult.records.map((_rec) => _rec.get('u3'))
             const comments = comment.map((_comment, idx) => ({
                 ..._comment,
                 author: names[idx],
                 deletable: deletable[idx],
-                upvoted: upvoted[idx],
-                reported: reported[idx],
             }))
+            let upvoteds = []
+            let reporteds = []
+            upvoteds = resUpvoteds.records.map((_rec) => _rec.get('c1'))
+            reporteds = resReporteds.records.map((_rec) => _rec.get('c2'))
             /*
             const names = writeResult.records.map((_rec) => _rec.get('u').properties)
             const comments = writeResult.records.map((_rec) => _rec.get('c').properties)
@@ -211,7 +204,7 @@ module.exports = {
             */
             return {
                 status: true,
-                data: { comments },
+                data: { comments, upvoteds, reporteds },
                 message: 'Comments returned successfully',
             }
         } catch (error) {

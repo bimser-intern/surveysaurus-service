@@ -375,8 +375,8 @@ const main = async () => {
     //await getUserInfo({})
     /*
     await updateUserInfo({
-         email: 'eray41@gmail.com',
-         userName: 'eray41',
+         email: 'eraydddd@gmail.com',
+         userName: 'denme2156',
          city: 'Ankara',
          country: 'Turkey',
          gender: "Male",
@@ -392,9 +392,9 @@ const main = async () => {
     })
     */
 
-    //await upVote({ commentID: 53 })
+    //await upVote({ commentID: 94 })
 
-    //await getComments({ title: 'animaldoyoulike' })
+    //await getComments({ title: 'karadenizin en güzel şehirleri' })
     //await report({ commentID: 115 })
     // await getComments({ title: 'animaldoyoulike' })
 
