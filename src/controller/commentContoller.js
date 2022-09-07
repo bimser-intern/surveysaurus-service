@@ -70,7 +70,7 @@ const reportController = asyncHandler(async (req, res, next) => {
 const getCommentsController = asyncHandler(async (req, res, next) => {
     const { title } = req.body
     try {
-        const { status, data:{comments}, message } = await getCommentsModel({
+        const { status, data:{comments, upvoteds, reporteds}, message } = await getCommentsModel({
             email : req.user?.email ? req.user.email : undefined,
             title,
         })
@@ -78,7 +78,7 @@ const getCommentsController = asyncHandler(async (req, res, next) => {
         if (!status) return next(new CustomError(message))
 
         res.status(200).json({
-            data: { comments },
+            data: { comments, upvoteds, reporteds},
             message: 'Comments listed successfully',
         })
     } catch (error) {
