@@ -355,7 +355,7 @@ const deleteComment = async ({ commentID }) => {
 // ----------------------------------------------------------------------
 
 const main = async () => {
-    await signIn({ email: 'g@gmail.com', password: '1234567Aa .' })
+    await signIn({ email: 'eraydddd@gmail.com', password: 'Eray123.' })
     //await sleep(2000)
     //await signUp({userName:"Çatuğ", email:"nasadcnsof@sswhsaizli.email", password:"deneme",gender:"Male",city:"Bangkok",country:"Thailand"});
     /*await createSurvey({
@@ -373,14 +373,17 @@ const main = async () => {
     // await getCountries()
     // await getCities({ country: 'Turkey' })
     //await getUserInfo({})
-    // await updateUserInfo({
-    //     email: 'test1@gmail.com',
-    //     userName: 'felat',
-    //     city: 'Ankara',
-    //     country: 'Turkey',
-    //       gender: "Male",
-    // })
-    // await updatePass({ oldPassword: 'Felat123.', newPassword: 'felat' })
+    /*
+    await updateUserInfo({
+         email: 'eray41@gmail.com',
+         userName: 'eray41',
+         city: 'Ankara',
+         country: 'Turkey',
+         gender: "Male",
+
+     })
+     */
+    //await updatePass({ oldPassword: 'Eray123...', newPassword: 'Eray1245...' })
     /*
     await addComment({
         title: 'ankeet',
@@ -391,7 +394,7 @@ const main = async () => {
 
     //await upVote({ commentID: 53 })
 
-    // await getComments({ title: 'animaldoyoulike' })
+    //await getComments({ title: 'animaldoyoulike' })
     //await report({ commentID: 115 })
     // await getComments({ title: 'animaldoyoulike' })
 

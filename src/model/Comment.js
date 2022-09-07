@@ -180,18 +180,26 @@ module.exports = {
             MATCH (c1:Comment)-[:TO]->(s)
             MATCH (c:Comment) WHERE apoc.coll.contains(c.path,c1.commentID) = true
             MATCH (u:User)-[:WRITED]->(c) 
-            RETURN u.name AS u, u.email = "${
+            MATCH (u2:User)-[:UPVOTED]->(c)
+            MATCH (u3:User)-[:REPORTED]->(c)
+            RETURN u.name AS u, u.email = "${email ? email : 'hjkfhsghkudlfhvkjidhbvkjdshv'}" AS d, c, u2.email = "${
                 email ? email : 'hjkfhsghkudlfhvkjidhbvkjdshv'
-            }" AS d, c ORDER BY c.upvote DESC, c.commentID DESC`
+            }" AS u2, u3.email = "${
+                email ? email : 'hjkfhsghkudlfhvkjidhbvkjdshv'
+            }" AS u3 ORDER BY c.upvote DESC, c.commentID DESC`
             console.log(writeQuery)
             const writeResult = await executeCypherQuery(writeQuery)
             const names = writeResult.records.map((_rec) => _rec.get('u'))
             const deletable = writeResult.records.map((_rec) => _rec.get('d'))
             const comment = writeResult.records.map((_rec) => _rec.get('c').properties)
+            const upvoted = writeResult.records.map((_rec) => _rec.get('u2'))
+            const reported = writeResult.records.map((_rec) => _rec.get('u3'))
             const comments = comment.map((_comment, idx) => ({
                 ..._comment,
                 author: names[idx],
                 deletable: deletable[idx],
+                upvoted: upvoted[idx],
+                reported: reported[idx],
             }))
             /*
             const names = writeResult.records.map((_rec) => _rec.get('u').properties)
