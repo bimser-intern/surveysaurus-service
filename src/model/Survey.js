@@ -194,8 +194,8 @@ const AllSurveysModel = async ({ queue }) => {
         const writeQuery = `MATCH (n:Survey) 
         MATCH (u:User)-[:CREATED]->(n)
         MATCH (u)-[:PP]->(i:Icon) 
-        WITH  u.name AS u, i.name AS i, n, toInteger(apoc.coll.sum(n.counts)) AS a ORDER BY a DESC, n.title ASC LIMIT (${queue}+1)*12
-        WITH u,i,n,a ORDER BY a ASC, n.title DESC LIMIT 12
+        WITH  u.name AS u, i.name AS i, n, toInteger(apoc.coll.sum(n.counts)) AS a ORDER BY a DESC, n.title ASC LIMIT (${queue}+1)*13
+        WITH u,i,n,a ORDER BY a ASC, n.title DESC LIMIT 13
         RETURN u,i,n ORDER BY a DESC, n.title ASC`
         console.log(writeQuery)
         const writeResult = await executeCypherQuery(writeQuery)
