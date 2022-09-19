@@ -355,7 +355,7 @@ const deleteComment = async ({ commentID }) => {
 // ----------------------------------------------------------------------
 
 const main = async () => {
-    await signIn({ email: 'eraydddd@gmail.com', password: 'Eray123.' })
+    //await signIn({ email: 'eraydddd@gmail.com', password: 'Eray123.' })
     //await sleep(2000)
     //await signUp({userName:"Çatuğ", email:"nasadcnsof@sswhsaizli.email", password:"deneme",gender:"Male",city:"Bangkok",country:"Thailand"});
     /*await createSurvey({
@@ -369,10 +369,10 @@ const main = async () => {
     //await isFilledTest({ title: 'yemek anketi' })
     //await fillSurvey({ title: 'animaldoyoulike', answer: 1 })
     //await getSurvey({ title: 'animaldoyoulike' })
-    //await getAllSurveys({queue:1})
+    await getAllSurveys({queue:15})
     // await getCountries()
     // await getCities({ country: 'Turkey' })
-    await getUserInfo({})
+    //await getUserInfo({})
     /*
     await updateUserInfo({
          email: 'eraydddd@gmail.com',
