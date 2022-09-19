@@ -34,6 +34,7 @@ module.exports = {
                     email: user.email,
                     city: user.city,
                     country: user.country,
+                    point: user.point
                 },
                 message: message || 'Giriş Yapıldı',
             })
