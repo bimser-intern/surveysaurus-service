@@ -372,7 +372,7 @@ const main = async () => {
     //await getAllSurveys({queue:1})
     // await getCountries()
     // await getCities({ country: 'Turkey' })
-    //await getUserInfo({})
+    await getUserInfo({})
     /*
     await updateUserInfo({
          email: 'eraydddd@gmail.com',

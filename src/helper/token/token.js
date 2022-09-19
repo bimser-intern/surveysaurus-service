@@ -27,15 +27,7 @@ module.exports = {
             })
             .json({
                 accessToken: token,
-
-                data: {
-                    name: user.name,
-                    gender: user.gender,
-                    email: user.email,
-                    city: user.city,
-                    country: user.country,
-                    point: user.point
-                },
+                data: user,
                 message: message || 'Giriş Yapıldı',
             })
     },
