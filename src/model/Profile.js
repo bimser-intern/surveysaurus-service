@@ -5,7 +5,10 @@ const getUserInfoModel = async ({ email }) => {
         const writeQuery = `MATCH (n:User) WHERE n.email = "${email}" 
         MATCH (n)-[:PP]->(i)
         RETURN n.name AS na, n.gender AS g, n.city AS ci, n.country AS co, n.point as p, i.name AS i`
+        const surveyCountQuery = `MATCH (n:User) WHERE n.email = "${email}" MATCH (n)-[r:CREATED]->(s:Survey) RETURN COUNT(r) AS r`
         const writeResult = await executeCypherQuery(writeQuery)
+        const surveyCountResult = await executeCypherQuery(surveyCountQuery)
+        const surveyCount = surveyCountResult.records[0]?.get('r')
         const name = writeResult.records[0]?.get('na')
         const gender = writeResult.records[0]?.get('g')
         const city = writeResult.records[0]?.get('ci')
@@ -24,7 +27,8 @@ const getUserInfoModel = async ({ email }) => {
                 city: city,
                 country: country,
                 point:point,
-                icon:icon
+                icon:icon,
+                surveyCount: surveyCount,
             },
             message: 'User informations returned successfully',
         }

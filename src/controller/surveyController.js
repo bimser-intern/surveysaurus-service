@@ -90,7 +90,7 @@ const allSurveys = asyncHandler(async (req, res, next) => {
         if (!status) return next(new CustomError(message))
 
         res.status(200).json({
-            data: { surveys: data.surveys },
+            data: { surveys: data.surveys, isLast: data.isLast },
             message: message,
         })
     } catch (error) {

@@ -191,13 +191,23 @@ const sampleSurveyModel = async ({ count }) => {
 
 const AllSurveysModel = async ({ queue }) => {
     try {
+        const SurveyCountQuery = `MATCH(s:Survey) RETURN COUNT(s) AS s`
+        const SurveyCountQueryResult = await executeCypherQuery(SurveyCountQuery)
+        const SurveyCount = SurveyCountQueryResult.records.map((_record) => _record.get('s'))
+        let isLast = false        
+        if((Math.floor(queue)+1)*13 >= SurveyCount){
+            isLast = true
+            queue = Math.floor(SurveyCount/13)-1
+        }
+        else{
+            isLast = false
+        }
         const writeQuery = `MATCH (n:Survey) 
         MATCH (u:User)-[:CREATED]->(n)
         MATCH (u)-[:PP]->(i:Icon) 
         WITH  u.name AS u, i.name AS i, n, toInteger(apoc.coll.sum(n.counts)) AS a ORDER BY a DESC, n.title ASC LIMIT (${queue}+1)*13
         WITH u,i,n,a ORDER BY a ASC, n.title DESC LIMIT 13
         RETURN u,i,n ORDER BY a DESC, n.title ASC`
-        console.log(writeQuery)
         const writeResult = await executeCypherQuery(writeQuery)
         const surveys2 = writeResult.records.map((_record) => _record.get('n').properties)
         const icons = writeResult.records.map((_record) => _record.get('i'))
@@ -214,7 +224,7 @@ const AllSurveysModel = async ({ queue }) => {
         })
         return {
             status: true,
-            data: { surveys },
+            data: { surveys, isLast },
             message: `Surveys listed successfully`,
         }
     } catch (error) {
