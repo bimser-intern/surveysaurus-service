@@ -36,13 +36,33 @@ const returnMapModel = async ({ title }) => {
             choiceindex.push(maxitem)
             choices.push(choice)
         }
+        let countrylist = countries[0] ? "\""+countries[0] +"\"" : undefined;
+        if(countrylist != undefined){
+            for(let i = 1; i<countrycodes.length; i++){
+                countrylist += "AND c.code <> \""+countrycodes[i]+"\"";
+            }
+            countrylist = "WHERE c.code <> "+countrylist
+        }
+        const otherCountriesQuery = `MATCH (c:Country) ${countrylist ? countrylist : ""} RETURN c.name AS cn, c.code AS cod`
+        const otherCountriesRes = await executeCypherQuery(otherCountriesQuery);
+        const getcountryNames = otherCountriesRes.records.map((_rec) => _rec.get('cn'));
+        const getcountryCodes = otherCountriesRes.records.map((_rec) => _rec.get('cod'));
         const data = countrynames.map((countryname, index) => ({
             countryname,
             countrycode: countrycodes[index],
             bestindex: choiceindex[index],
             bestchoice: choices[index],
         }))
-
+        const data4NotListed = getcountryNames.map((countryname, index) => ({
+            countryname,
+            countrycode: getcountryCodes[index],
+            bestindex: "",
+            bestchoice: "",
+        }))
+        for(let i = 0; i<data4NotListed.length; i++){
+            data.push(data4NotListed[i])
+        }
+        console.log("Yazdi: \n\r",data);
         return {
             status: true,
             data: { data },
