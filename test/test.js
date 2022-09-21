@@ -322,8 +322,6 @@ const getComments = async ({ title }) => {
 }
 
 const getMap = async ({ title }) => {
-    const d3 = await import('d3')
-
     const res = await axios.post('http://localhost:5500/api/map/getmap', {
         title,
     })
@@ -398,7 +396,7 @@ const main = async () => {
     //await report({ commentID: 115 })
     // await getComments({ title: 'animaldoyoulike' })
 
-    //await getMap({ title: 'karadenizin en güzel şehirleri' })
+    await getMap({ title: 'karadenizin en güzel şehirleri' })
     //await deleteComment({commentID:128 })
     //await creatorProfile({author:"wiozeo"})
 }

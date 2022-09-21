@@ -17,15 +17,25 @@ const getMapValuesController = asyncHandler(async (req, res, next) => {
         if (!status) return next(new CustomError(message))
 
         // generate
+        /*
+        const array = [Object.keys(data[0])].concat(data)
+        const resultMap = array
+            .map((it) => {
+                return Object.values(it).toString()
+            })
+            .join('\n')
+            */
         const fields = ['countryname', 'countrycode', 'bestindex', 'bestchoice']
         const opts = { fields }
         const csv1 = await parseAsync(data, opts)
         const csv = csv1.replace(/["']/g, '').replace('\\r\\n', '')
-
+/*
         res.status(200).json({
             data: { csv },
             message: 'Map Values listed successfully',
         })
+        *///
+       res.status(200).attachment(csv)
     } catch (error) {
         return next(new CustomError(error.message))
     }
