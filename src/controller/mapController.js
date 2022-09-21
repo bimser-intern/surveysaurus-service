@@ -34,7 +34,7 @@ const getMapValuesController = asyncHandler(async (req, res, next) => {
             data: { csv },
             message: 'Map Values listed successfully',
         })
-        */
+        *///
        res.status(200).attachment(csv)
     } catch (error) {
         return next(new CustomError(error.message))

@@ -62,7 +62,6 @@ const returnMapModel = async ({ title }) => {
         for(let i = 0; i<data4NotListed.length; i++){
             data.push(data4NotListed[i])
         }
-        console.log("Yazdi: \n\r",data);
         return {
             status: true,
             data: { data },
