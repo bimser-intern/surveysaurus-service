@@ -322,9 +322,8 @@ const getComments = async ({ title }) => {
 }
 
 const getMap = async ({ title }) => {
-    const res = await axios.post('http://localhost:5500/api/map/getmap', {
-        title,
-    })
+    console.log("URL: "+'http://localhost:5500/api/map/getmap?title=' + title)
+    const res = await axios.get('http://localhost:5500/api/map/getmap?title=' + title)
     console.log(res.data)
 }
 
@@ -367,7 +366,7 @@ const main = async () => {
     //await isFilledTest({ title: 'yemek anketi' })
     //await fillSurvey({ title: 'animaldoyoulike', answer: 1 })
     //await getSurvey({ title: 'animaldoyoulike' })
-    await getAllSurveys({queue:15})
+    //await getAllSurveys({ queue: 15 })
     // await getCountries()
     // await getCities({ country: 'Turkey' })
     //await getUserInfo({})
@@ -396,7 +395,9 @@ const main = async () => {
     //await report({ commentID: 115 })
     // await getComments({ title: 'animaldoyoulike' })
 
-    await getMap({ title: 'karadenizin en güzel şehirleri' })
+    const query = encodeURIComponent('karadenizin en güzel şehirleri')
+
+    await getMap({ title:query })
     //await deleteComment({commentID:128 })
     //await creatorProfile({author:"wiozeo"})
 }
@@ -405,5 +406,3 @@ main()
         console.log('Finished')
     })
     .catch((err) => console.error(err))
-
-

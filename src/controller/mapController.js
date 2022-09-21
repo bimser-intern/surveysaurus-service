@@ -4,7 +4,7 @@ const { returnMapModel } = require('../model/Map')
 const { parseAsync } = require('json2csv')
 
 const getMapValuesController = asyncHandler(async (req, res, next) => {
-    const { title } = req.body
+    const { title } = req.query.title
     try {
         const {
             status,
@@ -16,26 +16,32 @@ const getMapValuesController = asyncHandler(async (req, res, next) => {
 
         if (!status) return next(new CustomError(message))
 
-        // generate
-        /*
+/*
+
+
+   /*     // generate
         const array = [Object.keys(data[0])].concat(data)
         const resultMap = array
             .map((it) => {
                 return Object.values(it).toString()
             })
             .join('\n')
-            */
+
+           /*
         const fields = ['countryname', 'countrycode', 'bestindex', 'bestchoice']
         const opts = { fields }
         const csv1 = await parseAsync(data, opts)
         const csv = csv1.replace(/["']/g, '').replace('\\r\\n', '')
-/*
+*/
         res.status(200).json({
-            data: { csv },
+            data,
             message: 'Map Values listed successfully',
         })
-        *///
-       res.status(200).attachment(csv)
+      //  console.log(resultMap)
+    //   res.status(200).attachment(resultMap).json({
+     //   data: {csv},
+      //  message: 'Map Values listed successfully'}) 
+
     } catch (error) {
         return next(new CustomError(error.message))
     }
