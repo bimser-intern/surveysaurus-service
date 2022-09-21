@@ -61,11 +61,19 @@ module.exports = {
 
             if (a) {
                 const readQuery = `MATCH(n:User) WHERE n.email = '${email}' AND n.password = '${password}' RETURN n.name + "|"+ n.email+ "|"+n.gender+ "|"+n.country+ "|"+n.city + "|"+n.point AS result`
+                const SurCountQuery = `MATCH(n:User) WHERE n.email = '${email}' AND n.password = '${password}' MATCH (n)-[r:CREATED]->(s:Survey) RETURN COUNT(r) AS r`
                 const readResult = await executeCypherQuery(readQuery, {
                     email,
                     password,
                 })
-
+                let SurveyCount = 0;
+                const SurCountRes = await executeCypherQuery(SurCountQuery, {
+                    email,
+                    password,
+                })
+                SurCountRes.records.forEach((record) => {
+                    SurveyCount = record.get('r');
+                })
                 for (const record of readResult.records) {
                     const array = record.get('result').split('|')
                     return {
@@ -77,6 +85,7 @@ module.exports = {
                             country: array[3],
                             city: array[4],
                             point: array[5],
+                            surveycount: SurveyCount,
                         },
                         message: '',
                     }

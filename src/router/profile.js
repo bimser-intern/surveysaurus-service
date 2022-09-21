@@ -17,7 +17,7 @@ const { getProfile } = require('../controller/profileController')
 
 router.get(
     '/getinfo',
-    [tokenControl, userControl, yupValidate(GetUserInfoSchema)],
+    [tokenControl, yupValidate(GetUserInfoSchema)],
     getProfile
 )
 router.put(

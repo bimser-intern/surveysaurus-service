@@ -367,7 +367,7 @@ const main = async () => {
     //await isFilledTest({ title: 'yemek anketi' })
     //await fillSurvey({ title: 'animaldoyoulike', answer: 1 })
     //await getSurvey({ title: 'animaldoyoulike' })
-    //await getAllSurveys({queue:1})
+    await getAllSurveys({queue:15})
     // await getCountries()
     // await getCities({ country: 'Turkey' })
     //await getUserInfo({})
