@@ -1,6 +1,6 @@
 # Surveysaurus - REST API
 
-## How To Run?
+## How To Run ?
 
 Below is the script you need to use to revoke the Rest API.
 
